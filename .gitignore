@@ -44,6 +44,7 @@
 !/SigurdLib*
 /SigurdLib*/[Bb]in
 /SigurdLib*/[Oo]bj
+/SigurdLib*/[Dd]ist
 
 # Explicit exceptions/ignores
 **.user
