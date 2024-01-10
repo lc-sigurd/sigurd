@@ -3,6 +3,9 @@
 
 # Specific includes
 
+## Editorconfig
+!.editorconfig
+
 ## Build System/Scripts
 !NuGet.Config
 !Directory.Build.props
