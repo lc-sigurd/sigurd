@@ -8,33 +8,42 @@ using System.Reflection;
 
 namespace Sigurd.ClientAPI.ChatCommands
 {
+    /// <summary>
+    /// Handles registering and unregistering command handlers.
+    /// </summary>
     public static class CommandRegistry
     {
+#pragma warning disable CS8618 // Non-nullable variable must contain a non-null value when exiting constructor.
         internal static ConfigEntry<string> CommandPrefix { get; set; }
+#pragma warning restore
 
         internal static List<CommandHandler> CommandHandlers { get; set; } = new List<CommandHandler>();
 
+        /// <summary>
+        /// Registers all command handlers from the caller's <see cref="Assembly"/>.
+        /// </summary>
         public static void RegisterAll()
         {
             MethodBase m = new StackTrace().GetFrame(1).GetMethod();
             Assembly assembly = m.ReflectedType.Assembly;
             foreach (Type type in AccessTools.GetTypesFromAssembly(assembly))
             {
-                RegisterAll(type);
+                Register(type);
             }
         }
 
-        public static void RegisterAll(Type type)
+        /// <summary>
+        /// Registers the command handler at the given <see cref="Type"/>, if it is one.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> to register as a command handler. Must extend <see cref="CommandHandler"/>.</param>
+        public static void Register(Type type)
         {
             if (type.IsClass && !type.IsAbstract && typeof(CommandHandler).IsAssignableFrom(type))
             {
                 CommandHandler commandHandler = (CommandHandler)Activator.CreateInstance(type);
 
-                if (!CommandHandlers.Any(c => c.Name == commandHandler.Name ||
-                        (c.Aliases != null && c.Aliases.Contains(commandHandler.Name)) ||
-                        (commandHandler.Aliases != null &&
-                            commandHandler.Aliases.Any(a => a == c.Name || (c.Aliases != null && c.Aliases.Contains(a)))))
-                    )
+                if (!TryGetCommandHandler(commandHandler.Name, out CommandHandler _) &&
+                    (commandHandler.Aliases == null || !commandHandler.Aliases.Any(a => TryGetCommandHandler(a, out CommandHandler _))))
                 {
                     CommandHandlers.Add(commandHandler);
                 }
@@ -45,17 +54,24 @@ namespace Sigurd.ClientAPI.ChatCommands
             }
         }
 
+        /// <summary>
+        /// Unregisters all command handlers from the caller's <see cref="Assembly"/>.
+        /// </summary>
         public static void UnregisterAll()
         {
             MethodBase m = new StackTrace().GetFrame(1).GetMethod();
             Assembly assembly = m.ReflectedType.Assembly;
             foreach (Type type in AccessTools.GetTypesFromAssembly(assembly))
             {
-                UnregisterAll(type);
+                Unregister(type);
             }
         }
 
-        public static void UnregisterAll(Type type)
+        /// <summary>
+        /// Unregisters the command handler at the given <see cref="Type"/>, if it is one.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> to unregister.</param>
+        public static void Unregister(Type type)
         {
             if (type.IsClass && !type.IsAbstract && typeof(CommandHandler).IsAssignableFrom(type))
             {
@@ -70,11 +86,22 @@ namespace Sigurd.ClientAPI.ChatCommands
             }
         }
 
+        /// <summary>
+        /// Gets a <see cref="CommandHandler"/> with the given name or alias.
+        /// </summary>
+        /// <param name="command">The name or alias to get the <see cref="CommandHandler"/> of.</param>
+        /// <returns>The <see cref="CommandHandler"/>, or <see langword="null" /> if it doesn't exist.</returns>
         public static CommandHandler GetCommandHandler(string command)
         {
             return CommandHandlers.FirstOrDefault(c => c.Name == command || (c.Aliases != null && c.Aliases.Any(a => a == command)));
         }
 
+        /// <summary>
+        /// Tries to get a <see cref="CommandHandler"/> with the given name or alias.
+        /// </summary>
+        /// <param name="command">The name or alias to get the <see cref="CommandHandler"/> of.</param>
+        /// <param name="commandHandler">Outputs a <see cref="CommandHandler"/>, or <see langword="null" /> if it doesn't exist.</param>
+        /// <returns><see langword="true" /> if a <see cref="CommandHandler"/> is found, <see langword="false" /> otherwise.</returns>
         public static bool TryGetCommandHandler(string command, out CommandHandler commandHandler)
         {
             commandHandler = GetCommandHandler(command);

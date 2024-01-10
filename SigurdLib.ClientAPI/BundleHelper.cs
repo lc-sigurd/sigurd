@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sigurd.ClientAPI
@@ -20,6 +20,7 @@ namespace Sigurd.ClientAPI
                 _loadedAssets = loadedAssets;
             }
 
+#pragma warning disable CS8603 // Possible null reference return.
             /// <summary>
             /// Gets an asset from the bundle.
             /// </summary>
@@ -37,6 +38,7 @@ namespace Sigurd.ClientAPI
 
                 return null;
             }
+#pragma warning restore
 
             /// <summary>
             /// Tries to get an asset from the bundle.
