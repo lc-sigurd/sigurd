@@ -2,22 +2,15 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
     <AssemblyName>com.sigurd.sigurd.serverapi</AssemblyName>
-    
+
     <Id>SigurdLib.ServerAPI</Id>
     <Product>SigurdLib.ServerAPI</Product>
-    
+
     <PackageId>SigurdLib.ServerAPI</PackageId>
     <Description>Sigurd's server-sided api. Everyone must have this for it to work properly.</Description>
-    
+
     <RootNamespace>Sigurd.ServerAPI</RootNamespace>
   </PropertyGroup>
-  
-  <!-- prevent referenced assemblies from being copied to the output folder -->
-  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
-    <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
-    </ItemGroup>
-  </Target>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
@@ -34,7 +27,7 @@
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="$(CI) != 'true'">
     <Reference Include="Assembly-CSharp" Publicize="true">
       <HintPath>$(LETHAL_COMPANY_DIR)\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
@@ -58,7 +51,7 @@
       <HintPath>$(LETHAL_COMPANY_DIR)\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
-  
+
   <ItemGroup Condition="$(CI) == 'true'">
     <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
   </ItemGroup>
@@ -66,24 +59,17 @@
   <PropertyGroup Condition="$(CI) == 'true'">
     <PACK_THUNDERSTORE>true</PACK_THUNDERSTORE>
   </PropertyGroup>
-  
-  <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
-    <Message Importance="high" Text="MinVer version is $(MinVerVersion)" />
-    <PropertyGroup>
-      <BepInExPluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</BepInExPluginVersion>
-    </PropertyGroup>
-  </Target>
-  
+
   <Target Name="NetcodeWeave" AfterTargets="PostBuildEvent">
     <CallTarget Condition="$(OS) == 'Windows_NT'" Targets="NetcodeWeaveWindows" />
     <CallTarget Condition="$(OS) != 'Windows_NT'" Targets="NetcodeWeaveUnix" />
     <Message Importance="high" Text="Successfully weaved NetCode!" />
   </Target>
-  
+
   <Target Name="NetcodeWeaveWindows">
     <Exec Command="cd $(NETCODE_PATCHER_DIR)&#xD;&#xA;NetcodePatcher.dll $(TargetDir) deps/" />
   </Target>
-  
+
   <Target Name="NetcodeWeaveUnix">
     <Exec Command="cd $(NETCODE_PATCHER_DIR)&#xD;&#xA;dotnet NetcodePatcher.dll $(TargetDir) deps/" />
   </Target>

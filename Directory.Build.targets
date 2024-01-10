@@ -1,0 +1,15 @@
+<Project>
+    <!-- prevent referenced assemblies from being copied to output folders -->
+    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
+        <Message Importance="high" Text="MinVer version is $(MinVerVersion)" />
+        <PropertyGroup>
+            <BepInExPluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</BepInExPluginVersion>
+        </PropertyGroup>
+    </Target>
+</Project>
