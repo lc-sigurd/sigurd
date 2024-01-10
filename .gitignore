@@ -31,10 +31,9 @@
 
 ## Thunderstore Assets
 !Thunderstore
-LC_API.dll
 
 ## Solution
-!LC-API.sln
+!SigurdLib.sln
 
 ### Project files
 !SigurdLib.*
