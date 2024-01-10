@@ -9,6 +9,7 @@
 ## Build System/Scripts
 !NuGet.Config
 !Directory.Build.props
+!Directory.Build.targets
 !build.sh
 !build.ps1
 !build.cmd
