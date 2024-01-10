@@ -12,13 +12,11 @@ namespace Sigurd.ClientAPI
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     public sealed class Plugin : BaseUnityPlugin
     {
-#pragma warning disable CS8618 // Non-nullable variable must contain a non-null value when exiting constructor.
         internal static Plugin Instance { get; private set; }
 
         internal static ManualLogSource Log { get; private set; }
 
         internal static Harmony Harmony { get; private set; }
-#pragma warning restore
 
         private void Awake()
         {

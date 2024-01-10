@@ -13,9 +13,7 @@ namespace Sigurd.ClientAPI.ChatCommands
     /// </summary>
     public static class CommandRegistry
     {
-#pragma warning disable CS8618 // Non-nullable variable must contain a non-null value when exiting constructor.
         internal static ConfigEntry<string> CommandPrefix { get; set; }
-#pragma warning restore
 
         internal static List<CommandHandler> CommandHandlers { get; set; } = new List<CommandHandler>();
 
