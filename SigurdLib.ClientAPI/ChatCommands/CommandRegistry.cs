@@ -45,6 +45,31 @@ namespace Sigurd.ClientAPI.ChatCommands
             }
         }
 
+        public static void UnregisterAll()
+        {
+            MethodBase m = new StackTrace().GetFrame(1).GetMethod();
+            Assembly assembly = m.ReflectedType.Assembly;
+            foreach (Type type in AccessTools.GetTypesFromAssembly(assembly))
+            {
+                UnregisterAll(type);
+            }
+        }
+
+        public static void UnregisterAll(Type type)
+        {
+            if (type.IsClass && !type.IsAbstract && typeof(CommandHandler).IsAssignableFrom(type))
+            {
+                foreach (CommandHandler commandHandler in CommandHandlers)
+                {
+                    if (commandHandler.GetType() == type)
+                    {
+                        CommandHandlers.Remove(commandHandler);
+                        return;
+                    }
+                }
+            }
+        }
+
         public static CommandHandler GetCommandHandler(string command)
         {
             return CommandHandlers.FirstOrDefault(c => c.Name == command || (c.Aliases != null && c.Aliases.Any(a => a == command)));
