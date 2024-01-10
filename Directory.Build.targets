@@ -30,6 +30,7 @@
         <PropertyGroup>
             <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
         </PropertyGroup>
+        <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
         <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)"/>
         <ItemGroup>
             <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
