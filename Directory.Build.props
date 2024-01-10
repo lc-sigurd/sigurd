@@ -34,4 +34,8 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="SigurdLib.props.user"/>
+    </ItemGroup>
 </Project>
