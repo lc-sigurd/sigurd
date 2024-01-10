@@ -7,7 +7,7 @@
         <Product>SigurdLib</Product>
 
         <PackageId>SigurdLib</PackageId>
-        <Description>SigurdLib's client-sided api. Does not require everyone to have to use.</Description>
+        <Description>Sigurd, the Lethal Company Library.</Description>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
