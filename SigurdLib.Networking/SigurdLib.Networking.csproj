@@ -1,31 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-    <AssemblyName>com.sigurd.networking</AssemblyName>
-    <Product>Sigurd.Networking</Product>
-    <Description>Sigurd's networking solution. The host must have this, clients are optional.</Description>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <RootNamespace>Sigurd.Networking</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <MinVerTagPrefix>v</MinVerTagPrefix>
-  </PropertyGroup>
-
-   <!-- NuGet package metadata -->
-  <PropertyGroup>
+    <AssemblyName>com.sigurd.sigurd.networking</AssemblyName>
+    
+    <Id>SigurdLib.Networking</Id>
+    <Product>SigurdLib.Networking</Product>
+    
     <PackageId>SigurdLib.Networking</PackageId>
-    <Authors>Lordfirespeed,Steven4547466</Authors>
-    <Company>Sigurd Team</Company>
-    <PackageLicenseFile>../LICENSE</PackageLicenseFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <OutputPath>bin</OutputPath>
+    <Description>Sigurd's networking solution. The host must have this, clients are optional.</Description>
+    
+    <RootNamespace>Sigurd.Networking</RootNamespace>
   </PropertyGroup>
 
   <!-- prevent referenced assemblies from being copied to the output folder -->

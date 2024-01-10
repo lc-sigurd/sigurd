@@ -1,33 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-    <AssemblyName>com.sigurd.serverapi</AssemblyName>
-    <Product>Sigurd.ServerAPI</Product>
-    <Description>Sigurd's server-sided api. Everyone must have this for it to work properly.</Description>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <RootNamespace>Sigurd.ServerAPI</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <MinVerTagPrefix>v</MinVerTagPrefix>
-  </PropertyGroup>
-
-   <!-- NuGet package metadata -->
-  <PropertyGroup>
+    <AssemblyName>com.sigurd.sigurd.serverapi</AssemblyName>
+    
+    <Id>SigurdLib.ServerAPI</Id>
+    <Product>SigurdLib.ServerAPI</Product>
+    
     <PackageId>SigurdLib.ServerAPI</PackageId>
-    <Authors>Lordfirespeed,Steven4547466</Authors>
-    <Company>Sigurd Team</Company>
-    <PackageLicenseFile>../LICENSE</PackageLicenseFile>
+    <Description>Sigurd's server-sided api. Everyone must have this for it to work properly.</Description>
+    
+    <RootNamespace>Sigurd.ServerAPI</RootNamespace>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <OutputPath>bin</OutputPath>
-  </PropertyGroup>
-
+  
   <!-- prevent referenced assemblies from being copied to the output folder -->
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>

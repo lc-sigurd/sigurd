@@ -1,31 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-    <AssemblyName>com.sigurd.clientapi</AssemblyName>
-    <Product>Sigurd.ClientAPI</Product>
-    <Description>Sigurd's client-sided api. Does not require everyone to have to use.</Description>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <RootNamespace>Sigurd.ClientAPI</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <MinVerTagPrefix>v</MinVerTagPrefix>
-  </PropertyGroup>
+    <AssemblyName>com.sigurd.sigurd.clientapi</AssemblyName>
+    
+    <Id>SigurdLib.ClientAPI</Id>
+    <Product>SigurdLib.ClientAPI</Product>
 
-   <!-- NuGet package metadata -->
-  <PropertyGroup>
-    <PackageId>SigurdLib.ClientAPI</PackageId>
-    <Authors>Lordfirespeed,Steven4547466</Authors>
-    <Company>Sigurd Team</Company>
-    <PackageLicenseFile>../LICENSE</PackageLicenseFile>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <OutputPath>bin</OutputPath>
+    <PackageId>SigurdLib</PackageId>
+    <Description>Sigurd's client-sided api. Does not require everyone to have to use.</Description>
+
+    <RootNamespace>Sigurd.ClientAPI</RootNamespace>
   </PropertyGroup>
 
   <!-- prevent referenced assemblies from being copied to the output folder -->

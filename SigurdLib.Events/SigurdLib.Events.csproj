@@ -1,31 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-    <AssemblyName>com.sigurd.events</AssemblyName>
-    <Product>Sigurd.Events</Product>
-    <Description>Sigurd's events. Depends on Sigurd.ServerAPI.</Description>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <RootNamespace>Sigurd.Events</RootNamespace>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <MinVerTagPrefix>v</MinVerTagPrefix>
-  </PropertyGroup>
-
-   <!-- NuGet package metadata -->
-  <PropertyGroup>
+    <AssemblyName>com.sigurd.sigurd.events</AssemblyName>
+    
+    <Id>SigurdLib.Events</Id>
+    <Product>SigurdLib.Events</Product>
+    
     <PackageId>SigurdLib.Events</PackageId>
-    <Authors>Lordfirespeed,Steven4547466</Authors>
-    <Company>Sigurd Team</Company>
-    <PackageLicenseFile>../LICENSE</PackageLicenseFile>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <OutputPath>bin</OutputPath>
+    <Description>Sigurd's events. Depends on Sigurd.ServerAPI.</Description>
+
+    <RootNamespace>Sigurd.Events</RootNamespace>
   </PropertyGroup>
 
   <!-- prevent referenced assemblies from being copied to the output folder -->
