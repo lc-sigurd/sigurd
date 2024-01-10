@@ -54,8 +54,4 @@
   <ItemGroup Condition="$(CI) == 'true'">
     <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
   </ItemGroup>
-
-  <PropertyGroup Condition="$(CI) == 'true'">
-    <PACK_THUNDERSTORE>true</PACK_THUNDERSTORE>
-  </PropertyGroup>
 </Project>
