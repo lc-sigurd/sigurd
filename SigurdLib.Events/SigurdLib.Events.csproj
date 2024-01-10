@@ -7,7 +7,7 @@
         <Product>SigurdLib.Events</Product>
 
         <PackageId>SigurdLib.Events</PackageId>
-        <Description>Sigurd's events. Depends on Sigurd.ServerAPI.</Description>
+        <Description>Sigurd's events module. Depends on Sigurd.ServerAPI.</Description>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
