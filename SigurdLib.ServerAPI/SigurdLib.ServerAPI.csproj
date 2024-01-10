@@ -11,22 +11,23 @@
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
+        <RequiresNetcodePatch>true</RequiresNetcodePatch>
 
         <RootNamespace>Sigurd.ServerAPI</RootNamespace>
     </PropertyGroup>
 
+    <!-- Development dependencies -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
         <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all"/>
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all"/>
-        <PackageReference Include="MinVer" Version="4.3.0">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
     </ItemGroup>
 
+    <!-- Runtime assembly references -->
+    <ItemGroup>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>
+    </ItemGroup>
     <ItemGroup Condition="$(CI) != 'true'">
         <Reference Include="Assembly-CSharp" Publicize="true">
             <HintPath>$(LETHAL_COMPANY_DIR)\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
@@ -50,22 +51,7 @@
             <HintPath>$(LETHAL_COMPANY_DIR)\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
         </Reference>
     </ItemGroup>
-
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all"/>
     </ItemGroup>
-
-    <Target Name="NetcodeWeave" AfterTargets="PostBuildEvent">
-        <CallTarget Condition="$(OS) == 'Windows_NT'" Targets="NetcodeWeaveWindows"/>
-        <CallTarget Condition="$(OS) != 'Windows_NT'" Targets="NetcodeWeaveUnix"/>
-        <Message Importance="high" Text="Successfully weaved NetCode!"/>
-    </Target>
-
-    <Target Name="NetcodeWeaveWindows">
-        <Exec Command="cd $(NETCODE_PATCHER_DIR)&#xD;&#xA;NetcodePatcher.dll $(TargetDir) deps/"/>
-    </Target>
-
-    <Target Name="NetcodeWeaveUnix">
-        <Exec Command="cd $(NETCODE_PATCHER_DIR)&#xD;&#xA;dotnet NetcodePatcher.dll $(TargetDir) deps/"/>
-    </Target>
 </Project>
