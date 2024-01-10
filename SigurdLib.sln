@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigurdLib.ClientAPI", "Sigu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Networking", "SigurdLib.Networking\SigurdLib.Networking.csproj", "{A6E7678D-6739-4ABC-88A0-A703C4D251D1}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SigurdLib", "SigurdLib\SigurdLib.csproj", "{D408CF8F-8228-47A6-93A2-A19B33BE26D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
