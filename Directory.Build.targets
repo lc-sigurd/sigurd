@@ -24,7 +24,7 @@
     <Target
         Name="ThunderstorePack"
         AfterTargets="PostBuildEvent"
-        Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true'"
+        Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'"
         DependsOnTargets="NetcodePatch"
     >
         <PropertyGroup>
