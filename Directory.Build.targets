@@ -2,12 +2,12 @@
     <!-- prevent referenced assemblies from being copied to output folders -->
     <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
         <ItemGroup>
-            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
         </ItemGroup>
     </Target>
 
     <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
-        <Message Importance="high" Text="MinVer version is $(MinVerVersion)" />
+        <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
         <PropertyGroup>
             <BepInExPluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</BepInExPluginVersion>
         </PropertyGroup>
@@ -17,10 +17,10 @@
         <PropertyGroup>
             <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
         </PropertyGroup>
-        <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)" />
+        <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)"/>
         <ItemGroup>
-            <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip" />
+            <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
         </ItemGroup>
-        <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))" />
+        <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))"/>
     </Target>
 </Project>

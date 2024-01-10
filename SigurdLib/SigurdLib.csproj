@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-    <AssemblyName>com.sigurd.sigurd</AssemblyName>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
+        <AssemblyName>com.sigurd.sigurd</AssemblyName>
 
-    <Id>SigurdLib</Id>
-    <Product>SigurdLib</Product>
+        <Id>SigurdLib</Id>
+        <Product>SigurdLib</Product>
 
-    <PackageId>SigurdLib</PackageId>
-    <Description>SigurdLib's client-sided api. Does not require everyone to have to use.</Description>
+        <PackageId>SigurdLib</PackageId>
+        <Description>SigurdLib's client-sided api. Does not require everyone to have to use.</Description>
 
-    <IsPackable>true</IsPackable>
-    <IsThunderstorePackable>true</IsThunderstorePackable>
+        <IsPackable>true</IsPackable>
+        <IsThunderstorePackable>true</IsThunderstorePackable>
 
-    <RootNamespace>Sigurd</RootNamespace>
-  </PropertyGroup>
+        <RootNamespace>Sigurd</RootNamespace>
+    </PropertyGroup>
 </Project>
