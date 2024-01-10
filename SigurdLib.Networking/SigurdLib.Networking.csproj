@@ -9,6 +9,9 @@
     <PackageId>SigurdLib.Networking</PackageId>
     <Description>Sigurd's networking solution. The host must have this, clients are optional.</Description>
 
+    <IsPackable>true</IsPackable>
+    <IsThunderstorePackable>true</IsThunderstorePackable>
+
     <RootNamespace>Sigurd.Networking</RootNamespace>
   </PropertyGroup>
 
@@ -55,16 +58,4 @@
   <PropertyGroup Condition="$(CI) == 'true'">
     <PACK_THUNDERSTORE>true</PACK_THUNDERSTORE>
   </PropertyGroup>
-
-  <Target Name="PackThunderstore" AfterTargets="PostBuildEvent" Condition="$(PACK_THUNDERSTORE) == 'true' and $(TargetFramework) == 'netstandard2.1'">
-    <Message Importance="high" Text="MinVer version is $(MinVerVersion)" />
-    <PropertyGroup>
-      <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
-    </PropertyGroup>
-    <Exec Command="tcli build --config-path $(SolutionDir)assets/thunderstore.toml --package-version $(PlainVersion)" />
-    <ItemGroup>
-      <FilesToRename Include="$(SolutionDir)dist/*-$(PlainVersion).zip" />
-    </ItemGroup>
-    <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))" />
-  </Target>
 </Project>
