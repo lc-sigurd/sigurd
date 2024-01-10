@@ -34,8 +34,6 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="SigurdLib.props.user"/>
-    </ItemGroup>
+    
+    <Import Project="$(SolutionDir)SigurdLib.props.user"/>
 </Project>
