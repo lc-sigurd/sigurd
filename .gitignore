@@ -35,10 +35,10 @@
 ## Solution
 !SigurdLib.sln
 
-### Project files
-!SigurdLib.*
-SigurdLib.*/[Bb]in/
-SigurdLib.*/[Oo]bj/
+### SigurdLib Projects
+!/SigurdLib*
+/SigurdLib*/[Bb]in
+/SigurdLib*/[Oo]bj
 
 # Explicit exceptions/ignores
 **.user
