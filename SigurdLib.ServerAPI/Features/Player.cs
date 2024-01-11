@@ -744,12 +744,7 @@ namespace Sigurd.ServerAPI.Features
         /// <returns>A <see cref="Player"/> or <see langword="null"/> if not found.</returns>
         public static Player Get(ulong clientId)
         {
-            foreach (Player player in List)
-            {
-                if (player.ClientId == clientId) return player;
-            }
-
-            return null;
+            return List.FirstOrDefault(p => p.ClientId == clientId);
         }
 
         /// <summary>
@@ -764,7 +759,7 @@ namespace Sigurd.ServerAPI.Features
         }
         #endregion
 
-        #region Event stuff
+        #region Event replication
         internal void CallHurtingOnOtherClients(int damage, bool hasSFX, CauseOfDeath causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
