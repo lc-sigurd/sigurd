@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-        <AssemblyName>com.sigurd.sigurd.clientapi</AssemblyName>
+        <AssemblyName>com.sigurd.sigurd.events</AssemblyName>
 
-        <Id>SigurdLib.ClientAPI</Id>
-        <Product>SigurdLib.ClientAPI</Product>
+        <Id>SigurdLib.Events</Id>
+        <Product>SigurdLib.Events</Product>
 
-        <PackageId>SigurdLib</PackageId>
-        <Description>Sigurd's client-sided api. Does not require everyone to have to use.</Description>
+        <PackageId>SigurdLib.Events</PackageId>
+        <Description>Sigurd's events module. Depends on Sigurd.ServerAPI.</Description>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
 
-        <RootNamespace>Sigurd.ClientAPI</RootNamespace>
+        <RootNamespace>Sigurd.Events</RootNamespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
       <NoWarn>1701;1702;8625;8603;8618;8600</NoWarn>
@@ -64,8 +64,5 @@
     </ItemGroup>
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\SigurdLib.Common\SigurdLib.Common.csproj" />
     </ItemGroup>
 </Project>
