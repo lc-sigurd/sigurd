@@ -365,25 +365,7 @@ namespace Sigurd.Networking
 
         internal static void Init()
         {
-            SetupNetworking();
-
             RegisterAll();
-        }
-
-        internal static void SetupNetworking()
-        {
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (var method in methods)
-                {
-                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        method.Invoke(null, null);
-                    }
-                }
-            }
         }
     }
 
