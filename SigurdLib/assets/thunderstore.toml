@@ -23,7 +23,7 @@ source = "bundles"
 target = "BepInEx/plugins/Sigurd/bundles"
 
 [[build.copy]]
-source = "../bin/Release/netstandard2.1/com.sigurd.sigurd.clientapi.dll"
+source = "../bin/Release/netstandard2.1/com.sigurd.sigurd.dll"
 target = "BepInEx/plugins/Sigurd/"
 
 [[build.copy]]
