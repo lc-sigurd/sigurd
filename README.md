@@ -15,8 +15,8 @@ placed into the repository root:
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <LethalCompanyDir>/home/joeclack/.steam/debian-installation/steamapps/common/Lethal Company/</LethalCompanyDir>
-        <TestProfileDir>/home/joeclack/.config/r2modmanPlus-local/LethalCompany/profiles/Test Sigurd/</TestProfileDir>
+        <LethalCompanyDir>C:/Program Files (x86)/Steam/steamapps/common/Lethal Company/</LethalCompanyDir>
+        <TestProfileDir>$(APPDATA)/r2modmanPlus-local/LethalCompany/profiles/Test Sigurd/</TestProfileDir>
     </PropertyGroup>
 
     <!-- Enable by setting the Condition attribute to "true". *nix users should switch out `copy` for `cp`. -->
