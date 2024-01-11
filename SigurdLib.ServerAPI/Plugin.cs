@@ -2,6 +2,8 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
+using System.Reflection;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Sigurd.ServerAPI
@@ -10,7 +12,6 @@ namespace Sigurd.ServerAPI
     /// The main Plugin class.
     /// </summary>
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    [BepInDependency(Common.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
     public sealed class Plugin : BaseUnityPlugin
     {
         internal static Plugin Instance { get; private set; }
@@ -31,6 +32,8 @@ namespace Sigurd.ServerAPI
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
+
+            InitializeNetworking();
         }
 
         // For pre-placed items
@@ -41,6 +44,22 @@ namespace Sigurd.ServerAPI
                 if (!grabbable.TryGetComponent(out Features.Item _))
                 {
                     grabbable.gameObject.AddComponent<Features.Item>();
+                }
+            }
+        }
+
+        internal void InitializeNetworking()
+        {
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                foreach (var method in methods)
+                {
+                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                    if (attributes.Length > 0)
+                    {
+                        method.Invoke(null, null);
+                    }
                 }
             }
         }
