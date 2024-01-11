@@ -6,8 +6,8 @@ repository = "https://thunderstore.io"
 
 [package]
 namespace = "Sigurd"
-name = "Sigurd_ClientAPI"
-description = "Sigurd's client-sided api"
+name = "Sigurd"
+description = "Sigurd, the Lethal Company Library"
 websiteUrl = "https://github.com/lc-sigurd/Sigurd"
 containsNsfwContent = false
 [package.dependencies]
