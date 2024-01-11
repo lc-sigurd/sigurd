@@ -1,19 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
-        <AssemblyName>com.sigurd.sigurd.serverapi</AssemblyName>
+        <AssemblyName>com.sigurd.sigurd.common</AssemblyName>
 
-        <Id>SigurdLib.ServerAPI</Id>
-        <Product>SigurdLib.ServerAPI</Product>
+        <Id>SigurdLib.Common</Id>
+        <Product>SigurdLib.Common</Product>
 
-        <PackageId>SigurdLib.ServerAPI</PackageId>
-        <Description>Sigurd's server-sided api. Everyone must have this for it to work properly.</Description>
+        <PackageId>SigurdLib</PackageId>
+        <Description>Sigurd's common utilities. Will never contain vanilla-breaking components.</Description>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
-        <RequiresNetcodePatch>true</RequiresNetcodePatch>
 
-        <RootNamespace>Sigurd.ServerAPI</RootNamespace>
+        <RootNamespace>Sigurd.Common</RootNamespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
       <NoWarn>1701;1702;8625;8603;8618</NoWarn>
@@ -65,11 +64,5 @@
     </ItemGroup>
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\SigurdLib.Common\SigurdLib.Common.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Events\" />
     </ItemGroup>
 </Project>
