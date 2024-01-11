@@ -519,7 +519,7 @@ namespace Sigurd.ServerAPI.Features
             if (Dictionary.TryGetValue(grabbableObject, out Item item))
                 return item;
 
-            return grabbableObject.gameObject.AddComponent<Item>(); ;
+            return grabbableObject.gameObject.AddComponent<Item>();
         }
 
         public static Item Get(GrabbableObject grabbableObject)
