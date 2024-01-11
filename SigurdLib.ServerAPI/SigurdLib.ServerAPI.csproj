@@ -59,7 +59,4 @@
     <ItemGroup>
       <ProjectReference Include="..\SigurdLib.Common\SigurdLib.Common.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Events\" />
-    </ItemGroup>
 </Project>

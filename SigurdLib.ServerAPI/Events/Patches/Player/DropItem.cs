@@ -1,6 +1,7 @@
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Unity.Netcode;
@@ -9,9 +10,9 @@ using UnityEngine;
 namespace Sigurd.ServerAPI.Events.Patches.Player
 {
     [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.DiscardHeldObject))]
-    internal class DroppingItem
+    internal class DropItem
     {
-        internal static DroppingItemEventArgs CallEvent(PlayerControllerB playerController, bool placeObject, Vector3 targetPosition,
+        internal static DroppingItemEventArgs CallDroppingItemEvent(PlayerControllerB playerController, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             Features.Player player = Features.Player.GetOrAdd(playerController);
@@ -27,6 +28,20 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
             return ev;
         }
 
+        internal static void CallDroppedItemEvent(PlayerControllerB playerController, GrabbableObject grabbable, bool placeObject, Vector3 targetPosition,
+            int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
+        {
+            Features.Player player = Features.Player.GetOrAdd(playerController);
+
+            Features.Item item = Features.Item.GetOrAdd(grabbable);
+
+            DroppedItemEventArgs ev = new DroppedItemEventArgs(player, item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
+
+            Handlers.Player.OnDroppedItem(ev);
+
+            player.CallDroppedItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
+        }
+
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> newInstructions = new List<CodeInstruction>(instructions);
@@ -39,6 +54,8 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             LocalBuilder isInShipLocal = generator.DeclareLocal(typeof(bool));
 
+            LocalBuilder grabbableObjectLocal = generator.DeclareLocal(typeof(GrabbableObject));
+
             {
                 const int offset = 1;
 
@@ -50,9 +67,14 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
                 CodeInstruction[] inst = new CodeInstruction[]
                 {
-                    // DroppingItemEventArgs ev = DroppingItem.CallEvent(PlayerControllerB, bool, Vector3, 
-                    //  int, NetworkObject, bool, bool)
+                    // grabbableObjectLocal = this.currentlyHeldObjectServer
                     new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PlayerControllerB), nameof(PlayerControllerB.currentlyHeldObjectServer))),
+                    new CodeInstruction(OpCodes.Stloc, grabbableObjectLocal.LocalIndex),
+
+                    // DroppingItemEventArgs ev = DropItem.CallDroppingItemEvent(PlayerControllerB, bool, Vector3, 
+                    //  int, NetworkObject, bool, bool)
+                    new CodeInstruction(OpCodes.Ldarg_0),
                     new CodeInstruction(OpCodes.Ldarg_1),
                     new CodeInstruction(OpCodes.Ldarg_3),
                     new CodeInstruction(OpCodes.Ldloc_0),
@@ -60,7 +82,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                     new CodeInstruction(OpCodes.Ldarg, 4),
                     new CodeInstruction(OpCodes.Ldarg_0),
                     new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PlayerControllerB), nameof(PlayerControllerB.isInHangarShipRoom))),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DroppingItem), nameof(DroppingItem.CallEvent))),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DropItem), nameof(DropItem.CallDroppingItemEvent))),
 
                     // if (ev is null) -> base game code
                     new CodeInstruction(OpCodes.Dup),
@@ -135,16 +157,21 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
                 CodeInstruction[] inst = new CodeInstruction[]
                 {
-                    // DroppingItemEventArgs ev = DroppingItem.CallEvent(PlayerControllerB, bool, Vector3, 
-                    //  int, NetworkObject, bool, bool)
+                    // grabbableObjectLocal = this.currentlyHeldObjectServer
                     new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PlayerControllerB), nameof(PlayerControllerB.currentlyHeldObjectServer))),
+                    new CodeInstruction(OpCodes.Stloc, grabbableObjectLocal.LocalIndex),
+
+                    // DroppingItemEventArgs ev = DropItem.CallDroppingItemEvent(PlayerControllerB, bool, Vector3, 
+                    //  int, NetworkObject, bool, bool)
+                    new CodeInstruction(OpCodes.Ldarg_0),
                     new CodeInstruction(OpCodes.Ldarg_1),
                     new CodeInstruction(OpCodes.Ldarg_3),
                     new CodeInstruction(OpCodes.Ldloc_0),
                     new CodeInstruction(OpCodes.Ldarg_2),
                     new CodeInstruction(OpCodes.Ldarg, 4),
                     new CodeInstruction(OpCodes.Ldloc_2),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DroppingItem), nameof(DroppingItem.CallEvent))),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DropItem), nameof(DropItem.CallDroppingItemEvent))),
 
                     new CodeInstruction(OpCodes.Dup),
 
@@ -201,6 +228,30 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                     new CodeInstruction(OpCodes.Ldloc, isInShipLocal.LocalIndex),
                     new CodeInstruction(OpCodes.Ldloc, isInShipLocal.LocalIndex)
                 });
+            }
+
+            {
+                for (int i = newInstructions.Count - 1; i >= 0; i--)
+                {
+                    if (newInstructions[i].OperandIs(AccessTools.Method(typeof(PlayerControllerB), nameof(PlayerControllerB.ThrowObjectServerRpc))) ||
+                        newInstructions[i].OperandIs(AccessTools.Method(typeof(PlayerControllerB), nameof(PlayerControllerB.PlaceObjectServerRpc))))
+                    {
+                        newInstructions.InsertRange(i + 1, new CodeInstruction[]
+                        {
+                            // DropItem.CallDroppedItemEvent(PlayerControllerB, GrabbableObject bool, Vector3, 
+                            //  int, NetworkObject, bool, bool)
+                            new CodeInstruction(OpCodes.Ldarg_0),
+                            new CodeInstruction(OpCodes.Ldloc, grabbableObjectLocal.LocalIndex),
+                            new CodeInstruction(OpCodes.Ldarg_1),
+                            new CodeInstruction(OpCodes.Ldarg_3),
+                            new CodeInstruction(OpCodes.Ldloc_0),
+                            new CodeInstruction(OpCodes.Ldarg_2),
+                            new CodeInstruction(OpCodes.Ldarg, 4),
+                            new CodeInstruction(OpCodes.Ldloc, isInShipLocal.LocalIndex),
+                            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DropItem), nameof(DropItem.CallDroppedItemEvent))),
+                        });
+                    }
+                }
             }
 
             for (int i = 0; i < newInstructions.Count; i++) yield return newInstructions[i];

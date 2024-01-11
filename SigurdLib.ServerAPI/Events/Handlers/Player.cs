@@ -59,6 +59,11 @@ namespace Sigurd.ServerAPI.Events.Handlers
         public static event CustomEventHandler<DroppingItemEventArgs> DroppingItem;
 
         /// <summary>
+        /// Invoked after a <see cref="Features.Player"/> drops an <see cref="Item"/>.
+        /// </summary>
+        public static event CustomEventHandler<DroppedItemEventArgs> DroppedItem;
+
+        /// <summary>
         /// Called after a <see cref="Features.Player"/> joined the server, including the host.
         /// </summary>
         /// <param name="ev">The <see cref="JoinedEventArgs"/> event arguments.</param>
@@ -117,5 +122,11 @@ namespace Sigurd.ServerAPI.Events.Handlers
         /// </summary>
         /// <param name="ev">The <see cref="DroppingItemEventArgs"/> event arguments.</param>
         public static void OnDroppingItem(DroppingItemEventArgs ev) => DroppingItem.InvokeSafely(ev);
+
+        /// <summary>
+        /// Called after a <see cref="Features.Player"/> drops an <see cref="Item"/>.
+        /// </summary>
+        /// <param name="ev">The <see cref="DroppedItemEventArgs"/> event arguments.</param>
+        public static void OnDroppedItem(DroppedItemEventArgs ev) => DroppedItem.InvokeSafely(ev);
     }
 }

@@ -33,7 +33,7 @@ namespace Sigurd.ServerAPI.Features.Patches
 
             foreach (NetworkPrefab prefab in networkManager.NetworkConfig.Prefabs.Prefabs)
             {
-                if (prefab.Prefab.GetComponent<GrabbableObject>() != null)
+                if (prefab.Prefab != null && prefab.Prefab.GetComponent<GrabbableObject>() != null)
                 {
                     prefab.Prefab.AddComponent<Item>();
                 }

@@ -836,6 +836,33 @@ namespace Sigurd.ServerAPI.Features
             Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(this, Item.Get(itemNetworkId), placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
 #pragma warning restore
         }
+
+        internal void CallDroppedItemOnOtherClients(Item item, bool placeObject, Vector3 targetPosition,
+            int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
+        {
+            CallDroppedItemOnOtherClientsServerRpc(item.NetworkObjectId, placeObject, targetPosition, floorYRotation, parentObjectTo != null, parentObjectTo != null ? parentObjectTo.NetworkObjectId : 0, matchRotationOfParent, droppedInShip);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void CallDroppedItemOnOtherClientsServerRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
+            int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip,
+            ServerRpcParams serverRpcParams = default)
+        {
+            if (serverRpcParams.Receive.SenderClientId != ClientId) return;
+
+            CallDroppedItemOnOtherClientsClientRpc(itemNetworkId, placeObject, targetPosition, floorYRotation, hasParent, parentObjectToId, matchRotationOfParent, droppedInShip);
+        }
+
+        [ClientRpc]
+        private void CallDroppedItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
+            int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
+        {
+            if (IsLocalPlayer) return;
+
+#pragma warning disable CS8604 // Possible null reference argument for parameter.
+            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(this, Item.Get(itemNetworkId), placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+#pragma warning restore
+        }
         #endregion
 
         /// <summary>
