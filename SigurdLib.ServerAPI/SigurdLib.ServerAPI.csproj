@@ -19,7 +19,7 @@
     <!-- Dependencies for thunderstore.toml -->
     <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetPluginVersion" BeforeTargets="PatchThunderstoreMetadata">
         <ItemGroup>
-            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" Reference="false" />
         </ItemGroup>
     </Target>
 
