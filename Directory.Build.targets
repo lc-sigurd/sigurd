@@ -22,14 +22,14 @@
             <GeneratedText><![CDATA[
 namespace $(RootNamespace)
 {
-#pragma warning disable
+#pragma warning disable 1591
     public static class MyPluginInfo
     {
         public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
         public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
         public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
     }
-#pragma warning restore
+#pragma warning restore 1591
 }
       ]]></GeneratedText>
             <GeneratedFilePath>$(IntermediateOutputPath)MyPluginInfo.cs</GeneratedFilePath>
