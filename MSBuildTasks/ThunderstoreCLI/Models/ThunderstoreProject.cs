@@ -50,7 +50,7 @@ public class ThunderstoreProject : BaseToml<ThunderstoreProject>
         [TomlProperty("name")]
         public string Name { get; set; } = "PackageName";
         [TomlProperty("versionNumber")]
-        public string VersionNumber { get; set; } = "0.0.1";
+        public string? VersionNumber { get; set; }
         [TomlProperty("description")]
         public string Description { get; set; } = "Example mod description";
         [TomlProperty("websiteUrl")]
