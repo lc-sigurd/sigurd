@@ -13,9 +13,6 @@
         <IsThunderstorePackable>true</IsThunderstorePackable>
 
         <RootNamespace>Sigurd.Common</RootNamespace>
-
-        <Nullable>disable</Nullable>
-        <NoWarn>1701;1702;8625;8603;8618;8600</NoWarn>
     </PropertyGroup>
 
     <!-- Development dependencies -->
