@@ -59,7 +59,8 @@
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
     </ItemGroup>
+
     <ItemGroup>
-      <ProjectReference Include="..\SigurdLib.Common\SigurdLib.Common.csproj" />
+      <ProjectReference Include="$(ProjectDir)../SigurdLib.Common/SigurdLib.Common.csproj" />
     </ItemGroup>
 </Project>
