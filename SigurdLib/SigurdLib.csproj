@@ -14,4 +14,25 @@
 
         <RootNamespace>Sigurd</RootNamespace>
     </PropertyGroup>
+
+    <!-- Dependencies for thunderstore.toml -->
+    <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetPluginVersion" BeforeTargets="PatchThunderstoreMetadata">
+        <ItemGroup>
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_ClientAPI" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_ServerAPI" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Networking" Version="$(PlainVersion)" Reference="false" />
+        </ItemGroup>
+    </Target>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" PrivateAssets="all"/>
+    </ItemGroup>
+
+    <!-- Runtime assembly references -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
+    </ItemGroup>
 </Project>
