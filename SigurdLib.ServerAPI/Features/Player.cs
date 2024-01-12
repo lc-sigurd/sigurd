@@ -832,7 +832,7 @@ namespace Sigurd.ServerAPI.Features
         {
             if (IsLocalPlayer) return;
 
-            Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(this, Item.Get(itemNetworkId), placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+            Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(this, Item.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
 
         internal void CallDroppedItemOnOtherClients(Item item, bool placeObject, Vector3 targetPosition,
@@ -857,7 +857,7 @@ namespace Sigurd.ServerAPI.Features
         {
             if (IsLocalPlayer) return;
 
-            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(this, Item.Get(itemNetworkId), placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(this, Item.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
         #endregion
 

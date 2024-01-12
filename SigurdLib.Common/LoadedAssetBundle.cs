@@ -9,7 +9,7 @@ namespace Sigurd.Common
     {
         private Dictionary<string, UnityEngine.Object> _loadedAssets;
 
-        public LoadedAssetBundle(Dictionary<string, UnityEngine.Object> loadedAssets)
+        internal LoadedAssetBundle(Dictionary<string, UnityEngine.Object> loadedAssets)
         {
             _loadedAssets = loadedAssets;
         }
