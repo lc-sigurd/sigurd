@@ -2,6 +2,7 @@
     <!-- compiler/msbuild switches -->
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
