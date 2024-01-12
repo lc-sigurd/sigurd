@@ -43,5 +43,13 @@
         </PackageReference>
     </ItemGroup>
 
+    <!-- Release optimisations -->
+    <PropertyGroup Condition="$(Configuration) == 'Release'">
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
     <Import Project="$(SolutionDir)SigurdLib.props.user" Condition="$(CI) != 'true'"/>
 </Project>
