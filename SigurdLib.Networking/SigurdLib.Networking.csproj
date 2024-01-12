@@ -14,7 +14,6 @@
 
         <RootNamespace>Sigurd.Networking</RootNamespace>
 
-        <Nullable>disable</Nullable>
         <NoWarn>1701;1702;8625;8603;8618;8600</NoWarn>
     </PropertyGroup>
     

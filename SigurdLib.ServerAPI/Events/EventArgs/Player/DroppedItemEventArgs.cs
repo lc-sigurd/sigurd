@@ -18,14 +18,14 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
 
         public int FloorYRotation { get; }
 
-        public NetworkObject ParentObjectTo { get; }
+        public NetworkObject? ParentObjectTo { get; }
 
         public bool MatchRotationOfParent { get; }
 
         public bool DroppedInShip { get; }
 
         public DroppedItemEventArgs(Features.Player player, Features.Item item, bool placeObject, Vector3 targetPosition,
-            int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
+            int floorYRotation, NetworkObject? parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             Player = player;
             Item = item;
