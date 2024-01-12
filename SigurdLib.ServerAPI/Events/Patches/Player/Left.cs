@@ -14,7 +14,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                 Cache.Player.ConnectedPlayers.Contains(player.actualClientId))
             {
                 Cache.Player.ConnectedPlayers.Remove(player.actualClientId);
-                Handlers.Player.OnLeft(new LeftEventArgs(Features.Player.GetOrAdd(player)));
+                Handlers.Player.OnLeft(new LeftEventArgs(Common.Features.Player.GetOrAdd(player)));
             }
         }
     }
@@ -25,7 +25,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static void Prefix(StartOfRound __instance)
         {
             PlayerControllerB player = __instance.localPlayerController;
-            Handlers.Player.OnLeft(new LeftEventArgs(Features.Player.GetOrAdd(player)));
+            Handlers.Player.OnLeft(new LeftEventArgs(Common.Features.Player.GetOrAdd(player)));
             Cache.Player.ConnectedPlayers.Clear();
 
             foreach (PlayerControllerB playerController in StartOfRound.Instance.allPlayerScripts)
@@ -34,7 +34,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                 playerController.isPlayerControlled = false;
             }
 
-            Features.Player.Dictionary.Clear();
+            Features.PlayerNetworking.Dictionary.Clear();
         }
     }
 }

@@ -1,5 +1,5 @@
 using HarmonyLib;
-using Sigurd.Common;
+using Sigurd.Common.Features;
 using System;
 using System.IO;
 using Unity.Netcode;
@@ -29,13 +29,13 @@ namespace Sigurd.ServerAPI.Features.Patches
             playerObj.AddComponent<Player>();
             playerObj.AddComponent<Player.PlayerInventory>();
             networkManager.AddNetworkPrefab(playerObj);
-            Player.PlayerNetworkPrefab = playerObj;
+            PlayerNetworking.PlayerNetworkPrefab = playerObj;
 
             foreach (NetworkPrefab prefab in networkManager.NetworkConfig.Prefabs.Prefabs)
             {
                 if (prefab.Prefab != null && prefab.Prefab.GetComponent<GrabbableObject>() != null)
                 {
-                    prefab.Prefab.AddComponent<Item>();
+                    prefab.Prefab.AddComponent<ItemNetworking>();
                 }
             }
         }

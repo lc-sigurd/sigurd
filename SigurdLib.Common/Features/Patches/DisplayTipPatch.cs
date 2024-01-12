@@ -1,6 +1,6 @@
 using HarmonyLib;
 
-namespace Sigurd.ServerAPI.Features.Patches
+namespace Sigurd.Common.Features.Patches
 {
     [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.DisplayTip))]
     class DisplayTipPatch

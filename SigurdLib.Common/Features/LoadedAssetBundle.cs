@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Sigurd.Common
+namespace Sigurd.Common.Features
 {
     /// <summary>
     /// A loaded asset bundle.

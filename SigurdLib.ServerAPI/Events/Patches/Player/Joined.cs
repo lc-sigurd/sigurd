@@ -1,6 +1,7 @@
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using Sigurd.ServerAPI.Features;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,7 +16,6 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
             if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
             {
                 PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
-                Features.Player.GetOrAdd(playerController).NetworkClientId.Value = clientId;
             }
         }
 
@@ -36,18 +36,18 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         {
             yield return new WaitUntil(() => StartOfRound.Instance.localPlayerController != null);
 
-            Features.Player player = Features.Player.GetOrAdd(controller);
+            Common.Features.Player player = Common.Features.Player.GetOrAdd(controller);
 
             while (player == null)
             {
                 yield return new WaitForSeconds(0.1f);
 
-                player = Features.Player.GetOrAdd(controller);
+                player = Common.Features.Player.GetOrAdd(controller);
             }
 
             if (player.IsLocalPlayer)
             {
-                Features.Player.LocalPlayer = player;
+                Common.Features.Player.LocalPlayer = player;
             }
 
             Handlers.Player.OnJoined(new JoinedEventArgs(player));
@@ -59,11 +59,6 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
     {
         private static void Postfix(PlayerControllerB __instance)
         {
-            if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-            {
-                Features.Player.GetOrAdd(__instance).NetworkClientId.Value = __instance.actualClientId;
-            }
-
             if (!Cache.Player.ConnectedPlayers.Contains(__instance.actualClientId))
             {
                 Cache.Player.ConnectedPlayers.Add(__instance.actualClientId);

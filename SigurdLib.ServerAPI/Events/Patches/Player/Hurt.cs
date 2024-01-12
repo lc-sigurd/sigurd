@@ -1,6 +1,7 @@
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using Sigurd.ServerAPI.Features;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;
@@ -13,14 +14,14 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static HurtingEventArgs CallHurtingEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Features.Player player = Features.Player.GetOrAdd(playerController);
+            Common.Features.Player player = Common.Features.Player.GetOrAdd(playerController);
 
             HurtingEventArgs ev = new HurtingEventArgs(player, damage, hasSFX,
                 causeOfDeath, deathAnimation, fallDamage, force);
 
             Handlers.Player.OnHurting(ev);
 
-            player.CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+            ((PlayerNetworking)player).CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
 
             return ev;
         }
@@ -28,14 +29,14 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static HurtEventArgs CallHurtEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Features.Player player = Features.Player.GetOrAdd(playerController);
+            Common.Features.Player player = Common.Features.Player.GetOrAdd(playerController);
 
             HurtEventArgs ev = new HurtEventArgs(player, damage, hasSFX,
                 causeOfDeath, deathAnimation, fallDamage, force);
 
             Handlers.Player.OnHurt(ev);
 
-            player.CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+            ((PlayerNetworking)player).CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
 
             return ev;
         }

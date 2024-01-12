@@ -13,8 +13,8 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
     {
         internal static StartGrabbingItemEventArgs CallStartGrabbingItem(PlayerControllerB playerController, GrabbableObject grabbableObject)
         {
-            StartGrabbingItemEventArgs ev = new StartGrabbingItemEventArgs(Features.Player.GetOrAdd(playerController),
-                Features.Item.GetOrAdd(grabbableObject));
+            StartGrabbingItemEventArgs ev = new StartGrabbingItemEventArgs(Common.Features.Player.GetOrAdd(playerController),
+                Common.Features.Item.Get(grabbableObject)!);
 
             Handlers.Player.OnStartGrabbingItem(ev);
 
@@ -23,8 +23,8 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
         internal static GrabbingItemEventArgs CallGrabbingItem(PlayerControllerB playerController, GrabbableObject grabbableObject)
         {
-            GrabbingItemEventArgs ev = new GrabbingItemEventArgs(Features.Player.GetOrAdd(playerController),
-                Features.Item.GetOrAdd(grabbableObject));
+            GrabbingItemEventArgs ev = new GrabbingItemEventArgs(Common.Features.Player.GetOrAdd(playerController),
+                Common.Features.Item.Get(grabbableObject)!);
 
             Handlers.Player.OnGrabbingItem(ev);
 
@@ -104,8 +104,8 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
     {
         internal static void CallEvent(PlayerControllerB player)
         {
-            Handlers.Player.OnGrabbedItem(new GrabbedItemEventArgs(Features.Player.GetOrAdd(player),
-                Features.Item.GetOrAdd(player.currentlyHeldObjectServer)));
+            Handlers.Player.OnGrabbedItem(new GrabbedItemEventArgs(Common.Features.Player.GetOrAdd(player),
+                Common.Features.Item.Get(player.currentlyHeldObjectServer)));
         }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

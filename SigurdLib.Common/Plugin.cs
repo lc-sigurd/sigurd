@@ -1,13 +1,12 @@
-using BepInEx;
 using BepInEx.Logging;
+using BepInEx;
 using HarmonyLib;
-using Sigurd.ServerAPI.Features;
 using System;
-using System.Reflection;
-using UnityEngine;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine.SceneManagement;
 
-namespace Sigurd.ServerAPI
+namespace Sigurd.Common
 {
     /// <summary>
     /// The main Plugin class.
@@ -27,14 +26,12 @@ namespace Sigurd.ServerAPI
 
             Log = Logger;
 
+            SceneManager.sceneLoaded += OnSceneLoaded;
+
             Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
             Harmony.PatchAll();
 
-            SceneManager.sceneLoaded += OnSceneLoaded;
-
             Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
-
-            InitializeNetworking();
         }
 
         // For pre-placed items
@@ -42,25 +39,9 @@ namespace Sigurd.ServerAPI
         {
             foreach (GrabbableObject grabbable in FindObjectsOfType<GrabbableObject>())
             {
-                if (!grabbable.TryGetComponent(out ItemNetworking _))
+                if (!grabbable.TryGetComponent(out Features.Item _))
                 {
-                    grabbable.gameObject.AddComponent<ItemNetworking>();
-                }
-            }
-        }
-
-        internal void InitializeNetworking()
-        {
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (var method in methods)
-                {
-                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        method.Invoke(null, null);
-                    }
+                    grabbable.gameObject.AddComponent<Features.Item>();
                 }
             }
         }

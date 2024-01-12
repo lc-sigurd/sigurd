@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sigurd.Common
+namespace Sigurd.Common.Features
 {
     /// <summary>
     /// Provides a helper method to load asset bundles.
@@ -21,7 +21,7 @@ namespace Sigurd.Common
             if (loadedAssetBundles.TryGetValue(filePath, out LoadedAssetBundle _assets))
                 return _assets;
 
-            Dictionary<string, UnityEngine.Object> assetPairs = new Dictionary<string, UnityEngine.Object>();
+            Dictionary<string, Object> assetPairs = new Dictionary<string, Object>();
 
             AssetBundle bundle = AssetBundle.LoadFromFile(filePath);
             try
@@ -30,7 +30,7 @@ namespace Sigurd.Common
 
                 foreach (string assetPath in assetPaths)
                 {
-                    UnityEngine.Object loadedAsset = bundle.LoadAsset(assetPath);
+                    Object loadedAsset = bundle.LoadAsset(assetPath);
                     if (loadedAsset == null)
                     {
                         continue;

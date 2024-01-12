@@ -3,14 +3,14 @@
 namespace Sigurd.ServerAPI.Events.EventArgs.Player
 {
     /// <summary>
-    /// Contains all the information before a <see cref="Features.Player"/> is hurt.
+    /// Contains all the information before a <see cref="Common.Features.Player"/> is hurt.
     /// </summary>
     public class HurtingEventArgs : System.EventArgs
     {
         /// <summary>
         /// Gets the player that is taking damage.
         /// </summary>
-        public Features.Player Player { get; }
+        public Common.Features.Player Player { get; }
 
         /// <summary>
         /// Gets or sets the amount of damage the <see cref="Player"/> will take.
@@ -57,7 +57,7 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// <param name="deathAnimation"><inheritdoc cref="DeathAnimation" /></param>
         /// <param name="fallDamage"><inheritdoc cref="FallDamage" /></param>
         /// <param name="force"><inheritdoc cref="Force" /></param>
-        public HurtingEventArgs(Features.Player player, int damage, bool hasSFX, CauseOfDeath causeOfDeath, int deathAnimation,
+        public HurtingEventArgs(Common.Features.Player player, int damage, bool hasSFX, CauseOfDeath causeOfDeath, int deathAnimation,
             bool fallDamage, Vector3 force)
         {
             Player = player;

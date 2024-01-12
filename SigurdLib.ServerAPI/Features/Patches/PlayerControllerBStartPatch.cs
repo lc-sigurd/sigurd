@@ -10,11 +10,10 @@ namespace Sigurd.ServerAPI.Features.Patches
     {
         private static void Postfix(PlayerControllerB __instance)
         {
-            if (__instance.IsServer && !Player.TryGet(__instance, out Player _))
+            if (__instance.IsServer && !PlayerNetworking.TryGet(__instance, out PlayerNetworking _))
             {
-                GameObject go = UnityEngine.Object.Instantiate(Features.Player.PlayerNetworkPrefab);
+                GameObject go = UnityEngine.Object.Instantiate(PlayerNetworking.PlayerNetworkPrefab);
                 go.SetActive(true);
-                go.GetComponent<Player>().PlayerController = __instance;
                 go.GetComponent<NetworkObject>().Spawn(false);
             }
         }

@@ -1,20 +1,19 @@
-using Sigurd.ServerAPI.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Sigurd.ServerAPI.Features
+namespace Sigurd.Common.Features
 {
     /// <summary>
     /// Encapsulates a <see cref="global::GrabbableObject"/> for easier interacting.
     /// </summary>
-    public class Item : NetworkBehaviour
+    public class Item : MonoBehaviour
     {
-        internal static GameObject ItemNetworkPrefab { get; set; }
-
         /// <summary>
-        /// Gets a dictionary containing all <see cref="Item"/>s that are currently spawned in the world or in <see cref="Player"/>s' inventories.
+        /// Gets a dictionary containing all <see cref="Item"/>s that are currently spawned in the world or in <see cref="Common.Features.Player"/>s' inventories.
         /// </summary>
         public static Dictionary<GrabbableObject, Item> Dictionary { get; } = new Dictionary<GrabbableObject, Item>();
 
@@ -58,7 +57,6 @@ namespace Sigurd.ServerAPI.Features
         /// <summary>
         /// Gets or sets the <see cref="Item"/>'s name.
         /// </summary>
-        /// <exception cref="NoAuthorityException">Thrown when attempting to set item name from the client.</exception>
         public string Name
         {
             get
@@ -67,11 +65,6 @@ namespace Sigurd.ServerAPI.Features
             }
             set
             {
-                if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-                {
-                    throw new NoAuthorityException("Tried to set item name on client.");
-                }
-
                 string current = ItemProperties.itemName.ToLower();
 
                 CloneProperties();
@@ -80,22 +73,7 @@ namespace Sigurd.ServerAPI.Features
                 OverrideTooltips(current, value.ToLower());
 
                 ScanNodeProperties.headerText = value;
-
-                SetGrabbableNameClientRpc(value);
             }
-        }
-
-        [ClientRpc]
-        private void SetGrabbableNameClientRpc(string name)
-        {
-            string current = ItemProperties.itemName.ToLower();
-
-            CloneProperties();
-
-            ItemProperties.itemName = name;
-            OverrideTooltips(current, name.ToLower());
-
-            ScanNodeProperties.headerText = name;
         }
 
         private void OverrideTooltips(string oldName, string newName)
@@ -111,7 +89,6 @@ namespace Sigurd.ServerAPI.Features
         /// <summary>
         /// Gets or sets the position of this <see cref="Item"/>.
         /// </summary>
-        /// <exception cref="NoAuthorityException">Thrown when attempting to set the item's position from the client.</exception>
         public Vector3 Position
         {
             get
@@ -120,29 +97,14 @@ namespace Sigurd.ServerAPI.Features
             }
             set
             {
-                if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-                {
-                    throw new NoAuthorityException("Tried to set item position on client.");
-                }
-
                 GrabbableObject.startFallingPosition = value;
                 GrabbableObject.targetFloorPosition = value;
                 GrabbableObject.transform.position = value;
-
-                SetItemPositionClientRpc(value);
             }
         }
 
-        [ClientRpc]
-        private void SetItemPositionClientRpc(Vector3 pos)
-        {
-            GrabbableObject.startFallingPosition = pos;
-            GrabbableObject.targetFloorPosition = pos;
-            GrabbableObject.transform.position = pos;
-        }
-
         /// <summary>
-        /// Gets or sets the rotation of this <see cref="Item"/>. Does not sync
+        /// Gets or sets the rotation of this <see cref="Item"/>.
         /// </summary>
         public Quaternion Rotation
         {
@@ -157,28 +119,7 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Sets the <see cref="Item"/>'s rotation and syncs it across all clients.
-        /// </summary>
-        /// <param name="rotation">The desired rotation.</param>
-        /// <exception cref="NoAuthorityException">Thrown when attempting to sync rotation to other clients while not being the host.</exception>
-        public void SetAndSyncRotation(Quaternion rotation)
-        {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to sync item rotation from client.");
-            }
-
-            SetItemRotationClientRpc(rotation);
-        }
-
-        [ClientRpc]
-        private void SetItemRotationClientRpc(Quaternion rotation)
-        {
-            Rotation = rotation;
-        }
-
-        /// <summary>
-        /// Sets the scale of the <see cref="Item"/>. Does not sync.
+        /// Sets the scale of the <see cref="Item"/>.
         /// </summary>
         public Vector3 Scale
         {
@@ -193,30 +134,8 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Sets the <see cref="Item"/>'s scale and syncs it across all clients.
-        /// </summary>
-        /// <param name="scale">The desired scale.</param>
-        /// <exception cref="NoAuthorityException">Thrown when attempting to sync scale to other clients while not being the host.</exception>
-        public void SetAndSyncScale(Vector3 scale)
-        {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to sync item scale from client.");
-            }
-
-            SetItemScaleClientRpc(scale);
-        }
-
-        [ClientRpc]
-        private void SetItemScaleClientRpc(Vector3 scale)
-        {
-            Scale = scale;
-        }
-
-        /// <summary>
         /// Gets or sets whether this <see cref="Item"/> should be considered scrap.
         /// </summary>
-        /// <exception cref="NoAuthorityException">Thrown when attempting to set isScrap from the client.</exception>
         public bool IsScrap
         {
             get
@@ -225,31 +144,15 @@ namespace Sigurd.ServerAPI.Features
             }
             set
             {
-                if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-                {
-                    throw new NoAuthorityException("Tried to set item name on client.");
-                }
-
                 CloneProperties();
 
                 ItemProperties.isScrap = value;
-
-                SetIsScrapClientRpc(value);
             }
-        }
-
-        [ClientRpc]
-        private void SetIsScrapClientRpc(bool isScrap)
-        {
-            CloneProperties();
-
-            ItemProperties.isScrap = isScrap;
         }
 
         /// <summary>
         /// Gets or sets this <see cref="Item"/>'s scrap value.
         /// </summary>
-        /// <exception cref="NoAuthorityException">Thrown when attempting to set scrap value from the client.</exception>
         public int ScrapValue
         {
             get
@@ -258,53 +161,8 @@ namespace Sigurd.ServerAPI.Features
             }
             set
             {
-                if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-                {
-                    throw new NoAuthorityException("Tried to set scrap value on client.");
-                }
-
                 GrabbableObject.SetScrapValue(value);
-
-                SetScrapValueClientRpc(value);
             }
-        }
-
-        [ClientRpc]
-        private void SetScrapValueClientRpc(int scrapValue)
-        {
-            GrabbableObject.SetScrapValue(scrapValue);
-        }
-
-        /// <summary>
-        /// Removes the <see cref="Item"/> from its current holder.
-        /// </summary>
-        /// <param name="position">The position to place the object after removing.</param>
-        /// <param name="rotation">The rotation the object should have after removing.</param>
-        public void RemoveFromHolder(Vector3 position = default, Quaternion rotation = default)
-        {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to remove item from player on client.");
-            }
-
-            if (!IsHeld) return;
-
-            NetworkObject.RemoveOwnership();
-
-            Holder.Inventory.RemoveItem(this);
-
-            RemoveFromHolderClientRpc();
-
-            Position = position;
-            Rotation = rotation;
-        }
-
-        [ClientRpc]
-        private void RemoveFromHolderClientRpc()
-        {
-            if (!IsHeld) return;
-
-            Holder.Inventory.RemoveItem(this);
         }
 
         /// <summary>
@@ -344,22 +202,6 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Gives this <see cref="Item"/> to the specific player. Deleting it from another <see cref="Player"/>'s inventory, if necessary.
-        /// </summary>
-        /// <param name="player">The player to give the item to.</param>
-        /// <param name="switchTo">Whether or not to switch to the item. Forced for 2 handed items.</param>
-        /// <returns><see langword="true"/> if the player had an open slot to add the item to, <see langword="flase"/> otherwise.</returns>
-        public bool GiveTo(Player player, bool switchTo = true)
-        {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to give item to player on client.");
-            }
-
-            return player.Inventory.TryAddItem(this, switchTo);
-        }
-
-        /// <summary>
         /// Initializes the <see cref="Item"/> with base game scrap values.
         /// </summary>
         public void InitializeScrap()
@@ -372,22 +214,10 @@ namespace Sigurd.ServerAPI.Features
         /// Initializes the <see cref="Item"/> with a specific scrap value.
         /// </summary>
         /// <param name="scrapValue">The desired scrap value.</param>
-        /// <exception cref="NoAuthorityException">Thrown when trying to initialize scrap from the client.</exception>
         public void InitializeScrap(int scrapValue)
         {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to initialize scrap on client.");
-            }
-
             ScrapValue = scrapValue;
 
-            InitializeScrapClientRpc();
-        }
-
-        [ClientRpc]
-        private void InitializeScrapClientRpc()
-        {
             if (GrabbableObject.gameObject.TryGetComponent(out MeshFilter filter)
                 && ItemProperties.meshVariants != null && ItemProperties.meshVariants.Length != 0)
             {
@@ -405,78 +235,6 @@ namespace Sigurd.ServerAPI.Features
                 else
                     renderer.sharedMaterial = ItemProperties.materialVariants[0];
             }
-        }
-
-        /// <summary>
-        /// Creates and spawns an <see cref="Item"/> in the world.
-        /// </summary>
-        /// <param name="itemName">The item's name. Uses a simple Contains check to see if the provided item name is contained in the actual item's name. Case insensitive.</param>
-        /// <param name="andInitialize">Whether or not to initialize the item after spawning.</param>
-        /// <param name="position">The position to spawn at.</param>
-        /// <param name="rotation">The rotation to spawn at.</param>
-        /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
-        /// <exception cref="NoAuthorityException">Thrown when trying to spawn an <see cref="Item"/> on the client.</exception>
-        public static Item CreateAndSpawnItem(string itemName, bool andInitialize = true, Vector3 position = default, Quaternion rotation = default)
-        {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to create and spawn item on client.");
-            }
-
-            string name = itemName.ToLower();
-
-            GameObject go = StartOfRound.Instance.allItemsList.itemsList.FirstOrDefault(i => i.itemName.ToLower().Contains(name))?.spawnPrefab;
-            if (go != null)
-            {
-                GameObject instantiated = Instantiate(go, position, rotation);
-
-                instantiated.GetComponent<NetworkObject>().Spawn();
-
-                Item item = instantiated.GetComponent<Item>();
-
-                if (item.IsScrap && andInitialize) item.InitializeScrap();
-
-                return item;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Creates an <see cref="Item"/> and gives it to a specific <see cref="Player"/>.
-        /// </summary>
-        /// <param name="itemName">The item's name. Uses a simple Contains check to see if the provided item name is contained in the actual item's name. Case insensitive.</param>
-        /// <param name="player">The <see cref="Player"/> to give the <see cref="Item"/> to.</param>
-        /// <param name="andInitialize">Whether or not to initialize this item after spawning.</param>
-        /// <param name="switchTo">Whether or not to switch to the item. Forced for 2 handed items.</param>
-        /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
-        /// <exception cref="NoAuthorityException">Thrown when trying to spawn an <see cref="Item"/> on the client.</exception>
-        public static Item CreateAndGiveItem(string itemName, Player player, bool andInitialize = true, bool switchTo = true)
-        {
-            if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
-            {
-                throw new NoAuthorityException("Tried to create and give item on client.");
-            }
-
-            string name = itemName.ToLower();
-
-            GameObject go = StartOfRound.Instance.allItemsList.itemsList.FirstOrDefault(i => i.itemName.ToLower().Contains(name))?.spawnPrefab;
-            if (go != null)
-            {
-                GameObject instantiated = Instantiate(go, Vector3.zero, default);
-
-                instantiated.GetComponent<NetworkObject>().Spawn();
-
-                Item item = instantiated.GetComponent<Item>();
-
-                if (item.IsScrap && andInitialize) item.InitializeScrap();
-
-                item.GiveTo(player, switchTo);
-
-                return item;
-            }
-
-            return null;
         }
 
         #region Unity related things
@@ -505,28 +263,13 @@ namespace Sigurd.ServerAPI.Features
         /// <summary>
         /// For internal use. Do not use.
         /// </summary>
-        public override void OnDestroy()
+        public void OnDestroy()
         {
             Dictionary.Remove(GrabbableObject);
-
-            base.OnDestroy();
         }
         #endregion
 
         #region Item getters
-        /// <summary>
-        /// Gets or adds an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
-        /// </summary>
-        /// <param name="grabbableObject">The encapsulated <see cref="GrabbableObject"/>.</param>
-        /// <returns>An <see cref="Item"/>.</returns>
-        public static Item GetOrAdd(GrabbableObject grabbableObject)
-        {
-            if (Dictionary.TryGetValue(grabbableObject, out Item item))
-                return item;
-
-            return grabbableObject.gameObject.AddComponent<Item>();
-        }
-
         /// <summary>
         /// Gets an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
         /// </summary>
@@ -558,7 +301,7 @@ namespace Sigurd.ServerAPI.Features
         /// <returns>An <see cref="Item"/>.</returns>
         public static Item? Get(ulong netId)
         {
-            return List.FirstOrDefault(i => i.NetworkObjectId == netId);
+            return List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == netId);
         }
 
         /// <summary>

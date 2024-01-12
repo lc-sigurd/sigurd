@@ -3,14 +3,14 @@
 namespace Sigurd.ServerAPI.Events.EventArgs.Player
 {
     /// <summary>
-    /// Contains all the information before a <see cref="Features.Player"/> is dies.
+    /// Contains all the information before a <see cref="Common.Features.Player"/> is dies.
     /// </summary>
     public class DyingEventArgs : System.EventArgs
     {
         /// <summary>
         /// Gets the player that is dying.
         /// </summary>
-        public Features.Player Player { get; }
+        public Common.Features.Player Player { get; }
 
         /// <summary>
         /// Gets or sets the force to add to the ragdoll.
@@ -45,7 +45,7 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// <param name="spawnBody"><inheritdoc cref="SpawnBody" /></param>
         /// <param name="causeOfDeath"><inheritdoc cref="CauseOfDeath" /></param>
         /// <param name="deathAnimation"><inheritdoc cref="DeathAnimation" /></param>
-        public DyingEventArgs(Features.Player player, Vector3 force, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation)
+        public DyingEventArgs(Common.Features.Player player, Vector3 force, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation)
         {
             Player = player;
             Force = force;
