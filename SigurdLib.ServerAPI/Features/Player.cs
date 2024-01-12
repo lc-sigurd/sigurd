@@ -195,7 +195,7 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="Player"/>'s position. 
+        /// Gets or sets the <see cref="Player"/>'s position.
         /// If you set a <see cref="Features.Player"/>'s position out of bounds, they will be teleported back to a safe location next to the ship or entrance/exit to a dungeon.
         /// </summary>
         /// <exception cref="NoAuthorityException">Thrown when attempting to set position from the client.</exception>
