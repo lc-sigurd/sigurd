@@ -34,6 +34,6 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-    
-    <Import Project="$(SolutionDir)SigurdLib.props.user"/>
+
+    <Import Project="$(SolutionDir)SigurdLib.props.user" Condition="$(CI) != 'true'"/>
 </Project>
