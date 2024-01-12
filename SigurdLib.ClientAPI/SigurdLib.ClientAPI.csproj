@@ -6,7 +6,7 @@
         <Id>SigurdLib.ClientAPI</Id>
         <Product>SigurdLib.ClientAPI</Product>
 
-        <PackageId>SigurdLib</PackageId>
+        <PackageId>SigurdLib.ClientAPI</PackageId>
         <Description>Sigurd's client-sided api. Does not require everyone to have to use.</Description>
 
         <IsPackable>true</IsPackable>
