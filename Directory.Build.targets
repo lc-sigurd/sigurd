@@ -1,4 +1,6 @@
 <Project>
+    <Import Project="$(MSBuildThisFileDirectory)/MSBuildTasks/MSBuildTasks.targets" Condition="$(MSBuildProjectName) != 'MSBuildTasks'"/>
+
     <!-- prevent referenced assemblies from being copied to output folders -->
     <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
         <ItemGroup>
