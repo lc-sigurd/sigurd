@@ -5,6 +5,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.*"/>
-        <PackageReference Include="Tomlyn" Version="0.17.0"/>
+        <PackageReference Include="Samboy063.Tomlet" Version="5.3.0"/>
+        <PackageReference Include="Semver" Version="2.3.0"/>
+        <ProjectReference Include="$(ProjectDir)../submodules/thunderstore-cli/ThunderstoreCLI/ThunderstoreCLI.csproj"/>
     </ItemGroup>
 </Project>
