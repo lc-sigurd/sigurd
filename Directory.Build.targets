@@ -2,7 +2,7 @@
     <Import Project="$(MSBuildThisFileDirectory)/MSBuildTasks/MSBuildTasks.targets" Condition="$(MSBuildProjectName) != 'MSBuildTasks'"/>
 
     <!-- prevent referenced assemblies from being copied to output folders -->
-    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences" Condition="$(ClearCopyLocalPaths) == 'true'">
         <ItemGroup>
             <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
         </ItemGroup>
