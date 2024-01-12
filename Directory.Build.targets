@@ -52,6 +52,20 @@ namespace $(RootNamespace)
     </Target>
 
     <Target
+        Name="PatchThunderstoreMetadata"
+        DependsOnTargets="SetPluginVersion"
+        BeforeTargets="ThunderstorePack"
+        Condition="$(IsThunderstorePackable == 'true'"
+    >
+        <PatchThunderstoreMetadata
+            InputPath="$(ProjectDir)assets/thunderstore.toml"
+            OutputPath="$(ProjectDir)assets/thunderstore.toml.user"
+            Version="$(PlainVersion)"
+            Dependencies="@(ThunderstoreDependency)"
+        />
+    </Target>
+
+    <Target
         Name="ThunderstorePack"
         AfterTargets="PostBuildEvent"
         Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'"
