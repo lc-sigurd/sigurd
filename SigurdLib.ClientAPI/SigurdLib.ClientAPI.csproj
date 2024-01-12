@@ -18,7 +18,7 @@
     <!-- Dependencies for thunderstore.toml -->
     <Target Name="AddThunderstoreDependencies" DependsOnTargets="MinVer">
         <ItemGroup>
-            <ThunderstoreDependency Include="Sigurd-Sigurd_Common<" Version="$(PlainVersion)" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" />
         </ItemGroup>
     </Target>
 
