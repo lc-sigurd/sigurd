@@ -15,7 +15,7 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
 
         public int FloorYRotation { get; set; }
 
-        public NetworkObject ParentObjectTo { get; set; }
+        public NetworkObject? ParentObjectTo { get; set; }
 
         public bool MatchRotationOfParent { get; set; }
 
@@ -24,7 +24,7 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         public bool IsAllowed { get; set; } = true;
 
         public DroppingItemEventArgs(Features.Player player, Features.Item item, bool placeObject, Vector3 targetPosition,
-            int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
+            int floorYRotation, NetworkObject? parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             Player = player;
             Item = item;
