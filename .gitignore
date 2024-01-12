@@ -26,6 +26,9 @@
 !.gitattributes
 !.git-blame-ignore-revs
 
+### Submodules
+!/submodules
+
 ## GitHub specific
 !.github/
 
