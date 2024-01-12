@@ -11,11 +11,11 @@ namespace Sigurd.ClientAPI;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public sealed class Plugin : BaseUnityPlugin
 {
-    internal static Plugin Instance { get; private set; }
+    internal static Plugin Instance { get; private set; } = null!;
 
-    internal static ManualLogSource Log { get; private set; }
+    internal static ManualLogSource Log { get; private set; } = null!;
 
-    internal static Harmony Harmony { get; private set; }
+    internal static Harmony Harmony { get; private set; } = null!;
 
     private void Awake()
     {
