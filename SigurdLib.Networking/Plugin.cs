@@ -2,32 +2,31 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 
-namespace Sigurd.Networking
+namespace Sigurd.Networking;
+
+/// <summary>
+/// The main Plugin class.
+/// </summary>
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+public sealed class Plugin : BaseUnityPlugin
 {
-    /// <summary>
-    /// The main Plugin class.
-    /// </summary>
-    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    public sealed class Plugin : BaseUnityPlugin
+    internal static Plugin Instance { get; private set; }
+
+    internal static ManualLogSource Log { get; private set; }
+
+    internal static Harmony Harmony { get; private set; }
+
+    private void Awake()
     {
-        internal static Plugin Instance { get; private set; }
+        Instance = this;
 
-        internal static ManualLogSource Log { get; private set; }
+        Log = Logger;
 
-        internal static Harmony Harmony { get; private set; }
+        Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
+        Harmony.PatchAll();
 
-        private void Awake()
-        {
-            Instance = this;
+        Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
 
-            Log = Logger;
-
-            Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
-            Harmony.PatchAll();
-
-            Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
-
-            Network.Init();
-        }
+        Network.Init();
     }
 }
