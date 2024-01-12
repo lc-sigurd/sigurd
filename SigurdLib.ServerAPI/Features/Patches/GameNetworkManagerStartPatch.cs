@@ -1,7 +1,5 @@
 using HarmonyLib;
 using Sigurd.Common;
-using System;
-using System.IO;
 using Unity.Netcode;
 using UnityEngine;
 

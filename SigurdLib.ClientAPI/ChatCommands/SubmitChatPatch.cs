@@ -1,11 +1,8 @@
+using System.Reflection;
+using System.Reflection.Emit;
 using BepInEx;
 using GameNetcodeStuff;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using UnityEngine.EventSystems;
 
 namespace Sigurd.ClientAPI.ChatCommands

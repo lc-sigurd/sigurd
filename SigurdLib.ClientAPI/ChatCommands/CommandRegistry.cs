@@ -1,10 +1,7 @@
+using System.Diagnostics;
+using System.Reflection;
 using BepInEx.Configuration;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 
 namespace Sigurd.ClientAPI.ChatCommands
 {

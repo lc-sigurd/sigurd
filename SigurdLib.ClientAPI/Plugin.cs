@@ -2,7 +2,6 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Sigurd.ClientAPI.ChatCommands;
-using System;
 
 namespace Sigurd.ClientAPI
 {

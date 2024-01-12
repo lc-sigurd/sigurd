@@ -1,5 +1,3 @@
-using System;
-
 namespace Sigurd.ServerAPI.Exceptions
 {
     internal class NoAuthorityException : Exception

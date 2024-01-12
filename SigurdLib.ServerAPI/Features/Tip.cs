@@ -1,5 +1,3 @@
-using System;
-
 namespace Sigurd.ServerAPI.Features
 {
     /// <summary>
