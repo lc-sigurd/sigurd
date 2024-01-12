@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <!-- Dependencies for thunderstore.toml -->
-    <Target Name="AddThunderstoreDependencies" DependsOnTargets="MinVer">
+    <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetPluginVersion" BeforeTargets="PatchThunderstoreMetadata">
         <ItemGroup>
             <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" />
         </ItemGroup>
