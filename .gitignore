@@ -47,5 +47,10 @@
 /SigurdLib*/[Oo]bj
 /SigurdLib*/[Dd]ist
 
+### MSBuildTasks Project
+!/MSBuildTasks
+/MSBuildTasks/[Bb]in
+/MSBuildTasks/[Oo]bj
+
 # Explicit exceptions/ignores
 **.user
