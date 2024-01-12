@@ -1,9 +1,6 @@
 [config]
 schemaVersion = "0.0.1"
 
-[general]
-repository = "https://thunderstore.io"
-
 [package]
 namespace = "Sigurd"
 name = "Sigurd"
@@ -36,6 +33,7 @@ target = "/"
 
 
 [publish]
+repository = "https://thunderstore.io"
 communities = [ "lethal-company", ]
 [publish.categories]
 lethal-company = [ "libraries", ]
