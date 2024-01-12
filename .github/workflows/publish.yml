@@ -15,6 +15,7 @@ jobs:
           ref: ${{ github.event.release.tag_name }}
           fetch-depth: 0
           filter: tree:0
+          submodules: recursive
 
       - name: Setup .NET environment
         uses: actions/setup-dotnet@v3

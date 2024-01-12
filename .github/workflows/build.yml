@@ -17,6 +17,7 @@ jobs:
         with:
           fetch-depth: 0
           filter: tree:0
+          submodules: recursive
 
       - name: Setup .NET environment
         uses: actions/setup-dotnet@v3
