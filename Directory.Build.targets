@@ -24,17 +24,17 @@
             <BepInExPluginName Condition="'$(BepInExPluginName)' == ''">$(Product)</BepInExPluginName>
             <BepInExPluginVersion Condition="'$(BepInExPluginVersion)' == ''">$(Version)</BepInExPluginVersion>
             <GeneratedText><![CDATA[
-namespace $(RootNamespace)
-{
+namespace $(RootNamespace)%3B
+
 #pragma warning disable 1591
-    public static class MyPluginInfo
-    {
-        public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
-        public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
-        public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
-    }
-#pragma warning restore 1591
+public static class MyPluginInfo
+{
+    public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
+    public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
+    public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
 }
+#pragma warning restore 1591
+
       ]]></GeneratedText>
             <GeneratedFilePath>$(IntermediateOutputPath)MyPluginInfo.cs</GeneratedFilePath>
         </PropertyGroup>
