@@ -67,12 +67,12 @@ namespace $(RootNamespace)
 
     <Target
         Name="ThunderstorePack"
+        DependsOnTargets="NetcodePatch;SetPluginVersion;PatchThunderstoreMetadata"
         AfterTargets="PostBuildEvent"
         Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'"
-        DependsOnTargets="NetcodePatch;SetPluginVersion"
     >
         <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
-        <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)"/>
+        <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml.user --package-version $(PlainVersion)"/>
         <ItemGroup>
             <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
         </ItemGroup>
