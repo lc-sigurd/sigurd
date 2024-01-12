@@ -8,6 +8,7 @@
 
 ## Build System/Scripts
 !/.config
+!/global.json
 !NuGet.Config
 !Directory.Build.props
 !Directory.Build.targets
