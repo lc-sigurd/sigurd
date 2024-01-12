@@ -29,6 +29,10 @@ jobs:
           dotnet restore
           dotnet tool restore
 
+      - name: Build MSBuild tasks
+        run: |
+          dotnet build -c BuildTasks
+
       - name: Build solution
         run: |
           dotnet build
