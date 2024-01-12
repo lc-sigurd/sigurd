@@ -55,7 +55,7 @@ namespace $(RootNamespace)
         Name="PatchThunderstoreMetadata"
         DependsOnTargets="SetPluginVersion"
         BeforeTargets="ThunderstorePack"
-        Condition="$(IsThunderstorePackable == 'true'"
+        Condition="$(IsThunderstorePackable) == 'true'"
     >
         <PatchThunderstoreMetadata
             InputPath="$(ProjectDir)assets/thunderstore.toml"
