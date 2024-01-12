@@ -857,9 +857,7 @@ namespace Sigurd.ServerAPI.Features
         {
             if (IsLocalPlayer) return;
 
-#pragma warning disable CS8604 // Possible null reference argument for parameter.
             Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(this, Item.Get(itemNetworkId), placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
-#pragma warning restore
         }
         #endregion
 
@@ -877,7 +875,7 @@ namespace Sigurd.ServerAPI.Features
             /// Gets the <see cref="Player"/>'s items in order.
             /// </summary>
             /// TODO: I'm not sure how feasible it is to get this to work in any other way, but I hate this.
-            public Item[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? Item.Dictionary[i] : null).ToArray();
+            public Item?[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? Item.Dictionary[i] : null).ToArray();
 
             /// <summary>
             /// Gets the <see cref="Player"/>'s current item slot.
