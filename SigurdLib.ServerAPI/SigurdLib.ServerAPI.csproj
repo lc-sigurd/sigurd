@@ -11,6 +11,7 @@
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
+        <HasBepInPlugin>true</HasBepInPlugin>
         <RequiresNetcodePatch>true</RequiresNetcodePatch>
 
         <RootNamespace>Sigurd.ServerAPI</RootNamespace>
