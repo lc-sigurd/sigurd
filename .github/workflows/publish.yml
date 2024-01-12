@@ -111,4 +111,4 @@ jobs:
         env:
           TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
         run: |
-          dotnet msbuild -target:ThunderstorePublish
+          dotnet build -target:ThunderstorePublish
