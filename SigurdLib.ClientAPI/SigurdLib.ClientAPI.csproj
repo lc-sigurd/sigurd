@@ -11,10 +11,16 @@
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
-        <LocalThunderstoreDepends>Sigurd-Sigurd_Common</LocalThunderstoreDepends>
 
         <RootNamespace>Sigurd.ClientAPI</RootNamespace>
     </PropertyGroup>
+
+    <!-- Dependencies for thunderstore.toml -->
+    <Target Name="AddThunderstoreDependencies" DependsOnTargets="MinVer">
+        <ItemGroup>
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common<" Version="$(PlainVersion)" />
+        </ItemGroup>
+    </Target>
 
     <!-- Development dependencies -->
     <ItemGroup>
