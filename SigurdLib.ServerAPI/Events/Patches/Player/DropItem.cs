@@ -1,7 +1,6 @@
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
-using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Unity.Netcode;

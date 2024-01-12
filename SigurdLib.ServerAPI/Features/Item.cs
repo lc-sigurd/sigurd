@@ -514,6 +514,11 @@ namespace Sigurd.ServerAPI.Features
         #endregion
 
         #region Item getters
+        /// <summary>
+        /// Gets or adds an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
+        /// </summary>
+        /// <param name="grabbableObject">The encapsulated <see cref="GrabbableObject"/>.</param>
+        /// <returns>An <see cref="Item"/>.</returns>
         public static Item GetOrAdd(GrabbableObject grabbableObject)
         {
             if (Dictionary.TryGetValue(grabbableObject, out Item item))
@@ -522,7 +527,12 @@ namespace Sigurd.ServerAPI.Features
             return grabbableObject.gameObject.AddComponent<Item>();
         }
 
-        public static Item Get(GrabbableObject grabbableObject)
+        /// <summary>
+        /// Gets an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
+        /// </summary>
+        /// <param name="grabbableObject">The encapsulated <see cref="GrabbableObject"/>.</param>
+        /// <returns>An <see cref="Item"/>.</returns>
+        public static Item? Get(GrabbableObject grabbableObject)
         {
             if (Dictionary.TryGetValue(grabbableObject, out Item item))
                 return item;
@@ -530,17 +540,34 @@ namespace Sigurd.ServerAPI.Features
             return null;
         }
 
-        public static bool TryGet(GrabbableObject grabbableObject, out Item item)
+        /// <summary>
+        /// Attempts to get an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
+        /// </summary>
+        /// <param name="grabbableObject">The encapsulated <see cref="GrabbableObject"/>.</param>
+        /// <param name="item">The <see cref="Item"/>, or <see langword="null"/> if not found.</param>
+        /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
+        public static bool TryGet(GrabbableObject grabbableObject, out Item? item)
         {
             return Dictionary.TryGetValue(grabbableObject, out item);
         }
 
-        public static Item Get(ulong netId)
+        /// <summary>
+        /// Gets an <see cref="Item"/> from its network object id.
+        /// </summary>
+        /// <param name="netId">The <see cref="Item"/>'s network object id.</param>
+        /// <returns>An <see cref="Item"/>.</returns>
+        public static Item? Get(ulong netId)
         {
             return List.FirstOrDefault(i => i.NetworkObjectId == netId);
         }
 
-        public static bool TryGet(ulong netId, out Item item)
+        /// <summary>
+        /// Attempts to get an <see cref="Item"/> from its network object id.
+        /// </summary>
+        /// <param name="netId">The <see cref="Item"/>'s network object id.</param>
+        /// <param name="item">The <see cref="Item"/>, or <see langword="null"/> if not found.</param>
+        /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
+        public static bool TryGet(ulong netId, out Item? item)
         {
             item = Get(netId);
 
