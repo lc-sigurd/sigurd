@@ -1,3 +1,0 @@
-[submodule "submodules/thunderstore-cli"]
-	path = submodules/thunderstore-cli
-	url = https://github.com/thunderstore-io/thunderstore-cli
