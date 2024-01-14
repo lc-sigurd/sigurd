@@ -74,6 +74,9 @@ namespace Sigurd.Common
                 }, RegexOptions.IgnoreCase);
             }
 
+            // In case it didn't work, just return a normal replace.
+            if (temp == input) return input.Replace(map.First().Key, map.First().Value);
+
             return temp;
         }
     }
