@@ -30,7 +30,7 @@ namespace Sigurd.ServerAPI.Features
         /// <summary>
         /// Gets whether or not this <see cref="SPlayerNetworking"/> is related to the local player, or if execution is happening on the server.
         /// </summary>
-        public bool IsLocalPlayerOrServer => IsLocalPlayer || NetworkManager.Singleton.IsServer;
+        public bool IsLocalPlayerOrServer => Player.IsLocalPlayer || NetworkManager.Singleton.IsServer;
 
         internal ClientRpcParams SendToMeParams { get; set; }
 
@@ -321,48 +321,25 @@ namespace Sigurd.ServerAPI.Features
             Player.ShowTip(header, message, duration, isWarning, useSave, prefsKey);
         }
 
+        private void SetSendToMeParams()
+        {
+            SendToMeParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { Player.ClientId }
+                }
+            };
+        }
+
         #region Unity related things
-        private PlayerControllerB playerController;
         private void Start()
         {
-            playerController = GetComponent<PlayerControllerB>();
-
-            Player = SPlayer.Get(playerController);
-
             if (Player != null)
             {
                 if (!Dictionary.ContainsKey(Player)) Dictionary.Add(Player, this);
 
-                SendToMeParams = new ClientRpcParams
-                {
-                    Send = new ClientRpcSendParams
-                    {
-                        TargetClientIds = new ulong[] { Player.ClientId }
-                    }
-                };
-            }
-        }
-
-        private void Update()
-        {
-            if (Player == null)
-            {
-                if (playerController == null && !TryGetComponent(out playerController)) return;
-
-                if (SPlayer.TryGet(playerController, out SPlayer player))
-                {
-                    Player = player;
-
-                    if (!Dictionary.ContainsKey(Player)) Dictionary.Add(Player, this);
-
-                    SendToMeParams = new ClientRpcParams
-                    {
-                        Send = new ClientRpcSendParams
-                        {
-                            TargetClientIds = new ulong[] { Player.ClientId }
-                        }
-                    };
-                }
+                SetSendToMeParams();
             }
         }
         #endregion
@@ -387,7 +364,7 @@ namespace Sigurd.ServerAPI.Features
         private void CallHurtingOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            if (IsLocalPlayer) return;
+            if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnHurting(new Events.EventArgs.Player.HurtingEventArgs(Player, damage, hasSFX,
                 (CauseOfDeath)causeOfDeath, deathAnimation, fallDamage, force));
@@ -412,7 +389,7 @@ namespace Sigurd.ServerAPI.Features
         private void CallHurtOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            if (IsLocalPlayer) return;
+            if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnHurt(new Events.EventArgs.Player.HurtEventArgs(Player, damage, hasSFX,
                 (CauseOfDeath)causeOfDeath, deathAnimation, fallDamage, force));
@@ -438,7 +415,7 @@ namespace Sigurd.ServerAPI.Features
         private void CallDroppingItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
             int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
         {
-            if (IsLocalPlayer) return;
+            if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(Player, Common.Features.SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
@@ -463,7 +440,7 @@ namespace Sigurd.ServerAPI.Features
         private void CallDroppedItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
             int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
         {
-            if (IsLocalPlayer) return;
+            if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(Player, Common.Features.SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
@@ -490,6 +467,9 @@ namespace Sigurd.ServerAPI.Features
                 if (p.Player?._clientId == player._clientId)
                 {
                     if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
+                    p.Player = player;
+
+                    p.SetSendToMeParams();
 
                     return p;
                 }
@@ -504,6 +484,8 @@ namespace Sigurd.ServerAPI.Features
                 go.GetComponent<NetworkObject>().Spawn(false);
 
                 if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
+
+                p.SetSendToMeParams();
 
                 return p;
             }
