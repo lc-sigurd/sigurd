@@ -9,6 +9,7 @@ using UnityEngine;
 namespace Sigurd.Common.Features.Patches
 {
     [HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.Start))]
+    [HarmonyPriority(int.MinValue)]
     class GameNetworkManagerStartPatch
     {
         private static void Postfix(GameNetworkManager __instance)

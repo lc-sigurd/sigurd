@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Sigurd.ServerAPI.Features.Patches
 {
     [HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.Start))]
+    [HarmonyPriority(int.MinValue)]
     class GameNetworkManagerStartPatch
     {
         private static readonly string BUNDLE_PATH = Path.Combine(Plugin.Instance.Info.Location.Substring(0, Plugin.Instance.Info.Location.LastIndexOf(Path.DirectorySeparatorChar)), "Bundles", "networking");
