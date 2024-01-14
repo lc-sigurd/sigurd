@@ -9,16 +9,16 @@ namespace Sigurd.ServerAPI.Features
     /// <summary>
     /// Encapsulates a <see cref="global::GrabbableObject"/> for easier interacting.
     /// </summary>
-    public class ItemNetworking : NetworkBehaviour
+    public class SItemNetworking : NetworkBehaviour
     {
         /// <summary>
-        /// Gets a dictionary mapping <see cref="Common.Features.SItem"/>'s to their respective <see cref="ItemNetworking"/>.
+        /// Gets a dictionary mapping <see cref="Common.Features.SItem"/>'s to their respective <see cref="SItemNetworking"/>.
         /// </summary>
-        public static Dictionary<Common.Features.SItem, ItemNetworking> Dictionary { get; } = new Dictionary<Common.Features.SItem, ItemNetworking>();
+        public static Dictionary<Common.Features.SItem, SItemNetworking> Dictionary { get; } = new Dictionary<Common.Features.SItem, SItemNetworking>();
 
         public Common.Features.SItem Item { get; private set; }
 
-        public PlayerNetworking HolderNetworking => PlayerNetworking.Get(Item.Holder);
+        public SPlayerNetworking HolderNetworking => SPlayerNetworking.Get(Item.Holder);
 
         /// <summary>
         /// Gets or sets the <see cref="Item"/>'s name.
@@ -196,7 +196,7 @@ namespace Sigurd.ServerAPI.Features
 
             NetworkObject.RemoveOwnership();
 
-            PlayerNetworking.Get(Item.Holder).InventoryNetworking.RemoveItem(this);
+            SPlayerNetworking.Get(Item.Holder).InventoryNetworking.RemoveItem(this);
 
             RemoveFromHolderClientRpc();
 
@@ -209,7 +209,7 @@ namespace Sigurd.ServerAPI.Features
         {
             if (!Item.IsHeld) return;
 
-            PlayerNetworking.Get(Item.Holder).InventoryNetworking.RemoveItem(this);
+            SPlayerNetworking.Get(Item.Holder).InventoryNetworking.RemoveItem(this);
         }
 
         /// <summary>
@@ -237,12 +237,12 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Gives this <see cref="Item"/> to the specific player. Deleting it from another <see cref="PlayerNetworking"/>'s inventory, if necessary.
+        /// Gives this <see cref="Item"/> to the specific player. Deleting it from another <see cref="SPlayerNetworking"/>'s inventory, if necessary.
         /// </summary>
         /// <param name="player">The player to give the item to.</param>
         /// <param name="switchTo">Whether or not to switch to the item. Forced for 2 handed items.</param>
         /// <returns><see langword="true"/> if the player had an open slot to add the item to, <see langword="flase"/> otherwise.</returns>
-        public bool GiveTo(PlayerNetworking player, bool switchTo = true)
+        public bool GiveTo(SPlayerNetworking player, bool switchTo = true)
         {
             if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
             {
@@ -288,15 +288,15 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Creates an <see cref="Item"/> and gives it to a specific <see cref="PlayerNetworking"/>.
+        /// Creates an <see cref="Item"/> and gives it to a specific <see cref="SPlayerNetworking"/>.
         /// </summary>
         /// <param name="itemName">The item's name. Uses a simple Contains check to see if the provided item name is contained in the actual item's name. Case insensitive.</param>
-        /// <param name="player">The <see cref="PlayerNetworking"/> to give the <see cref="Common.Features.SItem"/> to.</param>
+        /// <param name="player">The <see cref="SPlayerNetworking"/> to give the <see cref="Common.Features.SItem"/> to.</param>
         /// <param name="andInitialize">Whether or not to initialize this item after spawning.</param>
         /// <param name="switchTo">Whether or not to switch to the item. Forced for 2 handed items.</param>
         /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
         /// <exception cref="NoAuthorityException">Thrown when trying to spawn an <see cref="Item"/> on the client.</exception>
-        public static ItemNetworking CreateAndGiveItem(string itemName, PlayerNetworking player, bool andInitialize = true, bool switchTo = true)
+        public static SItemNetworking CreateAndGiveItem(string itemName, SPlayerNetworking player, bool andInitialize = true, bool switchTo = true)
         {
             if (!NetworkManager.Singleton.IsServer)
             {
@@ -312,7 +312,7 @@ namespace Sigurd.ServerAPI.Features
 
                 instantiated.GetComponent<NetworkObject>().Spawn();
 
-                ItemNetworking item = instantiated.GetComponent<ItemNetworking>();
+                SItemNetworking item = instantiated.GetComponent<SItemNetworking>();
 
                 if (item.IsScrap && andInitialize) item.InitializeScrap();
 
@@ -331,32 +331,32 @@ namespace Sigurd.ServerAPI.Features
         }
         #endregion
 
-        public static implicit operator Common.Features.SItem(ItemNetworking itemNetworking) => itemNetworking.Item;
-        public static implicit operator ItemNetworking(Common.Features.SItem item) => Get(item);
+        public static implicit operator Common.Features.SItem(SItemNetworking itemNetworking) => itemNetworking.Item;
+        public static implicit operator SItemNetworking(Common.Features.SItem item) => Get(item);
 
         #region Item getters
         /// <summary>
-        /// Gets an <see cref="ItemNetworking"/> from an <see cref="Common.Features.SItem"/>.
+        /// Gets an <see cref="SItemNetworking"/> from an <see cref="Common.Features.SItem"/>.
         /// </summary>
         /// <param name="item">The <see cref="Common.Features.SItem"/>.</param>
-        /// <returns>An <see cref="ItemNetworking"/>.</returns>
-        public static ItemNetworking? Get(Common.Features.SItem item)
+        /// <returns>An <see cref="SItemNetworking"/>.</returns>
+        public static SItemNetworking? Get(Common.Features.SItem item)
         {
             if (item == null) return null;
 
-            if (Dictionary.TryGetValue(item, out ItemNetworking itemNetworking))
+            if (Dictionary.TryGetValue(item, out SItemNetworking itemNetworking))
                 return itemNetworking;
 
             return null;
         }
 
         /// <summary>
-        /// Attempts to get an <see cref="ItemNetworking"/> from an <see cref="Common.Features.SItem"/>.
+        /// Attempts to get an <see cref="SItemNetworking"/> from an <see cref="Common.Features.SItem"/>.
         /// </summary>
         /// <param name="item">The <see cref="Common.Features.SItem"/>.</param>
-        /// <param name="itemNetworking">The <see cref="ItemNetworking"/>, or <see langword="null"/> if not found.</param>
+        /// <param name="itemNetworking">The <see cref="SItemNetworking"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(Common.Features.SItem item, out ItemNetworking? itemNetworking)
+        public static bool TryGet(Common.Features.SItem item, out SItemNetworking? itemNetworking)
         {
             itemNetworking = null;
             if (item == null) return false;
@@ -369,7 +369,7 @@ namespace Sigurd.ServerAPI.Features
         /// </summary>
         /// <param name="netId">The <see cref="Item"/>'s network object id.</param>
         /// <returns>An <see cref="Item"/>.</returns>
-        public static ItemNetworking? Get(ulong netId)
+        public static SItemNetworking? Get(ulong netId)
         {
             return Dictionary.Values.FirstOrDefault(i => i.NetworkObjectId == netId);
         }
@@ -380,7 +380,7 @@ namespace Sigurd.ServerAPI.Features
         /// <param name="netId">The <see cref="Item"/>'s network object id.</param>
         /// <param name="item">The <see cref="Item"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(ulong netId, out ItemNetworking? item)
+        public static bool TryGet(ulong netId, out SItemNetworking? item)
         {
             item = Get(netId);
 

@@ -23,7 +23,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             Handlers.Player.OnDroppingItem(ev);
 
-            ((PlayerNetworking)player).CallDroppingItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
+            ((SPlayerNetworking)player).CallDroppingItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
 
             return ev;
         }
@@ -39,7 +39,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             Handlers.Player.OnDroppedItem(ev);
 
-            ((PlayerNetworking)player).CallDroppedItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
+            ((SPlayerNetworking)player).CallDroppedItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
         }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

@@ -13,14 +13,14 @@ namespace Sigurd.ServerAPI.Features
     /// <summary>
     /// Encapsulates a <see cref="PlayerControllerB"/> for earier interacting.
     /// </summary>
-    public class PlayerNetworking : NetworkBehaviour
+    public class SPlayerNetworking : NetworkBehaviour
     {
         internal static GameObject PlayerNetworkPrefab { get; set; }
 
         /// <summary>
-        /// Gets a dictionary mapping <see cref="Common.Features.SPlayer"/>'s to their respective <see cref="PlayerNetworking"/>. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
+        /// Gets a dictionary mapping <see cref="Common.Features.SPlayer"/>'s to their respective <see cref="SPlayerNetworking"/>. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
         /// </summary>
-        public static Dictionary<SPlayer, PlayerNetworking> Dictionary { get; } = new Dictionary<SPlayer, PlayerNetworking>();
+        public static Dictionary<SPlayer, SPlayerNetworking> Dictionary { get; } = new Dictionary<SPlayer, SPlayerNetworking>();
 
         /// <summary>
         /// The related <see cref="Common.Features.SPlayer"/>.
@@ -28,7 +28,7 @@ namespace Sigurd.ServerAPI.Features
         public SPlayer Player { get; private set; }
 
         /// <summary>
-        /// Gets whether or not this <see cref="PlayerNetworking"/> is related to the local player, or if execution is happening on the server.
+        /// Gets whether or not this <see cref="SPlayerNetworking"/> is related to the local player, or if execution is happening on the server.
         /// </summary>
         public bool IsLocalPlayerOrServer => IsLocalPlayer || NetworkManager.Singleton.IsServer;
 
@@ -110,7 +110,7 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Gets the <see cref="PlayerNetworking"/>'s <see cref="PlayerInventoryNetworking"/>.
+        /// Gets the <see cref="SPlayerNetworking"/>'s <see cref="PlayerInventoryNetworking"/>.
         /// </summary>
         public PlayerInventoryNetworking InventoryNetworking { get; private set; }
 
@@ -469,23 +469,23 @@ namespace Sigurd.ServerAPI.Features
         }
         #endregion
 
-        public static implicit operator SPlayer(PlayerNetworking playerNetworking) => playerNetworking.Player;
+        public static implicit operator SPlayer(SPlayerNetworking playerNetworking) => playerNetworking.Player;
 
-        public static implicit operator PlayerNetworking(SPlayer player) => Get(player);
+        public static implicit operator SPlayerNetworking(SPlayer player) => Get(player);
 
         #region Player getters
         /// <summary>
-        /// Gets or adds a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
+        /// Gets or adds a <see cref="SPlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
         /// <param name="player">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <returns>A <see cref="PlayerNetworking"/>.</returns>
-        public static PlayerNetworking GetOrAdd(SPlayer player)
+        /// <returns>A <see cref="SPlayerNetworking"/>.</returns>
+        public static SPlayerNetworking GetOrAdd(SPlayer player)
         {
             if (player == null) return null;
 
-            if (TryGet(player, out PlayerNetworking playerNetworking)) return playerNetworking;
+            if (TryGet(player, out SPlayerNetworking playerNetworking)) return playerNetworking;
 
-            foreach (PlayerNetworking p in FindObjectsOfType<PlayerNetworking>())
+            foreach (SPlayerNetworking p in FindObjectsOfType<SPlayerNetworking>())
             {
                 if (p.Player?._clientId == player._clientId)
                 {
@@ -499,7 +499,7 @@ namespace Sigurd.ServerAPI.Features
             {
                 GameObject go = Instantiate(PlayerNetworkPrefab, Vector3.zero, default);
                 go.SetActive(true);
-                PlayerNetworking p = go.GetComponent<PlayerNetworking>();
+                SPlayerNetworking p = go.GetComponent<SPlayerNetworking>();
                 p.Player = player;
                 go.GetComponent<NetworkObject>().Spawn(false);
 
@@ -512,36 +512,36 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
+        /// Gets a <see cref="SPlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
         /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <returns>A <see cref="PlayerNetworking"/> or <see langword="null"/> if not found.</returns>
-        public static PlayerNetworking Get(SPlayer playerController)
+        /// <returns>A <see cref="SPlayerNetworking"/> or <see langword="null"/> if not found.</returns>
+        public static SPlayerNetworking Get(SPlayer playerController)
         {
             if (playerController == null) return null;
 
-            if (Dictionary.TryGetValue(playerController, out PlayerNetworking player)) return player;
+            if (Dictionary.TryGetValue(playerController, out SPlayerNetworking player)) return player;
 
             return null;
         }
 
         /// <summary>
-        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
+        /// Tries to get a <see cref="SPlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
         /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <param name="player">Outputs a <see cref="PlayerNetworking"/>, or <see langword="null"/> if not found.</param>
+        /// <param name="player">Outputs a <see cref="SPlayerNetworking"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if a <see cref="Common.Features.SPlayer"/> is found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(SPlayer playerController, out PlayerNetworking player)
+        public static bool TryGet(SPlayer playerController, out SPlayerNetworking player)
         {
             return Dictionary.TryGetValue(playerController, out player);
         }
 
         /// <summary>
-        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="PlayerControllerB"/>.
+        /// Gets a <see cref="SPlayerNetworking"/> from a <see cref="PlayerControllerB"/>.
         /// </summary>
         /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <returns>A <see cref="PlayerNetworking"/> or <see langword="null"/> if not found.</returns>
-        public static PlayerNetworking Get(PlayerControllerB playerController)
+        /// <returns>A <see cref="SPlayerNetworking"/> or <see langword="null"/> if not found.</returns>
+        public static SPlayerNetworking Get(PlayerControllerB playerController)
         {
             if (playerController == null) return null;
 
@@ -551,33 +551,33 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
+        /// Tries to get a <see cref="SPlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
         /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <param name="player">Outputs a <see cref="PlayerNetworking"/>, or <see langword="null"/> if not found.</param>
+        /// <param name="player">Outputs a <see cref="SPlayerNetworking"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if a <see cref="Common.Features.SPlayer"/> is found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(PlayerControllerB playerController, out PlayerNetworking player)
+        public static bool TryGet(PlayerControllerB playerController, out SPlayerNetworking player)
         {
             return (player = Get(playerController)) != null;
         }
 
         /// <summary>
-        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>'s client id.
+        /// Gets a <see cref="SPlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>'s client id.
         /// </summary>
         /// <param name="clientId">The player's client id.</param>
         /// <returns>A <see cref="Player"/> or <see langword="null"/> if not found.</returns>
-        public static PlayerNetworking Get(ulong clientId)
+        public static SPlayerNetworking Get(ulong clientId)
         {
             return Get(SPlayer.List.FirstOrDefault(p => p.ClientId == clientId));
         }
 
         /// <summary>
-        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>'s client id.
+        /// Tries to get a <see cref="SPlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>'s client id.
         /// </summary>
         /// <param name="clientId">The player's client id.</param>
         /// <param name="player">Outputs a <see cref="Common.Features.SPlayer"/>, or <see langword="null"/> if not found.</param>
-        /// <returns><see langword="true"/> if a <see cref="PlayerNetworking"/> is found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(ulong clientId, out PlayerNetworking player)
+        /// <returns><see langword="true"/> if a <see cref="SPlayerNetworking"/> is found, <see langword="false"/> otherwise.</returns>
+        public static bool TryGet(ulong clientId, out SPlayerNetworking player)
         {
             return (player = Get(clientId)) != null;
         }
@@ -665,7 +665,7 @@ namespace Sigurd.ServerAPI.Features
 
                 if (TryGetFirstEmptySlot(out int slot))
                 {
-                    ItemNetworking itemNetworking = ItemNetworking.Get(item)!;
+                    SItemNetworking itemNetworking = SItemNetworking.Get(item)!;
 
                     if (item.IsTwoHanded && !Player.HasFreeHands)
                     {
@@ -721,7 +721,7 @@ namespace Sigurd.ServerAPI.Features
 
                 if (slot < Player.PlayerController.ItemSlots.Length && Player.PlayerController.ItemSlots[slot] == null)
                 {
-                    ItemNetworking itemNetworking = ItemNetworking.Get(item)!;
+                    SItemNetworking itemNetworking = SItemNetworking.Get(item)!;
 
                     if (item.IsTwoHanded && !Player.HasFreeHands)
                     {

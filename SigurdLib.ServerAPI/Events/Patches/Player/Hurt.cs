@@ -21,7 +21,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             Handlers.Player.OnHurting(ev);
 
-            ((PlayerNetworking)player).CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+            ((SPlayerNetworking)player).CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
 
             return ev;
         }
@@ -36,7 +36,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             Handlers.Player.OnHurt(ev);
 
-            ((PlayerNetworking)player).CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+            ((SPlayerNetworking)player).CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
 
             return ev;
         }

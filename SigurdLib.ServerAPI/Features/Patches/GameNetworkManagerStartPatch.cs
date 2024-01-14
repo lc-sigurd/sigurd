@@ -26,16 +26,16 @@ namespace Sigurd.ServerAPI.Features.Patches
             LoadedAssetBundle assets = BundleHelper.LoadAssetBundle(BUNDLE_PATH, false);
 
             GameObject playerObj = assets.GetAsset<GameObject>(PLAYER_NETWORKING_ASSET_LOCATION);
-            playerObj.AddComponent<PlayerNetworking>();
-            playerObj.AddComponent<PlayerNetworking.PlayerInventoryNetworking>();
+            playerObj.AddComponent<SPlayerNetworking>();
+            playerObj.AddComponent<SPlayerNetworking.PlayerInventoryNetworking>();
             networkManager.AddNetworkPrefab(playerObj);
-            PlayerNetworking.PlayerNetworkPrefab = playerObj;
+            SPlayerNetworking.PlayerNetworkPrefab = playerObj;
 
             foreach (NetworkPrefab prefab in networkManager.NetworkConfig.Prefabs.Prefabs)
             {
                 if (prefab.Prefab != null && prefab.Prefab.GetComponent<GrabbableObject>() != null)
                 {
-                    prefab.Prefab.AddComponent<ItemNetworking>();
+                    prefab.Prefab.AddComponent<SItemNetworking>();
                 }
             }
         }

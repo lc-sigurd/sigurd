@@ -11,13 +11,13 @@ namespace Sigurd.ServerAPI.Extensions
     public static class ItemExtensions
     {
         /// <summary>
-        /// Gets a <see cref="Common.Features.SItem"/>'s <see cref="ItemNetworking"/>.
+        /// Gets a <see cref="Common.Features.SItem"/>'s <see cref="SItemNetworking"/>.
         /// </summary>
         /// <param name="item">The <see cref="Common.Features.SItem"/>.</param>
-        /// <returns>The <see cref="Common.Features.SItem"/>'s <see cref="ItemNetworking"/></returns>
-        public static ItemNetworking GetNetworking(this Common.Features.SItem item)
+        /// <returns>The <see cref="Common.Features.SItem"/>'s <see cref="SItemNetworking"/></returns>
+        public static SItemNetworking GetNetworking(this Common.Features.SItem item)
         {
-            return (ItemNetworking)item;
+            return (SItemNetworking)item;
         }
     }
 }

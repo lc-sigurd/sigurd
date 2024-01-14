@@ -11,13 +11,13 @@ namespace Sigurd.ServerAPI.Extensions
     public static class PlayerExtensions
     {
         /// <summary>
-        /// Gets a <see cref="Common.Features.SPlayer"/>'s <see cref="PlayerNetworking"/>.
+        /// Gets a <see cref="Common.Features.SPlayer"/>'s <see cref="SPlayerNetworking"/>.
         /// </summary>
         /// <param name="player">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <returns>The <see cref="Common.Features.SPlayer"/>'s <see cref="PlayerNetworking"/></returns>
-        public static PlayerNetworking GetNetworking(this Common.Features.SPlayer player)
+        /// <returns>The <see cref="Common.Features.SPlayer"/>'s <see cref="SPlayerNetworking"/></returns>
+        public static SPlayerNetworking GetNetworking(this Common.Features.SPlayer player)
         {
-            return (PlayerNetworking)player;
+            return (SPlayerNetworking)player;
         }
     }
 }

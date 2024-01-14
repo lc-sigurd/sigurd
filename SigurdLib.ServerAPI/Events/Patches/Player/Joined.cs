@@ -37,13 +37,13 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                 player = Common.Features.SPlayer.GetOrAdd(controller);
             }
 
-            PlayerNetworking playerNetworking = PlayerNetworking.GetOrAdd(player);
+            SPlayerNetworking playerNetworking = SPlayerNetworking.GetOrAdd(player);
 
             while (playerNetworking == null)
             {
                 yield return new WaitForSeconds(0.1f);
 
-                playerNetworking = PlayerNetworking.GetOrAdd(player);
+                playerNetworking = SPlayerNetworking.GetOrAdd(player);
             }
 
             if (player.IsLocalPlayer)

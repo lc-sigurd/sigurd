@@ -34,8 +34,8 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                 playerController.isPlayerControlled = false;
             }
 
-            Features.PlayerNetworking.Dictionary.Clear();
-            Features.ItemNetworking.Dictionary.Clear();
+            Features.SPlayerNetworking.Dictionary.Clear();
+            Features.SItemNetworking.Dictionary.Clear();
         }
     }
 }

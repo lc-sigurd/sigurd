@@ -42,9 +42,9 @@ namespace Sigurd.ServerAPI
         {
             foreach (GrabbableObject grabbable in FindObjectsOfType<GrabbableObject>())
             {
-                if (!grabbable.TryGetComponent(out ItemNetworking _))
+                if (!grabbable.TryGetComponent(out SItemNetworking _))
                 {
-                    grabbable.gameObject.AddComponent<ItemNetworking>();
+                    grabbable.gameObject.AddComponent<SItemNetworking>();
                 }
             }
         }
