@@ -327,7 +327,8 @@ namespace Sigurd.ServerAPI.Features
         #region Unity related things
         private void Awake()
         {
-            Dictionary.Add(GetComponent<Common.Features.SItem>(), this);
+            Item = GetComponent<Common.Features.SItem>();
+            Dictionary.Add(Item, this);
         }
         #endregion
 
