@@ -1,6 +1,8 @@
 using GameNetcodeStuff;
 using HarmonyLib;
+using Sigurd.Common.Features;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using Sigurd.ServerAPI.Extensions;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Unity.Netcode;
@@ -23,10 +25,13 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
         internal static GrabbingItemEventArgs CallGrabbingItem(PlayerControllerB playerController, GrabbableObject grabbableObject)
         {
-            GrabbingItemEventArgs ev = new GrabbingItemEventArgs(Common.Features.SPlayer.GetOrAdd(playerController),
-                Common.Features.SItem.Get(grabbableObject)!);
+            SPlayer player = SPlayer.GetOrAdd(playerController);
+            SItem item = SItem.Get(grabbableObject)!;
+            GrabbingItemEventArgs ev = new GrabbingItemEventArgs(player, item);
 
             Handlers.Player.OnGrabbingItem(ev);
+
+            player.GetNetworking().CallGrabbingItemOnOtherClients(item);
 
             return ev;
         }
@@ -105,7 +110,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         internal static void CallEvent(PlayerControllerB player)
         {
             Handlers.Player.OnGrabbedItem(new GrabbedItemEventArgs(Common.Features.SPlayer.GetOrAdd(player),
-                Common.Features.SItem.Get(player.currentlyHeldObjectServer)));
+                Common.Features.SItem.Get(player.currentlyHeldObjectServer)!));
         }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

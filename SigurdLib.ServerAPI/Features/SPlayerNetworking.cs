@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Sigurd.ServerAPI.Features
 {
@@ -26,6 +25,8 @@ namespace Sigurd.ServerAPI.Features
         /// The related <see cref="Common.Features.SPlayer"/>.
         /// </summary>
         public SPlayer Player { get; private set; }
+
+        internal NetworkVariable<ulong> NetworkClientId { get; } = new NetworkVariable<ulong>(ulong.MaxValue);
 
         /// <summary>
         /// Gets whether or not this <see cref="SPlayerNetworking"/> is related to the local player, or if execution is happening on the server.
@@ -341,6 +342,55 @@ namespace Sigurd.ServerAPI.Features
 
                 SetSendToMeParams();
             }
+            else
+            {
+                if (NetworkClientId.Value != ulong.MaxValue)
+                {
+                    SPlayer player = SPlayer.Get(NetworkClientId.Value);
+
+                    if (player != null)
+                    {
+                        if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, this);
+
+                        Player = player;
+                    }
+                }
+            }
+
+            InventoryNetworking = GetComponent<PlayerInventoryNetworking>();
+
+            NetworkClientId.OnValueChanged += clientIdChanged;
+        }
+
+        /// <summary>
+        /// For internal use only. Do not use.
+        /// </summary>
+        public override void OnDestroy()
+        {
+            NetworkClientId.OnValueChanged -= clientIdChanged;
+            base.OnDestroy();
+        }
+
+        private void clientIdChanged(ulong oldId, ulong newId)
+        {
+            Plugin.Log.LogInfo("CLIENT ID CHANGED!!!!!!!!");
+            SPlayer player = SPlayer.Get(newId);
+            if (player != null)
+            {
+                if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, this);
+
+                Player = player;
+            }
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (NetworkManager.Singleton.IsServer && Player != null)
+            {
+                NetworkClientId.Value = Player.ClientId;
+            }
         }
         #endregion
 
@@ -364,6 +414,7 @@ namespace Sigurd.ServerAPI.Features
         private void CallHurtingOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
+            Plugin.Log.LogInfo($"CallHurtingOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnHurting(new Events.EventArgs.Player.HurtingEventArgs(Player, damage, hasSFX,
@@ -389,13 +440,14 @@ namespace Sigurd.ServerAPI.Features
         private void CallHurtOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
+            Plugin.Log.LogInfo($"CallHurtOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnHurt(new Events.EventArgs.Player.HurtEventArgs(Player, damage, hasSFX,
                 (CauseOfDeath)causeOfDeath, deathAnimation, fallDamage, force));
         }
 
-        internal void CallDroppingItemOnOtherClients(Common.Features.SItem item, bool placeObject, Vector3 targetPosition,
+        internal void CallDroppingItemOnOtherClients(SItem item, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             CallDroppingItemOnOtherClientsServerRpc(item.GrabbableObject.NetworkObjectId, placeObject, targetPosition, floorYRotation, parentObjectTo != null, parentObjectTo != null ? parentObjectTo.NetworkObjectId : 0, matchRotationOfParent, droppedInShip);
@@ -415,12 +467,13 @@ namespace Sigurd.ServerAPI.Features
         private void CallDroppingItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
             int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
         {
+            Plugin.Log.LogInfo($"CallDroppingItemOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
-            Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(Player, Common.Features.SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+            Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(Player, SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
 
-        internal void CallDroppedItemOnOtherClients(Common.Features.SItem item, bool placeObject, Vector3 targetPosition,
+        internal void CallDroppedItemOnOtherClients(SItem item, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             CallDroppedItemOnOtherClientsServerRpc(item.GrabbableObject.NetworkObjectId, placeObject, targetPosition, floorYRotation, parentObjectTo != null, parentObjectTo != null ? parentObjectTo.NetworkObjectId : 0, matchRotationOfParent, droppedInShip);
@@ -440,9 +493,33 @@ namespace Sigurd.ServerAPI.Features
         private void CallDroppedItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
             int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
         {
+            Plugin.Log.LogInfo($"CallDroppedItemOnOtherClientsClientRpc {Player.IsLocalPlayer}");
+
             if (Player.IsLocalPlayer) return;
 
-            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(Player, Common.Features.SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(Player, SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+        }
+
+        internal void CallGrabbingItemOnOtherClients(SItem item)
+        {
+            CallGrabbingItemOnOtherClientsServerRpc(item.GrabbableObject.NetworkObjectId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void CallGrabbingItemOnOtherClientsServerRpc(ulong itemNetworkId, ServerRpcParams serverRpcParams = default)
+        {
+            if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
+
+            CallGrabbingItemOnOtherClientsClientRpc(itemNetworkId);
+        }
+
+        [ClientRpc]
+        private void CallGrabbingItemOnOtherClientsClientRpc(ulong itemNetworkId)
+        {
+            Plugin.Log.LogInfo($"CallGrabbingItemOnOtherClientsClientRpc {Player.IsLocalPlayer}");
+            if (Player.IsLocalPlayer) return;
+
+            Events.Handlers.Player.OnGrabbingItem(new Events.EventArgs.Player.GrabbingItemEventArgs(Player, SItem.Get(itemNetworkId)!));
         }
         #endregion
 
@@ -464,7 +541,8 @@ namespace Sigurd.ServerAPI.Features
 
             foreach (SPlayerNetworking p in FindObjectsOfType<SPlayerNetworking>())
             {
-                if (p.Player?._clientId == player._clientId)
+                Plugin.Log.LogInfo($"FINDING PLAYER NETWORKING... LOOKING FOR: {player.ClientId}. CUR NETWORK ID: {p.NetworkClientId.Value}");
+                if (p.NetworkClientId.Value == player.ClientId)
                 {
                     if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
                     p.Player = player;
@@ -477,11 +555,12 @@ namespace Sigurd.ServerAPI.Features
 
             if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
             {
+                Plugin.Log.LogInfo($"SPAWNING PLAYER THING {player.ClientId}");
                 GameObject go = Instantiate(PlayerNetworkPrefab, Vector3.zero, default);
                 go.SetActive(true);
                 SPlayerNetworking p = go.GetComponent<SPlayerNetworking>();
                 p.Player = player;
-                go.GetComponent<NetworkObject>().Spawn(false);
+                p.GetComponent<NetworkObject>().Spawn(false);
 
                 if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
 
@@ -579,7 +658,7 @@ namespace Sigurd.ServerAPI.Features
             /// Gets the <see cref="Player"/>'s items in order.
             /// </summary>
             /// TODO: I'm not sure how feasible it is to get this to work in any other way, but I hate this.
-            public Common.Features.SItem?[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? Common.Features.SItem.Dictionary[i] : null).ToArray();
+            public SItem?[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? SItem.Dictionary[i] : null).ToArray();
 
             /// <summary>
             /// Gets the <see cref="Player"/>'s current item slot.
@@ -632,13 +711,13 @@ namespace Sigurd.ServerAPI.Features
             }
 
             /// <summary>
-            /// Tries to add an <see cref="Common.Features.SItem"/> to the inventory in the first available slot.
+            /// Tries to add an <see cref="SItem"/> to the inventory in the first available slot.
             /// </summary>
             /// <param name="item">The item to try to add.</param>
             /// <param name="switchTo">Whether or not to switch to this item after adding.</param>
             /// <returns><see langword="true"/> if added <see langword="false"/> otherwise.</returns>
             /// <exception cref="NoAuthorityException">Thrown when trying to add item from the client.</exception>
-            public bool TryAddItem(Common.Features.SItem item, bool switchTo = true)
+            public bool TryAddItem(SItem item, bool switchTo = true)
             {
                 if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
                 {
@@ -687,14 +766,14 @@ namespace Sigurd.ServerAPI.Features
             }
 
             /// <summary>
-            /// Tries to add an <see cref="Common.Features.SItem"/> to the inventory in a specific slot.
+            /// Tries to add an <see cref="SItem"/> to the inventory in a specific slot.
             /// </summary>
             /// <param name="item">The item to try to add.</param>
             /// <param name="slot">The slot to try to add the item to.</param>
             /// <param name="switchTo">Whether or not to switch to this item after adding.</param>
             /// <returns><see langword="true"/> if added <see langword="false"/> otherwise.</returns>
             /// <exception cref="NoAuthorityException">Thrown when trying to add item from the client.</exception>
-            public bool TryAddItemToSlot(Common.Features.SItem item, int slot, bool switchTo = true)
+            public bool TryAddItemToSlot(SItem item, int slot, bool switchTo = true)
             {
                 if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
                 {
@@ -745,7 +824,7 @@ namespace Sigurd.ServerAPI.Features
             [ClientRpc]
             private void SetItemInSlotClientRpc(int slot, ulong itemId)
             {
-                Common.Features.SItem item = Common.Features.SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
+                SItem item = SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
 
                 if (item != null)
                 {
@@ -779,7 +858,7 @@ namespace Sigurd.ServerAPI.Features
             [ClientRpc]
             private void SetSlotAndItemClientRpc(int slot, ulong itemId)
             {
-                Common.Features.SItem item = Common.Features.SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
+                SItem item = SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
 
                 if (item != null)
                 {
@@ -830,7 +909,7 @@ namespace Sigurd.ServerAPI.Features
                 if (slot != -1)
                 {
                     bool currentlyHeldOut = slot == Player.Inventory.CurrentSlot;
-                    Common.Features.SItem item = Items[slot];
+                    SItem item = Items[slot];
 
                     if (item == null) return;
 
@@ -889,7 +968,7 @@ namespace Sigurd.ServerAPI.Features
             /// Removes an <see cref="Item"/> from the inventory. This should be called on all clients from a client rpc.
             /// </summary>
             /// <param name="item">The <see cref="Item"/> to remove.</param>
-            public void RemoveItem(Common.Features.SItem item)
+            public void RemoveItem(SItem item)
             {
                 RemoveItem(Array.IndexOf(Player.PlayerController.ItemSlots, item.GrabbableObject));
             }

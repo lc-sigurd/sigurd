@@ -11,6 +11,19 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnPlayerConnectedClientRpc))]
     internal static class Joined
     {
+        //private static void Prefix(ulong clientId, int assignedPlayerObjectId)
+        //{
+        //    if (NetworkManager.Singleton.IsServer)
+        //    {
+        //        PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
+        //        if (SPlayerNetworking.TryGet(playerController, out SPlayerNetworking networking))
+        //        {
+        //            Plugin.Log.LogInfo("SET NETWORK CLIENT ID 1");
+        //            networking.NetworkClientId.Value = clientId;
+        //        }
+        //    }
+        //}
+
         private static void Postfix(ulong clientId, int assignedPlayerObjectId)
         {
             PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
@@ -32,6 +45,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             while (player == null)
             {
+                Plugin.Log.LogInfo("WAITING FOR PLAYER");
                 yield return new WaitForSeconds(0.1f);
 
                 player = Common.Features.SPlayer.GetOrAdd(controller);
@@ -41,6 +55,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
 
             while (playerNetworking == null)
             {
+                Plugin.Log.LogInfo("WAITING FOR PLAYER NETWORKING");
                 yield return new WaitForSeconds(0.1f);
 
                 playerNetworking = SPlayerNetworking.GetOrAdd(player);
