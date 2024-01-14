@@ -110,7 +110,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
             {
                 const int offset = 1;
 
-                int index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Nop) + offset;
+                int index = newInstructions.FindIndex(i => i.opcode == OpCodes.Nop) + offset;
 
                 CodeInstruction[] inst = new CodeInstruction[]
                 {
