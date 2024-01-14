@@ -11,7 +11,7 @@ namespace Sigurd.ServerAPI.Features.Patches
     [HarmonyPriority(int.MinValue)]
     class GameNetworkManagerStartPatch
     {
-        private static readonly string BUNDLE_PATH = Path.Combine(Plugin.Instance.Info.Location.Substring(0, Plugin.Instance.Info.Location.LastIndexOf(Path.DirectorySeparatorChar)), "Bundles", "networking");
+        private static readonly string BUNDLE_PATH = Path.Combine(Path.GetDirectoryName(Plugin.Instance.Info.Location), "Bundles", "networking");
 
         private const string PLAYER_NETWORKING_ASSET_LOCATION = "assets/sigurd/playernetworkingprefab.prefab";
 
