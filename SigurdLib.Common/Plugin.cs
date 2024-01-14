@@ -39,9 +39,9 @@ namespace Sigurd.Common
         {
             foreach (GrabbableObject grabbable in FindObjectsOfType<GrabbableObject>())
             {
-                if (!grabbable.TryGetComponent(out Features.Item _))
+                if (!grabbable.TryGetComponent(out Features.SItem _))
                 {
-                    grabbable.gameObject.AddComponent<Features.Item>();
+                    grabbable.gameObject.AddComponent<Features.SItem>();
                 }
             }
         }

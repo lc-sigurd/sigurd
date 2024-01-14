@@ -11,7 +11,8 @@ namespace Sigurd.Common.Features.Patches
     {
         private static void Prefix()
         {
-            Player.Dictionary.Clear();
+            SPlayer.Dictionary.Clear();
+            SItem.Dictionary.Clear();
         }
     }
 }

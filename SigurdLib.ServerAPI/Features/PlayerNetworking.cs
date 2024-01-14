@@ -18,14 +18,14 @@ namespace Sigurd.ServerAPI.Features
         internal static GameObject PlayerNetworkPrefab { get; set; }
 
         /// <summary>
-        /// Gets a dictionary mapping <see cref="Common.Features.Player"/>'s to their respective <see cref="PlayerNetworking"/>. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
+        /// Gets a dictionary mapping <see cref="Common.Features.SPlayer"/>'s to their respective <see cref="PlayerNetworking"/>. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
         /// </summary>
-        public static Dictionary<Player, PlayerNetworking> Dictionary { get; } = new Dictionary<Player, PlayerNetworking>();
+        public static Dictionary<SPlayer, PlayerNetworking> Dictionary { get; } = new Dictionary<SPlayer, PlayerNetworking>();
 
         /// <summary>
-        /// The related <see cref="Common.Features.Player"/>.
+        /// The related <see cref="Common.Features.SPlayer"/>.
         /// </summary>
-        public Player Player { get; private set; }
+        public SPlayer Player { get; private set; }
 
         /// <summary>
         /// Gets whether or not this <see cref="PlayerNetworking"/> is related to the local player, or if execution is happening on the server.
@@ -116,7 +116,7 @@ namespace Sigurd.ServerAPI.Features
 
         /// <summary>
         /// Gets or sets the <see cref="Player"/>'s position.
-        /// If you set a <see cref="Common.Features.Player"/>'s position out of bounds, they will be teleported back to a safe location next to the ship or entrance/exit to a dungeon.
+        /// If you set a <see cref="Common.Features.SPlayer"/>'s position out of bounds, they will be teleported back to a safe location next to the ship or entrance/exit to a dungeon.
         /// </summary>
         /// <exception cref="NoAuthorityException">Thrown when attempting to set position from another client.</exception>
         public Vector3 Position
@@ -182,7 +182,7 @@ namespace Sigurd.ServerAPI.Features
 
         /// <summary>
         /// Gets or sets the <see cref="Player"/>'s rotation. Quaternions can't gimbal lock, but they are harder to understand.
-        /// Use <see cref="Player.EulerAngles"/> if you don't know what you're doing.
+        /// Use <see cref="SPlayer.EulerAngles"/> if you don't know what you're doing.
         /// </summary>
         /// <exception cref="NoAuthorityException">Thrown when attempting to update rotation from a client that isn't the local client, or the host.</exception>
         public Quaternion Rotation
@@ -327,7 +327,7 @@ namespace Sigurd.ServerAPI.Features
         {
             playerController = GetComponent<PlayerControllerB>();
 
-            Player = Player.Get(playerController);
+            Player = SPlayer.Get(playerController);
 
             if (Player != null)
             {
@@ -349,7 +349,7 @@ namespace Sigurd.ServerAPI.Features
             {
                 if (playerController == null && !TryGetComponent(out playerController)) return;
 
-                if (Player.TryGet(playerController, out Player player))
+                if (SPlayer.TryGet(playerController, out SPlayer player))
                 {
                     Player = player;
 
@@ -418,7 +418,7 @@ namespace Sigurd.ServerAPI.Features
                 (CauseOfDeath)causeOfDeath, deathAnimation, fallDamage, force));
         }
 
-        internal void CallDroppingItemOnOtherClients(Common.Features.Item item, bool placeObject, Vector3 targetPosition,
+        internal void CallDroppingItemOnOtherClients(Common.Features.SItem item, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             CallDroppingItemOnOtherClientsServerRpc(item.GrabbableObject.NetworkObjectId, placeObject, targetPosition, floorYRotation, parentObjectTo != null, parentObjectTo != null ? parentObjectTo.NetworkObjectId : 0, matchRotationOfParent, droppedInShip);
@@ -440,10 +440,10 @@ namespace Sigurd.ServerAPI.Features
         {
             if (IsLocalPlayer) return;
 
-            Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(Player, Common.Features.Item.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+            Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(Player, Common.Features.SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
 
-        internal void CallDroppedItemOnOtherClients(Common.Features.Item item, bool placeObject, Vector3 targetPosition,
+        internal void CallDroppedItemOnOtherClients(Common.Features.SItem item, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             CallDroppedItemOnOtherClientsServerRpc(item.GrabbableObject.NetworkObjectId, placeObject, targetPosition, floorYRotation, parentObjectTo != null, parentObjectTo != null ? parentObjectTo.NetworkObjectId : 0, matchRotationOfParent, droppedInShip);
@@ -465,21 +465,58 @@ namespace Sigurd.ServerAPI.Features
         {
             if (IsLocalPlayer) return;
 
-            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(Player, Common.Features.Item.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
+            Events.Handlers.Player.OnDroppedItem(new Events.EventArgs.Player.DroppedItemEventArgs(Player, Common.Features.SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
         }
         #endregion
 
-        public static implicit operator Player(PlayerNetworking playerNetworking) => playerNetworking.Player;
+        public static implicit operator SPlayer(PlayerNetworking playerNetworking) => playerNetworking.Player;
 
-        public static implicit operator PlayerNetworking(Player player) => Get(player);
+        public static implicit operator PlayerNetworking(SPlayer player) => Get(player);
 
         #region Player getters
         /// <summary>
-        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.Player"/>.
+        /// Gets or adds a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
-        /// <param name="playerController">The <see cref="Common.Features.Player"/>.</param>
+        /// <param name="player">The <see cref="Common.Features.SPlayer"/>.</param>
+        /// <returns>A <see cref="PlayerNetworking"/>.</returns>
+        public static PlayerNetworking GetOrAdd(SPlayer player)
+        {
+            if (player == null) return null;
+
+            if (TryGet(player, out PlayerNetworking playerNetworking)) return playerNetworking;
+
+            foreach (PlayerNetworking p in FindObjectsOfType<PlayerNetworking>())
+            {
+                if (p.Player?._clientId == player._clientId)
+                {
+                    if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
+
+                    return p;
+                }
+            }
+
+            if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+            {
+                GameObject go = Instantiate(PlayerNetworkPrefab, Vector3.zero, default);
+                go.SetActive(true);
+                PlayerNetworking p = go.GetComponent<PlayerNetworking>();
+                p.Player = player;
+                go.GetComponent<NetworkObject>().Spawn(false);
+
+                if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
+
+                return p;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
+        /// </summary>
+        /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
         /// <returns>A <see cref="PlayerNetworking"/> or <see langword="null"/> if not found.</returns>
-        public static PlayerNetworking Get(Player playerController)
+        public static PlayerNetworking Get(SPlayer playerController)
         {
             if (playerController == null) return null;
 
@@ -489,12 +526,12 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.Player"/>.
+        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
-        /// <param name="playerController">The <see cref="Common.Features.Player"/>.</param>
+        /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
         /// <param name="player">Outputs a <see cref="PlayerNetworking"/>, or <see langword="null"/> if not found.</param>
-        /// <returns><see langword="true"/> if a <see cref="Common.Features.Player"/> is found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(Player playerController, out PlayerNetworking player)
+        /// <returns><see langword="true"/> if a <see cref="Common.Features.SPlayer"/> is found, <see langword="false"/> otherwise.</returns>
+        public static bool TryGet(SPlayer playerController, out PlayerNetworking player)
         {
             return Dictionary.TryGetValue(playerController, out player);
         }
@@ -502,43 +539,43 @@ namespace Sigurd.ServerAPI.Features
         /// <summary>
         /// Gets a <see cref="PlayerNetworking"/> from a <see cref="PlayerControllerB"/>.
         /// </summary>
-        /// <param name="playerController">The <see cref="Common.Features.Player"/>.</param>
+        /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
         /// <returns>A <see cref="PlayerNetworking"/> or <see langword="null"/> if not found.</returns>
         public static PlayerNetworking Get(PlayerControllerB playerController)
         {
             if (playerController == null) return null;
 
-            if (Player.TryGet(playerController, out Player p)) return p;
+            if (SPlayer.TryGet(playerController, out SPlayer p)) return p;
 
             return null;
         }
 
         /// <summary>
-        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.Player"/>.
+        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>.
         /// </summary>
-        /// <param name="playerController">The <see cref="Common.Features.Player"/>.</param>
+        /// <param name="playerController">The <see cref="Common.Features.SPlayer"/>.</param>
         /// <param name="player">Outputs a <see cref="PlayerNetworking"/>, or <see langword="null"/> if not found.</param>
-        /// <returns><see langword="true"/> if a <see cref="Common.Features.Player"/> is found, <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if a <see cref="Common.Features.SPlayer"/> is found, <see langword="false"/> otherwise.</returns>
         public static bool TryGet(PlayerControllerB playerController, out PlayerNetworking player)
         {
             return (player = Get(playerController)) != null;
         }
 
         /// <summary>
-        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.Player"/>'s client id.
+        /// Gets a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>'s client id.
         /// </summary>
         /// <param name="clientId">The player's client id.</param>
         /// <returns>A <see cref="Player"/> or <see langword="null"/> if not found.</returns>
         public static PlayerNetworking Get(ulong clientId)
         {
-            return Get(Player.List.FirstOrDefault(p => p.ClientId == clientId));
+            return Get(SPlayer.List.FirstOrDefault(p => p.ClientId == clientId));
         }
 
         /// <summary>
-        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.Player"/>'s client id.
+        /// Tries to get a <see cref="PlayerNetworking"/> from a <see cref="Common.Features.SPlayer"/>'s client id.
         /// </summary>
         /// <param name="clientId">The player's client id.</param>
-        /// <param name="player">Outputs a <see cref="Common.Features.Player"/>, or <see langword="null"/> if not found.</param>
+        /// <param name="player">Outputs a <see cref="Common.Features.SPlayer"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if a <see cref="PlayerNetworking"/> is found, <see langword="false"/> otherwise.</returns>
         public static bool TryGet(ulong clientId, out PlayerNetworking player)
         {
@@ -552,15 +589,15 @@ namespace Sigurd.ServerAPI.Features
         public class PlayerInventoryNetworking : NetworkBehaviour
         {
             /// <summary>
-            /// Gets the <see cref="Common.Features.Player"/> that this <see cref="PlayerInventoryNetworking"/> belongs to.
+            /// Gets the <see cref="Common.Features.SPlayer"/> that this <see cref="PlayerInventoryNetworking"/> belongs to.
             /// </summary>
-            public Player Player { get; private set; }
+            public SPlayer Player { get; private set; }
 
             /// <summary>
             /// Gets the <see cref="Player"/>'s items in order.
             /// </summary>
             /// TODO: I'm not sure how feasible it is to get this to work in any other way, but I hate this.
-            public Common.Features.Item?[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? Common.Features.Item.Dictionary[i] : null).ToArray();
+            public Common.Features.SItem?[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? Common.Features.SItem.Dictionary[i] : null).ToArray();
 
             /// <summary>
             /// Gets the <see cref="Player"/>'s current item slot.
@@ -613,13 +650,13 @@ namespace Sigurd.ServerAPI.Features
             }
 
             /// <summary>
-            /// Tries to add an <see cref="Common.Features.Item"/> to the inventory in the first available slot.
+            /// Tries to add an <see cref="Common.Features.SItem"/> to the inventory in the first available slot.
             /// </summary>
             /// <param name="item">The item to try to add.</param>
             /// <param name="switchTo">Whether or not to switch to this item after adding.</param>
             /// <returns><see langword="true"/> if added <see langword="false"/> otherwise.</returns>
             /// <exception cref="NoAuthorityException">Thrown when trying to add item from the client.</exception>
-            public bool TryAddItem(Common.Features.Item item, bool switchTo = true)
+            public bool TryAddItem(Common.Features.SItem item, bool switchTo = true)
             {
                 if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
                 {
@@ -668,14 +705,14 @@ namespace Sigurd.ServerAPI.Features
             }
 
             /// <summary>
-            /// Tries to add an <see cref="Common.Features.Item"/> to the inventory in a specific slot.
+            /// Tries to add an <see cref="Common.Features.SItem"/> to the inventory in a specific slot.
             /// </summary>
             /// <param name="item">The item to try to add.</param>
             /// <param name="slot">The slot to try to add the item to.</param>
             /// <param name="switchTo">Whether or not to switch to this item after adding.</param>
             /// <returns><see langword="true"/> if added <see langword="false"/> otherwise.</returns>
             /// <exception cref="NoAuthorityException">Thrown when trying to add item from the client.</exception>
-            public bool TryAddItemToSlot(Common.Features.Item item, int slot, bool switchTo = true)
+            public bool TryAddItemToSlot(Common.Features.SItem item, int slot, bool switchTo = true)
             {
                 if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost))
                 {
@@ -726,7 +763,7 @@ namespace Sigurd.ServerAPI.Features
             [ClientRpc]
             private void SetItemInSlotClientRpc(int slot, ulong itemId)
             {
-                Common.Features.Item item = Common.Features.Item.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
+                Common.Features.SItem item = Common.Features.SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
 
                 if (item != null)
                 {
@@ -760,7 +797,7 @@ namespace Sigurd.ServerAPI.Features
             [ClientRpc]
             private void SetSlotAndItemClientRpc(int slot, ulong itemId)
             {
-                Common.Features.Item item = Common.Features.Item.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
+                Common.Features.SItem item = Common.Features.SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
 
                 if (item != null)
                 {
@@ -811,7 +848,7 @@ namespace Sigurd.ServerAPI.Features
                 if (slot != -1)
                 {
                     bool currentlyHeldOut = slot == Player.Inventory.CurrentSlot;
-                    Common.Features.Item item = Items[slot];
+                    Common.Features.SItem item = Items[slot];
 
                     if (item == null) return;
 
@@ -870,7 +907,7 @@ namespace Sigurd.ServerAPI.Features
             /// Removes an <see cref="Item"/> from the inventory. This should be called on all clients from a client rpc.
             /// </summary>
             /// <param name="item">The <see cref="Item"/> to remove.</param>
-            public void RemoveItem(Common.Features.Item item)
+            public void RemoveItem(Common.Features.SItem item)
             {
                 RemoveItem(Array.IndexOf(Player.PlayerController.ItemSlots, item.GrabbableObject));
             }
@@ -888,7 +925,7 @@ namespace Sigurd.ServerAPI.Features
 
             private void Awake()
             {
-                Player = GetComponent<Player>();
+                Player = GetComponent<SPlayer>();
             }
         }
     }

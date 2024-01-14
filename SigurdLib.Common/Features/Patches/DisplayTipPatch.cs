@@ -11,7 +11,7 @@ namespace Sigurd.Common.Features.Patches
         // the tip is complete.
         private static bool Prefix(string headerText, string bodyText, bool isWarning, bool useSave, string prefsKey)
         {
-            Player player = Player.LocalPlayer;
+            SPlayer player = SPlayer.LocalPlayer;
 
             if (player == null) return true;
 
@@ -29,7 +29,7 @@ namespace Sigurd.Common.Features.Patches
             HUDManager.Instance.tipsPanelAnimator.speed = 1;
             HUDManager.Instance.tipsPanelAnimator.ResetTrigger("TriggerHint");
 
-            Player.DisplayTip(tip.Header, tip.Message, isWarning, useSave, prefsKey);
+            SPlayer.DisplayTip(tip.Header, tip.Message, isWarning, useSave, prefsKey);
 
             return false;
         }

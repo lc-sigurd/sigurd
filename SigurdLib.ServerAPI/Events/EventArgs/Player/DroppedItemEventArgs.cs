@@ -4,19 +4,19 @@ using UnityEngine;
 namespace Sigurd.ServerAPI.Events.EventArgs.Player
 {
     /// <summary>
-    /// Contains all the information after a <see cref="Common.Features.Player"/> drops an <see cref="Common.Features.Item"/>.
+    /// Contains all the information after a <see cref="Common.Features.SPlayer"/> drops an <see cref="Common.Features.SItem"/>.
     /// </summary>
     public class DroppedItemEventArgs : System.EventArgs
     {
         /// <summary>
-        /// Gets the <see cref="Common.Features.Player"/> that dropped the <see cref="Item"/>.
+        /// Gets the <see cref="Common.Features.SPlayer"/> that dropped the <see cref="Item"/>.
         /// </summary>
-        public Common.Features.Player Player { get; }
+        public Common.Features.SPlayer Player { get; }
 
         /// <summary>
-        /// Gets the <see cref="Common.Features.Item"/> that was dropped.
+        /// Gets the <see cref="Common.Features.SItem"/> that was dropped.
         /// </summary>
-        public Common.Features.Item Item { get; }
+        public Common.Features.SItem Item { get; }
 
         /// <summary>
         /// Gets whether or not the <see cref="Item"/> was placed.
@@ -59,7 +59,7 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// <param name="parentObjectTo"><inheritdoc cref="ParentObjectTo"/></param>
         /// <param name="matchRotationOfParent"><inheritdoc cref="MatchRotationOfParent"/></param>
         /// <param name="droppedInShip"><inheritdoc cref="DroppedInShip"/></param>
-        public DroppedItemEventArgs(Common.Features.Player player, Common.Features.Item item, bool placeObject, Vector3 targetPosition,
+        public DroppedItemEventArgs(Common.Features.SPlayer player, Common.Features.SItem item, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject? parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
             Player = player;

@@ -14,7 +14,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static HurtingEventArgs CallHurtingEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Common.Features.Player player = Common.Features.Player.GetOrAdd(playerController);
+            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
             HurtingEventArgs ev = new HurtingEventArgs(player, damage, hasSFX,
                 causeOfDeath, deathAnimation, fallDamage, force);
@@ -29,7 +29,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static HurtEventArgs CallHurtEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Common.Features.Player player = Common.Features.Player.GetOrAdd(playerController);
+            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
             HurtEventArgs ev = new HurtEventArgs(player, damage, hasSFX,
                 causeOfDeath, deathAnimation, fallDamage, force);

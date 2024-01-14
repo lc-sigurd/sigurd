@@ -12,11 +12,11 @@ namespace Sigurd.ServerAPI.Features
     public class ItemNetworking : NetworkBehaviour
     {
         /// <summary>
-        /// Gets a dictionary mapping <see cref="Common.Features.Item"/>'s to their respective <see cref="ItemNetworking"/>.
+        /// Gets a dictionary mapping <see cref="Common.Features.SItem"/>'s to their respective <see cref="ItemNetworking"/>.
         /// </summary>
-        public static Dictionary<Common.Features.Item, ItemNetworking> Dictionary { get; } = new Dictionary<Common.Features.Item, ItemNetworking>();
+        public static Dictionary<Common.Features.SItem, ItemNetworking> Dictionary { get; } = new Dictionary<Common.Features.SItem, ItemNetworking>();
 
-        public Common.Features.Item Item { get; private set; }
+        public Common.Features.SItem Item { get; private set; }
 
         public PlayerNetworking HolderNetworking => PlayerNetworking.Get(Item.Holder);
 
@@ -261,7 +261,7 @@ namespace Sigurd.ServerAPI.Features
         /// <param name="rotation">The rotation to spawn at.</param>
         /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
         /// <exception cref="NoAuthorityException">Thrown when trying to spawn an <see cref="Item"/> on the client.</exception>
-        public static Common.Features.Item CreateAndSpawnItem(string itemName, bool andInitialize = true, Vector3 position = default, Quaternion rotation = default)
+        public static Common.Features.SItem CreateAndSpawnItem(string itemName, bool andInitialize = true, Vector3 position = default, Quaternion rotation = default)
         {
             if (!NetworkManager.Singleton.IsServer)
             {
@@ -277,7 +277,7 @@ namespace Sigurd.ServerAPI.Features
 
                 instantiated.GetComponent<NetworkObject>().Spawn();
 
-                Common.Features.Item item = instantiated.GetComponent<Common.Features.Item>();
+                Common.Features.SItem item = instantiated.GetComponent<Common.Features.SItem>();
 
                 if (item.IsScrap && andInitialize) item.InitializeScrap();
 
@@ -291,7 +291,7 @@ namespace Sigurd.ServerAPI.Features
         /// Creates an <see cref="Item"/> and gives it to a specific <see cref="PlayerNetworking"/>.
         /// </summary>
         /// <param name="itemName">The item's name. Uses a simple Contains check to see if the provided item name is contained in the actual item's name. Case insensitive.</param>
-        /// <param name="player">The <see cref="PlayerNetworking"/> to give the <see cref="Common.Features.Item"/> to.</param>
+        /// <param name="player">The <see cref="PlayerNetworking"/> to give the <see cref="Common.Features.SItem"/> to.</param>
         /// <param name="andInitialize">Whether or not to initialize this item after spawning.</param>
         /// <param name="switchTo">Whether or not to switch to the item. Forced for 2 handed items.</param>
         /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
@@ -327,20 +327,20 @@ namespace Sigurd.ServerAPI.Features
         #region Unity related things
         private void Awake()
         {
-            Dictionary.Add(GetComponent<Common.Features.Item>(), this);
+            Dictionary.Add(GetComponent<Common.Features.SItem>(), this);
         }
         #endregion
 
-        public static implicit operator Common.Features.Item(ItemNetworking itemNetworking) => itemNetworking.Item;
-        public static implicit operator ItemNetworking(Common.Features.Item item) => Get(item);
+        public static implicit operator Common.Features.SItem(ItemNetworking itemNetworking) => itemNetworking.Item;
+        public static implicit operator ItemNetworking(Common.Features.SItem item) => Get(item);
 
         #region Item getters
         /// <summary>
-        /// Gets an <see cref="ItemNetworking"/> from an <see cref="Common.Features.Item"/>.
+        /// Gets an <see cref="ItemNetworking"/> from an <see cref="Common.Features.SItem"/>.
         /// </summary>
-        /// <param name="item">The <see cref="Common.Features.Item"/>.</param>
+        /// <param name="item">The <see cref="Common.Features.SItem"/>.</param>
         /// <returns>An <see cref="ItemNetworking"/>.</returns>
-        public static ItemNetworking? Get(Common.Features.Item item)
+        public static ItemNetworking? Get(Common.Features.SItem item)
         {
             if (item == null) return null;
 
@@ -351,12 +351,12 @@ namespace Sigurd.ServerAPI.Features
         }
 
         /// <summary>
-        /// Attempts to get an <see cref="ItemNetworking"/> from an <see cref="Common.Features.Item"/>.
+        /// Attempts to get an <see cref="ItemNetworking"/> from an <see cref="Common.Features.SItem"/>.
         /// </summary>
-        /// <param name="item">The <see cref="Common.Features.Item"/>.</param>
+        /// <param name="item">The <see cref="Common.Features.SItem"/>.</param>
         /// <param name="itemNetworking">The <see cref="ItemNetworking"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(Common.Features.Item item, out ItemNetworking? itemNetworking)
+        public static bool TryGet(Common.Features.SItem item, out ItemNetworking? itemNetworking)
         {
             itemNetworking = null;
             if (item == null) return false;

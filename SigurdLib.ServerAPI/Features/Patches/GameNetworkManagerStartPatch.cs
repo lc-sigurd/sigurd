@@ -26,8 +26,8 @@ namespace Sigurd.ServerAPI.Features.Patches
             LoadedAssetBundle assets = BundleHelper.LoadAssetBundle(BUNDLE_PATH, false);
 
             GameObject playerObj = assets.GetAsset<GameObject>(PLAYER_NETWORKING_ASSET_LOCATION);
-            playerObj.AddComponent<Player>();
-            playerObj.AddComponent<Player.PlayerInventory>();
+            playerObj.AddComponent<PlayerNetworking>();
+            playerObj.AddComponent<PlayerNetworking.PlayerInventoryNetworking>();
             networkManager.AddNetworkPrefab(playerObj);
             PlayerNetworking.PlayerNetworkPrefab = playerObj;
 

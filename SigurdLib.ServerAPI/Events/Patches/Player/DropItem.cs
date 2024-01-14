@@ -15,9 +15,9 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         internal static DroppingItemEventArgs CallDroppingItemEvent(PlayerControllerB playerController, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
-            Common.Features.Player player = Common.Features.Player.GetOrAdd(playerController);
+            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
-            Common.Features.Item item = Common.Features.Item.Get(playerController.currentlyHeldObjectServer)!;
+            Common.Features.SItem item = Common.Features.SItem.Get(playerController.currentlyHeldObjectServer)!;
 
             DroppingItemEventArgs ev = new DroppingItemEventArgs(player, item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
 
@@ -31,9 +31,9 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         internal static void CallDroppedItemEvent(PlayerControllerB playerController, GrabbableObject grabbable, bool placeObject, Vector3 targetPosition,
             int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
         {
-            Common.Features.Player player = Common.Features.Player.GetOrAdd(playerController);
+            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
-            Common.Features.Item item = Common.Features.Item.Get(grabbable)!;
+            Common.Features.SItem item = Common.Features.SItem.Get(grabbable)!;
 
             DroppedItemEventArgs ev = new DroppedItemEventArgs(player, item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
 

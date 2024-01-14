@@ -3,7 +3,7 @@ using System;
 namespace Sigurd.Common.Features
 {
     /// <summary>
-    /// Contains <see cref="Player"/> tip info.
+    /// Contains <see cref="SPlayer"/> tip info.
     /// </summary>
     public class Tip : IComparable<Tip>
     {

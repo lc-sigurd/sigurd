@@ -13,7 +13,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static DyingEventArgs CallEvent(PlayerControllerB playerController, Vector3 force, bool spawnBody,
             CauseOfDeath causeOfDeath, int deathAnimation)
         {
-            DyingEventArgs ev = new DyingEventArgs(Common.Features.Player.GetOrAdd(playerController), force, spawnBody,
+            DyingEventArgs ev = new DyingEventArgs(Common.Features.SPlayer.GetOrAdd(playerController), force, spawnBody,
                 causeOfDeath, deathAnimation);
 
             Handlers.Player.OnDying(ev);
@@ -87,7 +87,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static void Prefix(PlayerControllerB __instance, bool spawnBody, Vector3 bodyVelocity,
             int causeOfDeath, int deathAnimation)
         {
-            Common.Features.Player player = Common.Features.Player.GetOrAdd(__instance);
+            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(__instance);
 
             // The local player Dying event has already been fired
             if (player.IsLocalPlayer) return;
@@ -99,7 +99,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         private static void Postfix(PlayerControllerB __instance, bool spawnBody, Vector3 bodyVelocity,
             int causeOfDeath, int deathAnimation)
         {
-            Handlers.Player.OnDied(new DiedEventArgs(Common.Features.Player.GetOrAdd(__instance), bodyVelocity,
+            Handlers.Player.OnDied(new DiedEventArgs(Common.Features.SPlayer.GetOrAdd(__instance), bodyVelocity,
                 spawnBody, (CauseOfDeath)causeOfDeath, deathAnimation));
         }
     }

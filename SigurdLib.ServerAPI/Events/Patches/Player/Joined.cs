@@ -11,14 +11,6 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnPlayerConnectedClientRpc))]
     internal static class Joined
     {
-        private static void Prefix(ulong clientId, int assignedPlayerObjectId)
-        {
-            if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-            {
-                PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
-            }
-        }
-
         private static void Postfix(ulong clientId, int assignedPlayerObjectId)
         {
             PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
@@ -36,18 +28,32 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
         {
             yield return new WaitUntil(() => StartOfRound.Instance.localPlayerController != null);
 
-            Common.Features.Player player = Common.Features.Player.GetOrAdd(controller);
+            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(controller);
 
             while (player == null)
             {
                 yield return new WaitForSeconds(0.1f);
 
-                player = Common.Features.Player.GetOrAdd(controller);
+                player = Common.Features.SPlayer.GetOrAdd(controller);
+            }
+
+            PlayerNetworking playerNetworking = PlayerNetworking.GetOrAdd(player);
+
+            while (playerNetworking == null)
+            {
+                yield return new WaitForSeconds(0.1f);
+
+                playerNetworking = PlayerNetworking.GetOrAdd(player);
             }
 
             if (player.IsLocalPlayer)
             {
-                Common.Features.Player.LocalPlayer = player;
+                Common.Features.SPlayer.LocalPlayer = player;
+            }
+
+            if (player.IsHost)
+            {
+                Common.Features.SPlayer.HostPlayer = player;
             }
 
             Handlers.Player.OnJoined(new JoinedEventArgs(player));

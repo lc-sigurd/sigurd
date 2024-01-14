@@ -10,17 +10,17 @@ namespace Sigurd.Common.Features
     /// <summary>
     /// Encapsulates a <see cref="global::GrabbableObject"/> for easier interacting.
     /// </summary>
-    public class Item : MonoBehaviour
+    public class SItem : MonoBehaviour
     {
         /// <summary>
-        /// Gets a dictionary containing all <see cref="Item"/>s that are currently spawned in the world or in <see cref="Common.Features.Player"/>s' inventories.
+        /// Gets a dictionary containing all <see cref="SItem"/>s that are currently spawned in the world or in <see cref="Common.Features.SPlayer"/>s' inventories.
         /// </summary>
-        public static Dictionary<GrabbableObject, Item> Dictionary { get; } = new Dictionary<GrabbableObject, Item>();
+        public static Dictionary<GrabbableObject, SItem> Dictionary { get; } = new Dictionary<GrabbableObject, SItem>();
 
         /// <summary>
-        /// Gets a list containing all <see cref="Item"/>s.
+        /// Gets a list containing all <see cref="SItem"/>s.
         /// </summary>
-        public static IReadOnlyCollection<Item> List => Dictionary.Values;
+        public static IReadOnlyCollection<SItem> List => Dictionary.Values;
 
         /// <summary>
         /// Gets the encapsulated <see cref="global::GrabbableObject"/>
@@ -28,34 +28,34 @@ namespace Sigurd.Common.Features
         public GrabbableObject GrabbableObject { get; private set; }
 
         /// <summary>
-        /// Gets the <see cref="Item"/>'s <see cref="Item">item properties</see>.
-        /// These do not network, it is recommended to use the getters/setters on the <see cref="Item"/> itself.
+        /// Gets the <see cref="SItem"/>'s <see cref="SItem">item properties</see>.
+        /// These do not network, it is recommended to use the getters/setters on the <see cref="SItem"/> itself.
         /// </summary>
         public global::Item ItemProperties => GrabbableObject.itemProperties;
 
         /// <summary>
-        /// Gets the <see cref="Item"/>'s <see cref="ScanNodeProperties"/>.
-        /// These do not network, it is recommended to use the getters/setters on the <see cref="Item"/> itself.
+        /// Gets the <see cref="SItem"/>'s <see cref="ScanNodeProperties"/>.
+        /// These do not network, it is recommended to use the getters/setters on the <see cref="SItem"/> itself.
         /// </summary>
         public ScanNodeProperties ScanNodeProperties { get; set; }
 
         /// <summary>
-        /// Gets whether or not this <see cref="Item"/> is currently being held.
+        /// Gets whether or not this <see cref="SItem"/> is currently being held.
         /// </summary>
         public bool IsHeld => GrabbableObject.isHeld;
 
         /// <summary>
-        /// Gets whether or not this <see cref="Item"/> is two handed.
+        /// Gets whether or not this <see cref="SItem"/> is two handed.
         /// </summary>
         public bool IsTwoHanded => ItemProperties.twoHanded;
 
         /// <summary>
-        /// Gets the <see cref="Player"/> that is currently holding this <see cref="Item"/>. <see langword="null"/> if not held.
+        /// Gets the <see cref="SPlayer"/> that is currently holding this <see cref="SItem"/>. <see langword="null"/> if not held.
         /// </summary>
-        public Player Holder => IsHeld ? Player.Dictionary.TryGetValue(GrabbableObject.playerHeldBy, out Player p) ? p : null : null;
+        public SPlayer Holder => IsHeld ? SPlayer.Dictionary.TryGetValue(GrabbableObject.playerHeldBy, out SPlayer p) ? p : null : null;
 
         /// <summary>
-        /// Gets or sets the <see cref="Item"/>'s name.
+        /// Gets or sets the <see cref="SItem"/>'s name.
         /// </summary>
         public string Name
         {
@@ -83,11 +83,11 @@ namespace Sigurd.Common.Features
                 ItemProperties.toolTips[i] = ItemProperties.toolTips[i].ReplaceWithCase(oldName, newName);
             }
 
-            if (IsHeld && Holder == Player.LocalPlayer) GrabbableObject.SetControlTipsForItem();
+            if (IsHeld && Holder == SPlayer.LocalPlayer) GrabbableObject.SetControlTipsForItem();
         }
 
         /// <summary>
-        /// Gets or sets the position of this <see cref="Item"/>.
+        /// Gets or sets the position of this <see cref="SItem"/>.
         /// </summary>
         public Vector3 Position
         {
@@ -104,7 +104,7 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Gets or sets the rotation of this <see cref="Item"/>.
+        /// Gets or sets the rotation of this <see cref="SItem"/>.
         /// </summary>
         public Quaternion Rotation
         {
@@ -119,7 +119,7 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Sets the scale of the <see cref="Item"/>.
+        /// Sets the scale of the <see cref="SItem"/>.
         /// </summary>
         public Vector3 Scale
         {
@@ -134,7 +134,7 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Gets or sets whether this <see cref="Item"/> should be considered scrap.
+        /// Gets or sets whether this <see cref="SItem"/> should be considered scrap.
         /// </summary>
         public bool IsScrap
         {
@@ -151,7 +151,7 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Gets or sets this <see cref="Item"/>'s scrap value.
+        /// Gets or sets this <see cref="SItem"/>'s scrap value.
         /// </summary>
         public int ScrapValue
         {
@@ -166,19 +166,19 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Enables/disables the <see cref="Item"/>'s physics.
+        /// Enables/disables the <see cref="SItem"/>'s physics.
         /// </summary>
         /// <param name="enable"><see langword="true"/> to enable physics, <see langword="false" /> otherwise.</param>
         public void EnablePhysics(bool enable) => GrabbableObject.EnablePhysics(enable);
 
         /// <summary>
-        /// Enables/disables the <see cref="Item"/>'s meshes.
+        /// Enables/disables the <see cref="SItem"/>'s meshes.
         /// </summary>
         /// <param name="enable"><see langword="true"/> to enable meshes, <see langword="false" /> otherwise.</param>
         public void EnableMeshes(bool enable) => GrabbableObject.EnableItemMeshes(enable);
 
         /// <summary>
-        /// Start the <see cref="Item"/> falling to the ground.
+        /// Start the <see cref="SItem"/> falling to the ground.
         /// </summary>
         /// <param name="randomizePosition">Whether or not to add some randomness to the position.</param>
         public void FallToGround(bool randomizePosition = false)
@@ -187,9 +187,9 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Pockets the <see cref="Item"/> by disabling its meshes. Plays pocket sound effects.
+        /// Pockets the <see cref="SItem"/> by disabling its meshes. Plays pocket sound effects.
         /// </summary>
-        /// <returns><see langword="true"/> if the <see cref="Item"/> was able to be pocketed, <see langword="false" /> otherwise.</returns>
+        /// <returns><see langword="true"/> if the <see cref="SItem"/> was able to be pocketed, <see langword="false" /> otherwise.</returns>
         public bool PocketItem()
         {
             // We can only pocket items that are currently being held in a player's hand. Two handed
@@ -202,7 +202,7 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Initializes the <see cref="Item"/> with base game scrap values.
+        /// Initializes the <see cref="SItem"/> with base game scrap values.
         /// </summary>
         public void InitializeScrap()
         {
@@ -211,7 +211,7 @@ namespace Sigurd.Common.Features
         }
 
         /// <summary>
-        /// Initializes the <see cref="Item"/> with a specific scrap value.
+        /// Initializes the <see cref="SItem"/> with a specific scrap value.
         /// </summary>
         /// <param name="scrapValue">The desired scrap value.</param>
         public void InitializeScrap(int scrapValue)
@@ -271,46 +271,46 @@ namespace Sigurd.Common.Features
 
         #region Item getters
         /// <summary>
-        /// Gets an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
+        /// Gets an <see cref="SItem"/> from a <see cref="GrabbableObject"/>.
         /// </summary>
         /// <param name="grabbableObject">The encapsulated <see cref="GrabbableObject"/>.</param>
-        /// <returns>An <see cref="Item"/>.</returns>
-        public static Item? Get(GrabbableObject grabbableObject)
+        /// <returns>An <see cref="SItem"/>.</returns>
+        public static SItem? Get(GrabbableObject grabbableObject)
         {
-            if (Dictionary.TryGetValue(grabbableObject, out Item item))
+            if (Dictionary.TryGetValue(grabbableObject, out SItem item))
                 return item;
 
             return null;
         }
 
         /// <summary>
-        /// Attempts to get an <see cref="Item"/> from a <see cref="GrabbableObject"/>.
+        /// Attempts to get an <see cref="SItem"/> from a <see cref="GrabbableObject"/>.
         /// </summary>
         /// <param name="grabbableObject">The encapsulated <see cref="GrabbableObject"/>.</param>
-        /// <param name="item">The <see cref="Item"/>, or <see langword="null"/> if not found.</param>
+        /// <param name="item">The <see cref="SItem"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(GrabbableObject grabbableObject, out Item? item)
+        public static bool TryGet(GrabbableObject grabbableObject, out SItem? item)
         {
             return Dictionary.TryGetValue(grabbableObject, out item);
         }
 
         /// <summary>
-        /// Gets an <see cref="Item"/> from its network object id.
+        /// Gets an <see cref="SItem"/> from its network object id.
         /// </summary>
-        /// <param name="netId">The <see cref="Item"/>'s network object id.</param>
-        /// <returns>An <see cref="Item"/>.</returns>
-        public static Item? Get(ulong netId)
+        /// <param name="netId">The <see cref="SItem"/>'s network object id.</param>
+        /// <returns>An <see cref="SItem"/>.</returns>
+        public static SItem? Get(ulong netId)
         {
             return List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == netId);
         }
 
         /// <summary>
-        /// Attempts to get an <see cref="Item"/> from its network object id.
+        /// Attempts to get an <see cref="SItem"/> from its network object id.
         /// </summary>
-        /// <param name="netId">The <see cref="Item"/>'s network object id.</param>
-        /// <param name="item">The <see cref="Item"/>, or <see langword="null"/> if not found.</param>
+        /// <param name="netId">The <see cref="SItem"/>'s network object id.</param>
+        /// <param name="item">The <see cref="SItem"/>, or <see langword="null"/> if not found.</param>
         /// <returns><see langword="true"/> if found, <see langword="false"/> otherwise.</returns>
-        public static bool TryGet(ulong netId, out Item? item)
+        public static bool TryGet(ulong netId, out SItem? item)
         {
             item = Get(netId);
 
