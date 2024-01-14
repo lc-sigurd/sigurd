@@ -54,4 +54,9 @@
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
     </ItemGroup>
+    <ItemGroup>
+        <Reference Include="OdinSerializer">
+            <HintPath>$(ProjectDir)..\libs\OdinSerializer.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 </Project>

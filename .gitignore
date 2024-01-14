@@ -46,5 +46,8 @@
 /SigurdLib*/[Oo]bj
 /SigurdLib*/[Dd]ist
 
+## Libraries
+!/libs*
+
 # Explicit exceptions/ignores
 **.user
