@@ -17,7 +17,7 @@ namespace Sigurd.ServerAPI.Features
         internal static GameObject PlayerNetworkPrefab { get; set; }
 
         /// <summary>
-        /// Gets a dictionary mapping <see cref="Common.Features.SPlayer"/>'s to their respective <see cref="SPlayerNetworking"/>. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
+        /// Gets a dictionary mapping <see cref="Common.Features.SPlayer"/>'s to their respective <see cref="SPlayerNetworking"/>. Even ones that may be inactive.
         /// </summary>
         public static Dictionary<SPlayer, SPlayerNetworking> Dictionary { get; } = new Dictionary<SPlayer, SPlayerNetworking>();
 
@@ -280,6 +280,7 @@ namespace Sigurd.ServerAPI.Features
             }
         }
 
+        [ClientRpc]
         private void HurtPlayerClientRpc(int damage, int causeOfDeath, Vector3 bodyVelocity, bool overrideOneShotProtection, int deathAnimation, bool fallDamage, bool hasSFX)
         {
             Player.Hurt(damage, (CauseOfDeath)causeOfDeath, bodyVelocity, overrideOneShotProtection, deathAnimation, fallDamage, hasSFX);
@@ -346,20 +347,37 @@ namespace Sigurd.ServerAPI.Features
             {
                 if (NetworkClientId.Value != ulong.MaxValue)
                 {
-                    SPlayer player = SPlayer.Get(NetworkClientId.Value);
+                    PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(p => p.actualClientId == NetworkClientId.Value);
 
-                    if (player != null)
-                    {
-                        if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, this);
+                    if (playerController == null) return;
 
-                        Player = player;
-                    }
+                    SPlayer player = SPlayer.GetOrAdd(playerController);
+
+                    if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, this);
+
+                    Player = player;
                 }
             }
 
             InventoryNetworking = GetComponent<PlayerInventoryNetworking>();
 
             NetworkClientId.OnValueChanged += clientIdChanged;
+        }
+
+        private void Update()
+        {
+            if (Player == null && NetworkClientId.Value != ulong.MaxValue)
+            {
+                PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(p => p.actualClientId == NetworkClientId.Value);
+
+                if (playerController == null) return;
+
+                SPlayer player = SPlayer.GetOrAdd(playerController);
+
+                if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, this);
+
+                Player = player;
+            }
         }
 
         /// <summary>
@@ -373,8 +391,9 @@ namespace Sigurd.ServerAPI.Features
 
         private void clientIdChanged(ulong oldId, ulong newId)
         {
-            Plugin.Log.LogInfo("CLIENT ID CHANGED!!!!!!!!");
-            SPlayer player = SPlayer.Get(newId);
+            PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(p => p.actualClientId == newId);
+
+            SPlayer player = SPlayer.Get(playerController);
             if (player != null)
             {
                 if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, this);
@@ -383,6 +402,9 @@ namespace Sigurd.ServerAPI.Features
             }
         }
 
+        /// <summary>
+        /// For internal use only.
+        /// </summary>
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -414,7 +436,6 @@ namespace Sigurd.ServerAPI.Features
         private void CallHurtingOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Plugin.Log.LogInfo($"CallHurtingOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnHurting(new Events.EventArgs.Player.HurtingEventArgs(Player, damage, hasSFX,
@@ -440,7 +461,6 @@ namespace Sigurd.ServerAPI.Features
         private void CallHurtOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
             int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Plugin.Log.LogInfo($"CallHurtOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnHurt(new Events.EventArgs.Player.HurtEventArgs(Player, damage, hasSFX,
@@ -467,7 +487,6 @@ namespace Sigurd.ServerAPI.Features
         private void CallDroppingItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
             int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
         {
-            Plugin.Log.LogInfo($"CallDroppingItemOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnDroppingItem(new Events.EventArgs.Player.DroppingItemEventArgs(Player, SItem.Get(itemNetworkId)!, placeObject, targetPosition, floorYRotation, hasParent ? NetworkManager.Singleton.SpawnManager.SpawnedObjects[parentObjectToId] : null, matchRotationOfParent, droppedInShip));
@@ -493,7 +512,6 @@ namespace Sigurd.ServerAPI.Features
         private void CallDroppedItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
             int floorYRotation, bool hasParent, ulong parentObjectToId, bool matchRotationOfParent, bool droppedInShip)
         {
-            Plugin.Log.LogInfo($"CallDroppedItemOnOtherClientsClientRpc {Player.IsLocalPlayer}");
 
             if (Player.IsLocalPlayer) return;
 
@@ -516,7 +534,6 @@ namespace Sigurd.ServerAPI.Features
         [ClientRpc]
         private void CallGrabbingItemOnOtherClientsClientRpc(ulong itemNetworkId)
         {
-            Plugin.Log.LogInfo($"CallGrabbingItemOnOtherClientsClientRpc {Player.IsLocalPlayer}");
             if (Player.IsLocalPlayer) return;
 
             Events.Handlers.Player.OnGrabbingItem(new Events.EventArgs.Player.GrabbingItemEventArgs(Player, SItem.Get(itemNetworkId)!));
@@ -541,7 +558,6 @@ namespace Sigurd.ServerAPI.Features
 
             foreach (SPlayerNetworking p in FindObjectsOfType<SPlayerNetworking>())
             {
-                Plugin.Log.LogInfo($"FINDING PLAYER NETWORKING... LOOKING FOR: {player.ClientId}. CUR NETWORK ID: {p.NetworkClientId.Value}");
                 if (p.NetworkClientId.Value == player.ClientId)
                 {
                     if (!Dictionary.ContainsKey(player)) Dictionary.Add(player, p);
@@ -553,10 +569,9 @@ namespace Sigurd.ServerAPI.Features
                 }
             }
 
-            if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
-                Plugin.Log.LogInfo($"SPAWNING PLAYER THING {player.ClientId}");
-                GameObject go = Instantiate(PlayerNetworkPrefab, Vector3.zero, default);
+                GameObject go = Instantiate(PlayerNetworkPrefab);
                 go.SetActive(true);
                 SPlayerNetworking p = go.GetComponent<SPlayerNetworking>();
                 p.Player = player;

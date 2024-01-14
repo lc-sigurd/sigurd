@@ -13,12 +13,12 @@ namespace Sigurd.Common.Features
     {
         internal static GameObject PlayerPrefab { get; set; }
         /// <summary>
-        /// Gets a dictionary containing all <see cref="SPlayer"/>s. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
+        /// Gets a dictionary containing all <see cref="SPlayer"/>s. Even ones that may no longer be active.
         /// </summary>
         public static Dictionary<PlayerControllerB, SPlayer> Dictionary { get; } = new Dictionary<PlayerControllerB, SPlayer>();
 
         /// <summary>
-        /// Gets a list containing all <see cref="SPlayer"/>s. Even inactive ones. When on a client, this may not contain all inactive players as they will not yet have been linked to a player controller.
+        /// Gets a list containing all <see cref="SPlayer"/>s. Even ones that may no longer be active.
         /// </summary>
         public static IReadOnlyCollection<SPlayer> List => Dictionary.Values;
 
