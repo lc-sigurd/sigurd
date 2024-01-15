@@ -13,6 +13,12 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     public string OutputPath { get; set; }
 
     [Required]
+    public string PackageNamespace { get; set; }
+
+    [Required]
+    public string PackageName { get; set; }
+
+    [Required]
     public string Version { get; set; }
 
     [Required]
@@ -40,6 +46,9 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
         }
 
         File.WriteAllText(OutputPath, project.Serialize());
+        project.Package.Namespace = PackageNamespace;
+        project.Package.Name = PackageName;
+
         return true;
     }
 }
