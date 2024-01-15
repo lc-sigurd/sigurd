@@ -1,32 +1,8 @@
 [config]
 schemaVersion = "0.0.1"
 
-[build]
-icon = "icons/in-deep.png"
-readme = "../../README.md"
-outdir = "../dist"
-
-[[build.copy]]
-source = "bundles"
-target = "BepInEx/plugins/Sigurd/bundles"
-
-[[build.copy]]
-source = "../bin/Release/netstandard2.1/com.sigurd.sigurd.serverapi.dll"
-target = "BepInEx/plugins/Sigurd/"
-
-[[build.copy]]
-source = "../../CHANGELOG.md"
-target = "/"
-
-[[build.copy]]
-source = "../../LICENSE"
-target = "/"
-
-
 [publish]
 repository = "https://thunderstore.io"
 communities = [ "lethal-company", ]
 [publish.categories]
 lethal-company = [ "libraries", ]
-
-
