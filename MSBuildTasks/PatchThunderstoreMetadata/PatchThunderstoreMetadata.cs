@@ -41,7 +41,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             .WriteTo.TaskLoggingHelper(Log)
             .CreateLogger();
 
-        Serilog.Log.Information("Plugin meta-manifest patcher started. There are {DepCount} items to consider", PackageDependencies.Length);
+        Serilog.Log.Information("Plugin meta-manifest patcher started.");
 
         var project = ThunderstoreProject.Deserialize(File.ReadAllText(ConfigurationFileInputPath));
         if (project is null) {
