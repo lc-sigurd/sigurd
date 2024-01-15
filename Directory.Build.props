@@ -36,6 +36,9 @@
         <ThunderstoreBuildCopyPath>
             <Destination/>
         </ThunderstoreBuildCopyPath>
+        <ThunderstorePublishCommunity>
+            <CategorySlugs/>
+        </ThunderstorePublishCommunity>
     </ItemDefinitionGroup>
 
     <PropertyGroup>
