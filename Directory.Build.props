@@ -22,6 +22,11 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <!-- Thunderstore metadata -->
+    <PropertyGroup>
+        <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
         <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
