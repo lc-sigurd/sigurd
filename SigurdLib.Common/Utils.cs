@@ -75,7 +75,17 @@ namespace Sigurd.Common
             }
 
             // In case it didn't work, just return a normal replace.
-            if (temp == input) return input.Replace(map.First().Key, map.First().Value);
+            if (temp == input)
+            {
+                string t = input;
+
+                foreach (KeyValuePair<string, string> pair in map)
+                {
+                    t = t.Replace(pair.Key, pair.Value);
+                }
+
+                return t;
+            }
 
             return temp;
         }
