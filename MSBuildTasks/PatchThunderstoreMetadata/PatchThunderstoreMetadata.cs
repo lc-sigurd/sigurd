@@ -68,16 +68,13 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             VersionNumber = PackageVersion,
             WebsiteUrl = PackageWebsiteUrl,
             ContainsNsfwContent = PackageContainsNsfwContent,
-            Dependencies = [],
+            Dependencies = PackageDependencies
+                .Select(ThunderstorePackageDependency.FromTaskItem)
+                .ToDictionary(
+                    dep => dep.Moniker.FullName,
+                    dep => dep.Moniker.Version.ToVersion().ToString()
+                ),
         };
-
-        var dependenciesToAdd = PackageDependencies.Select(ThunderstorePackageDependency.FromTaskItem);
-
-        foreach (var dependency in dependenciesToAdd)
-        {
-            Serilog.Log.Information("Dependency found: {Dependency}", dependency);
-            project.Package.Dependencies.Add(dependency.Moniker.FullName, dependency.Moniker.Version.ToVersion().ToString());
-        }
 
         project.Build = new ThunderstoreProject.BuildData {
             Readme = BuildReadmePath,
