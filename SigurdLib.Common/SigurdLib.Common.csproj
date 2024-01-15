@@ -10,6 +10,7 @@
         <Description>Sigurd's common utilities. Will never contain vanilla-breaking components.</Description>
 
         <ThunderstoreName>Sigurd_Common</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's common utilities</ThunderstoreDescription>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>

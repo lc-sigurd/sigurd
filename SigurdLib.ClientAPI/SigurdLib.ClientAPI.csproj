@@ -7,9 +7,10 @@
         <Product>SigurdLib.ClientAPI</Product>
 
         <PackageId>SigurdLib.ClientAPI</PackageId>
-        <Description>Sigurd's client-sided api. Does not require everyone to have to use.</Description>
+        <Description>Sigurd's client-sided modding API. Compatible with all clients.</Description>
 
         <ThunderstoreName>Sigurd_ClientAPI</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's client-sided modding API</ThunderstoreDescription>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>

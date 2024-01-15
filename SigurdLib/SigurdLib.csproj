@@ -10,6 +10,7 @@
         <Description>Sigurd, the Lethal Company Library.</Description>
 
         <ThunderstoreName>Sigurd</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd, the Lethal Company Library</ThunderstoreDescription>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
