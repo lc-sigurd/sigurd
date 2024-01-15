@@ -16,8 +16,8 @@
         <Company>Sigurd Team</Company>
         <IsPackable>false</IsPackable>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/lc-sigurd/Sigurd</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lc-sigurd/Sigurd</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
