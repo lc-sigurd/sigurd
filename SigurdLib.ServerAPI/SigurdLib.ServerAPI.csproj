@@ -10,6 +10,7 @@
         <Description>Sigurd's server-sided modding API. Everyone must have this for it to work properly.</Description>
 
         <ThunderstoreName>Sigurd_ServerAPI</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's server-sided modding API</ThunderstoreDescription>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
