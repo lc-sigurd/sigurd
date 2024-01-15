@@ -90,6 +90,17 @@ public class ThunderstoreProject : BaseToml<ThunderstoreProject>
                     Target = item.GetMetadata("Destination"),
                 };
             }
+
+            public CopyPath MakeRelativeToFile(string path)
+            {
+                return MakeRelativeTo(Path.GetDirectoryName(path)!);
+            }
+
+            public CopyPath MakeRelativeTo(string directory)
+            {
+                Source = Path.GetRelativePath(directory, Source);
+                return this;
+            }
         }
 
         [TomlProperty("copy")]
