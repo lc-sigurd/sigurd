@@ -42,6 +42,7 @@
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
         <ThunderstoreReadmePath>$(ProjectDir)../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>$(ProjectDir)assets/icons/in-deep.png</ThunderstoreIconPath>
     </PropertyGroup>
 
     <ItemGroup>
