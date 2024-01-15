@@ -6,43 +6,42 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine.SceneManagement;
 
-namespace Sigurd.Common
+namespace Sigurd.Common;
+
+/// <summary>
+/// The main Plugin class.
+/// </summary>
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+public sealed class Plugin : BaseUnityPlugin
 {
-    /// <summary>
-    /// The main Plugin class.
-    /// </summary>
-    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    public sealed class Plugin : BaseUnityPlugin
+    internal static Plugin Instance { get; private set; }
+
+    internal static ManualLogSource Log { get; private set; }
+
+    internal static Harmony Harmony { get; private set; }
+
+    private void Awake()
     {
-        internal static Plugin Instance { get; private set; }
+        Instance = this;
 
-        internal static ManualLogSource Log { get; private set; }
+        Log = Logger;
 
-        internal static Harmony Harmony { get; private set; }
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
-        private void Awake()
+        Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
+        Harmony.PatchAll();
+
+        Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
+    }
+
+    // For pre-placed items
+    internal void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        foreach (GrabbableObject grabbable in FindObjectsOfType<GrabbableObject>())
         {
-            Instance = this;
-
-            Log = Logger;
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-
-            Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
-            Harmony.PatchAll();
-
-            Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
-        }
-
-        // For pre-placed items
-        internal void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            foreach (GrabbableObject grabbable in FindObjectsOfType<GrabbableObject>())
+            if (!grabbable.TryGetComponent(out Features.SItem _))
             {
-                if (!grabbable.TryGetComponent(out Features.SItem _))
-                {
-                    grabbable.gameObject.AddComponent<Features.SItem>();
-                }
+                grabbable.gameObject.AddComponent<Features.SItem>();
             }
         }
     }

@@ -6,120 +6,120 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;
 
-namespace Sigurd.ServerAPI.Events.Patches.Player
+namespace Sigurd.ServerAPI.Events.Patches.Player;
+
+[HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.DamagePlayer))]
+internal class Hurt
 {
-    [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.DamagePlayer))]
-    internal class Hurt
+    private static HurtingEventArgs CallHurtingEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
+        int deathAnimation, bool fallDamage, Vector3 force)
     {
-        private static HurtingEventArgs CallHurtingEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
-            int deathAnimation, bool fallDamage, Vector3 force)
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
+
+        HurtingEventArgs ev = new HurtingEventArgs(player, damage, hasSFX,
+            causeOfDeath, deathAnimation, fallDamage, force);
+
+        Handlers.Player.OnHurting(ev);
+
+        ((SPlayerNetworking)player).CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+
+        return ev;
+    }
+
+    private static HurtEventArgs CallHurtEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
+        int deathAnimation, bool fallDamage, Vector3 force)
+    {
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
+
+        HurtEventArgs ev = new HurtEventArgs(player, damage, hasSFX,
+            causeOfDeath, deathAnimation, fallDamage, force);
+
+        Handlers.Player.OnHurt(ev);
+
+        ((SPlayerNetworking)player).CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+
+        return ev;
+    }
+
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    {
+        List<CodeInstruction> newInstructions = new List<CodeInstruction>(instructions);
+
         {
-            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
+            const int offset = 3;
 
-            HurtingEventArgs ev = new HurtingEventArgs(player, damage, hasSFX,
-                causeOfDeath, deathAnimation, fallDamage, force);
+            int index = newInstructions.FindLastIndex(i => i.OperandIs(AccessTools.Method(typeof(PlayerControllerB),
+                nameof(PlayerControllerB.AllowPlayerDeath)))) + offset;
 
-            Handlers.Player.OnHurting(ev);
+            Label notAllowedLabel = generator.DefineLabel();
+            Label skipLabel = generator.DefineLabel();
 
-            ((SPlayerNetworking)player).CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+            CodeInstruction[] inst = new CodeInstruction[]
+            {
+                // HurtingEventArgs ev = Hurt.CallHurtingEvent(PlayerControllerB, int, bool, CauseOfDeath, int, bool, Vector3)
+                new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldarg_2),
+                new CodeInstruction(OpCodes.Ldarg, 4),
+                new CodeInstruction(OpCodes.Ldarg, 5),
+                new CodeInstruction(OpCodes.Ldarg, 6),
+                new CodeInstruction(OpCodes.Ldarg, 7),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Hurt), nameof(Hurt.CallHurtingEvent))),
+                new CodeInstruction(OpCodes.Dup),
 
-            return ev;
+                // if (!ev.IsAllowed) return
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.IsAllowed))),
+                new CodeInstruction(OpCodes.Brfalse_S, notAllowedLabel),
+
+                // Duplicating the stack is more memory efficient than making a local
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Dup),
+
+                // damage = ev.Damage
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.Damage))),
+                new CodeInstruction(OpCodes.Starg_S, 1),
+
+                // hasDamageSFX = ev.HasSFX
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.HasSFX))),
+                new CodeInstruction(OpCodes.Starg_S, 2),
+
+                // causeOfDeath = ev.CauseOfDeath
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.CauseOfDeath))),
+                new CodeInstruction(OpCodes.Starg_S, 4),
+
+                // deathAnimation = ev.DeathAnimation
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.DeathAnimation))),
+                new CodeInstruction(OpCodes.Starg_S, 5),
+
+                // fallDamage = ev.FallDamage
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.FallDamage))),
+                new CodeInstruction(OpCodes.Starg_S, 6),
+
+                // force = ev.Force
+                new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.Force))),
+                new CodeInstruction(OpCodes.Starg_S, 7),
+                new CodeInstruction(OpCodes.Br, skipLabel),
+                new CodeInstruction(OpCodes.Pop).WithLabels(notAllowedLabel),
+                new CodeInstruction(OpCodes.Ret)
+            };
+
+            newInstructions.InsertRange(index, inst);
+
+            newInstructions[index + inst.Length].labels.Add(skipLabel);
         }
 
-        private static HurtEventArgs CallHurtEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
-            int deathAnimation, bool fallDamage, Vector3 force)
         {
-            Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
+            const int offset = 1;
 
-            HurtEventArgs ev = new HurtEventArgs(player, damage, hasSFX,
-                causeOfDeath, deathAnimation, fallDamage, force);
+            int index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Stfld
+                                                           && i.OperandIs(AccessTools.Field(typeof(PlayerControllerB), nameof(PlayerControllerB.health)))) + offset;
 
-            Handlers.Player.OnHurt(ev);
-
-            ((SPlayerNetworking)player).CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
-
-            return ev;
-        }
-
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        {
-            List<CodeInstruction> newInstructions = new List<CodeInstruction>(instructions);
-
+            newInstructions.InsertRange(index, new CodeInstruction[]
             {
-                const int offset = 3;
-
-                int index = newInstructions.FindLastIndex(i => i.OperandIs(AccessTools.Method(typeof(PlayerControllerB),
-                    nameof(PlayerControllerB.AllowPlayerDeath)))) + offset;
-
-                Label notAllowedLabel = generator.DefineLabel();
-                Label skipLabel = generator.DefineLabel();
-
-                CodeInstruction[] inst = new CodeInstruction[]
-                {
-                    // HurtingEventArgs ev = Hurt.CallHurtingEvent(PlayerControllerB, int, bool, CauseOfDeath, int, bool, Vector3)
-                    new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
-                    new CodeInstruction(OpCodes.Ldarg_1),
-                    new CodeInstruction(OpCodes.Ldarg_2),
-                    new CodeInstruction(OpCodes.Ldarg, 4),
-                    new CodeInstruction(OpCodes.Ldarg, 5),
-                    new CodeInstruction(OpCodes.Ldarg, 6),
-                    new CodeInstruction(OpCodes.Ldarg, 7),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Hurt), nameof(Hurt.CallHurtingEvent))),
-                    new CodeInstruction(OpCodes.Dup),
-
-                    // if (!ev.IsAllowed) return
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.IsAllowed))),
-                    new CodeInstruction(OpCodes.Brfalse_S, notAllowedLabel),
-
-                    // Duplicating the stack is more memory efficient than making a local
-                    new CodeInstruction(OpCodes.Dup),
-                    new CodeInstruction(OpCodes.Dup),
-                    new CodeInstruction(OpCodes.Dup),
-                    new CodeInstruction(OpCodes.Dup),
-                    new CodeInstruction(OpCodes.Dup),
-
-                    // damage = ev.Damage
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.Damage))),
-                    new CodeInstruction(OpCodes.Starg_S, 1),
-
-                    // hasDamageSFX = ev.HasSFX
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.HasSFX))),
-                    new CodeInstruction(OpCodes.Starg_S, 2),
-
-                    // causeOfDeath = ev.CauseOfDeath
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.CauseOfDeath))),
-                    new CodeInstruction(OpCodes.Starg_S, 4),
-
-                    // deathAnimation = ev.DeathAnimation
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.DeathAnimation))),
-                    new CodeInstruction(OpCodes.Starg_S, 5),
-
-                    // fallDamage = ev.FallDamage
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.FallDamage))),
-                    new CodeInstruction(OpCodes.Starg_S, 6),
-
-                    // force = ev.Force
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.Force))),
-                    new CodeInstruction(OpCodes.Starg_S, 7),
-                    new CodeInstruction(OpCodes.Br, skipLabel),
-                    new CodeInstruction(OpCodes.Pop).WithLabels(notAllowedLabel),
-                    new CodeInstruction(OpCodes.Ret)
-                };
-
-                newInstructions.InsertRange(index, inst);
-
-                newInstructions[index + inst.Length].labels.Add(skipLabel);
-            }
-
-            {
-                const int offset = 1;
-
-                int index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Stfld
-                    && i.OperandIs(AccessTools.Field(typeof(PlayerControllerB), nameof(PlayerControllerB.health)))) + offset;
-
-                newInstructions.InsertRange(index, new CodeInstruction[]
-                {
-                    // HurtEventArgs ev = Hurt.CallHurtEvent(PlayerControllerB, int, bool, CauseOfDeath, int, bool, Vector3)
+                // HurtEventArgs ev = Hurt.CallHurtEvent(PlayerControllerB, int, bool, CauseOfDeath, int, bool, Vector3)
                 new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
                 new CodeInstruction(OpCodes.Ldarg_1),
                 new CodeInstruction(OpCodes.Ldarg_2),
@@ -154,10 +154,9 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                 // force = ev.Force
                 new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(HurtingEventArgs), nameof(HurtingEventArgs.Force))),
                 new CodeInstruction(OpCodes.Starg_S, 7),
-                });
-            }
-
-            for (int i = 0; i < newInstructions.Count; i++) yield return newInstructions[i];
+            });
         }
+
+        for (int i = 0; i < newInstructions.Count; i++) yield return newInstructions[i];
     }
 }

@@ -3,21 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sigurd.ServerAPI.Extensions
+namespace Sigurd.ServerAPI.Extensions;
+
+/// <summary>
+/// Useful player extensions.
+/// </summary>
+public static class PlayerExtensions
 {
     /// <summary>
-    /// Useful player extensions.
+    /// Gets a <see cref="Common.Features.SPlayer"/>'s <see cref="SPlayerNetworking"/>.
     /// </summary>
-    public static class PlayerExtensions
+    /// <param name="player">The <see cref="Common.Features.SPlayer"/>.</param>
+    /// <returns>The <see cref="Common.Features.SPlayer"/>'s <see cref="SPlayerNetworking"/></returns>
+    public static SPlayerNetworking GetNetworking(this Common.Features.SPlayer player)
     {
-        /// <summary>
-        /// Gets a <see cref="Common.Features.SPlayer"/>'s <see cref="SPlayerNetworking"/>.
-        /// </summary>
-        /// <param name="player">The <see cref="Common.Features.SPlayer"/>.</param>
-        /// <returns>The <see cref="Common.Features.SPlayer"/>'s <see cref="SPlayerNetworking"/></returns>
-        public static SPlayerNetworking GetNetworking(this Common.Features.SPlayer player)
-        {
-            return (SPlayerNetworking)player;
-        }
+        return (SPlayerNetworking)player;
     }
 }

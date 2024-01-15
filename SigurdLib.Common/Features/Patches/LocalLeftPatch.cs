@@ -4,15 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sigurd.Common.Features.Patches
+namespace Sigurd.Common.Features.Patches;
+
+[HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
+internal static class LocalLeft
 {
-    [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
-    internal static class LocalLeft
+    private static void Prefix()
     {
-        private static void Prefix()
-        {
-            SPlayer.Dictionary.Clear();
-            SItem.Dictionary.Clear();
-        }
+        SPlayer.Dictionary.Clear();
+        SItem.Dictionary.Clear();
     }
 }
