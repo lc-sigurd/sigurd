@@ -1,3 +1,5 @@
+using System;
+
 namespace Sigurd.ServerAPI.Features;
 
 /// <summary>
@@ -31,7 +33,7 @@ public class Tip : IComparable<Tip>
     public int Priority { get; } = 0;
 
     /// <summary>
-    /// Gets whether or not the <see cref="Tip"/> is a warning. 
+    /// Gets whether or not the <see cref="Tip"/> is a warning.
     /// </summary>
     public bool IsWarning { get; } = false;
 
