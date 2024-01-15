@@ -57,6 +57,7 @@
         <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="libraries"/>
     </ItemGroup>
 
+    <!-- .NET Framework (.NET 4) reference assemblies  -->
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
@@ -81,5 +82,6 @@
         <Optimize>true</Optimize>
     </PropertyGroup>
 
+    <!-- Import local user props -->
     <Import Project="$(SolutionDir)SigurdLib.props.user" Condition="$(CI) != 'true'"/>
 </Project>
