@@ -22,6 +22,11 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
+        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>
+
     <!-- Thunderstore metadata -->
     <PropertyGroup>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
@@ -29,8 +34,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
-        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
