@@ -25,6 +25,7 @@
     <!-- Thunderstore metadata -->
     <PropertyGroup>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
+        <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
     </PropertyGroup>
 
     <ItemGroup>
