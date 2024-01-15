@@ -54,6 +54,7 @@
         <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
         <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../CHANGELOG.md" Destination="/"/>
         <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../LICENSE" Destination="/"/>
+        <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="libraries"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
