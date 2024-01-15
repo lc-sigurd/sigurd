@@ -256,12 +256,12 @@ namespace Sigurd.ServerAPI.Features
         /// Creates and spawns an <see cref="Item"/> in the world.
         /// </summary>
         /// <param name="itemName">The item's name. Uses a simple Contains check to see if the provided item name is contained in the actual item's name. Case insensitive.</param>
-        /// <param name="andInitialize">Whether or not to initialize the item after spawning.</param>
         /// <param name="position">The position to spawn at.</param>
         /// <param name="rotation">The rotation to spawn at.</param>
+        /// <param name="andInitialize">Whether or not to initialize the item after spawning.</param>
         /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
         /// <exception cref="NoAuthorityException">Thrown when trying to spawn an <see cref="Item"/> on the client.</exception>
-        public static Common.Features.SItem CreateAndSpawnItem(string itemName, bool andInitialize = true, Vector3 position = default, Quaternion rotation = default)
+        public static Common.Features.SItem CreateAndSpawnItem(string itemName, Vector3 position = default, Quaternion rotation = default, bool andInitialize = true)
         {
             if (!NetworkManager.Singleton.IsServer)
             {
@@ -292,11 +292,11 @@ namespace Sigurd.ServerAPI.Features
         /// </summary>
         /// <param name="itemName">The item's name. Uses a simple Contains check to see if the provided item name is contained in the actual item's name. Case insensitive.</param>
         /// <param name="player">The <see cref="SPlayerNetworking"/> to give the <see cref="Common.Features.SItem"/> to.</param>
-        /// <param name="andInitialize">Whether or not to initialize this item after spawning.</param>
         /// <param name="switchTo">Whether or not to switch to the item. Forced for 2 handed items.</param>
+        /// <param name="andInitialize">Whether or not to initialize this item after spawning.</param>
         /// <returns>A new <see cref="Item"/>, or <see langword="null"/> if the provided item name is not found.</returns>
         /// <exception cref="NoAuthorityException">Thrown when trying to spawn an <see cref="Item"/> on the client.</exception>
-        public static SItemNetworking CreateAndGiveItem(string itemName, SPlayerNetworking player, bool andInitialize = true, bool switchTo = true)
+        public static SItemNetworking CreateAndGiveItem(string itemName, SPlayerNetworking player, bool switchTo = true, bool andInitialize = true)
         {
             if (!NetworkManager.Singleton.IsServer)
             {

@@ -665,9 +665,14 @@ namespace Sigurd.ServerAPI.Features
         public class PlayerInventoryNetworking : NetworkBehaviour
         {
             /// <summary>
-            /// Gets the <see cref="Common.Features.SPlayer"/> that this <see cref="PlayerInventoryNetworking"/> belongs to.
+            /// Gets the <see cref="SPlayerNetworking"/> that this <see cref="PlayerInventoryNetworking"/> belongs to.
             /// </summary>
-            public SPlayer Player { get; private set; }
+            public SPlayerNetworking PlayerNetworking { get; private set; }
+
+            /// <summary>
+            /// Gets the <see cref="SPlayer"/> that this <see cref="PlayerInventoryNetworking"/> belongs to.
+            /// </summary>
+            public SPlayer Player => PlayerNetworking.Player;
 
             /// <summary>
             /// Gets the <see cref="Player"/>'s items in order.
@@ -849,11 +854,13 @@ namespace Sigurd.ServerAPI.Features
                         HUDManager.Instance.itemSlotIcons[slot].enabled = true;
                     }
 
+                    item.GrabbableObject.heldByPlayerOnServer = Player.PlayerController;
                     item.GrabbableObject.EnablePhysics(false);
                     item.GrabbableObject.EnableItemMeshes(false);
                     item.GrabbableObject.playerHeldBy = Player.PlayerController;
                     item.GrabbableObject.hasHitGround = false;
                     item.GrabbableObject.isInFactory = Player.IsInFactory;
+                    item.GrabbableObject.isHeld = true;
 
                     Player.CarryWeight += Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
 
@@ -879,6 +886,7 @@ namespace Sigurd.ServerAPI.Features
                 {
                     Player.PlayerController.SwitchToItemSlot(slot, item.GrabbableObject);
 
+                    item.GrabbableObject.heldByPlayerOnServer = Player.PlayerController;
                     item.GrabbableObject.EnablePhysics(false);
                     item.GrabbableObject.isHeld = true;
                     item.GrabbableObject.hasHitGround = false;
@@ -1001,7 +1009,7 @@ namespace Sigurd.ServerAPI.Features
 
             private void Awake()
             {
-                Player = GetComponent<SPlayer>();
+                PlayerNetworking = GetComponent<SPlayerNetworking>();
             }
         }
     }
