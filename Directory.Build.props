@@ -1,4 +1,10 @@
 <Project>
+    <!-- Build configurations -->
+    <PropertyGroup>
+        <Configurations>Debug;Release;BuildTasks</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
     <!-- compiler/msbuild switches -->
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
