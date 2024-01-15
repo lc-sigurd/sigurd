@@ -77,7 +77,7 @@ internal class DropItem
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldarg_1),
                 new CodeInstruction(OpCodes.Ldarg_3),
-                new CodeInstruction(OpCodes.Ldloc_0),
+                new CodeInstruction(OpCodes.Ldloc, 4),
                 new CodeInstruction(OpCodes.Ldarg_2),
                 new CodeInstruction(OpCodes.Ldarg, 4),
                 new CodeInstruction(OpCodes.Ldarg_0),
@@ -105,7 +105,7 @@ internal class DropItem
 
                 // floorYRot2 = ev.FloorYRotation
                 new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(DroppingItemEventArgs), nameof(DroppingItemEventArgs.FloorYRotation))),
-                new CodeInstruction(OpCodes.Stloc_0),
+                new CodeInstruction(OpCodes.Stloc, 4),
 
                 // parentObjectTo = ev.ParentObjectTo
                 new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(DroppingItemEventArgs), nameof(DroppingItemEventArgs.ParentObjectTo))),
@@ -190,7 +190,7 @@ internal class DropItem
 
                 // floorYRot = ev.FloorYRotation
                 new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(DroppingItemEventArgs), nameof(DroppingItemEventArgs.FloorYRotation))),
-                new CodeInstruction(OpCodes.Stloc, 4),
+                new CodeInstruction(OpCodes.Stloc_0),
 
                 // parentObjectTo = ev.ParentObjectTo
                 new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(DroppingItemEventArgs), nameof(DroppingItemEventArgs.ParentObjectTo))),
