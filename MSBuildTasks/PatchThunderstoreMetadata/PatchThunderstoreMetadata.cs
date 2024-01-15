@@ -7,8 +7,7 @@ namespace MSBuildTasks.PatchThunderstoreMetadata;
 
 public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 {
-    [Required]
-    public string ConfigurationFileSchemaVersion { get; set; } = null!;
+    public string ConfigurationFileSchemaVersion { get; set; } = "0.0.1";
 
     [Required]
     public string ConfigurationFileInputPath { get; set; } = null!;
