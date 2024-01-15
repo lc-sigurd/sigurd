@@ -10,9 +10,6 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     public string ConfigurationFileSchemaVersion { get; set; } = "0.0.1";
 
     [Required]
-    public string ConfigurationFileInputPath { get; set; } = null!;
-
-    [Required]
     public string ConfigurationFileOutputPath { get; set; } = null!;
 
     [Required]
