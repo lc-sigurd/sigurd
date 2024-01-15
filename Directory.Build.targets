@@ -74,6 +74,10 @@ public static class MyPluginInfo
             PackageDescription="$(ThunderstoreDescription)"
             PackageContainsNsfwContent="false"
             PackageDependencies="@(ThunderstoreDependency)"
+            BuildReadmePath="$(ThunderstoreReadmePath)"
+            BuildIconPath="$(ThunderstoreIconPath)"
+            BuildOutDir="$(ThunderstoreOutDir)"
+            BuildCopyPaths="@(ThunderstoreBuildCopyPath)"
         />
     </Target>
 
