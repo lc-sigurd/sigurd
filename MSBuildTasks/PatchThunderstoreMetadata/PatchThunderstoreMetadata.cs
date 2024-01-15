@@ -1,6 +1,7 @@
 using Microsoft.Build.Framework;
 using NetcodePatcher.MSBuild;
 using Serilog;
+using ThunderstoreCLI.Models;
 
 namespace MSBuildTasks.PatchThunderstoreMetadata;
 
@@ -28,7 +29,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     public string PackageWebsiteUrl { get; set; }
 
     [Required]
-    public string PackageContainsNsfwContent { get; set; }
+    public bool PackageContainsNsfwContent { get; set; }
 
     [Required]
     public ITaskItem[] PackageDependencies { get; set; }
@@ -46,6 +47,17 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
         if (project is null) {
             Serilog.Log.Fatal("Couldn't read project file.");
             return false;
+        }
+
+        project.Package = new ThunderstoreProject.PackageData {
+            Name = PackageName,
+            Namespace = PackageNamespace,
+            Description = PackageDescription,
+            VersionNumber = PackageVersion,
+            WebsiteUrl = PackageWebsiteUrl,
+            ContainsNsfwContent = PackageContainsNsfwContent,
+            Dependencies = new Dictionary<string, string>(),
+        };
 
         var dependenciesToAdd = PackageDependencies.Select(ThunderstorePackageDependency.FromTaskItem);
 
@@ -54,13 +66,6 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             Serilog.Log.Information("Dependency found: {Dependency}", dependency);
             project.Package.Dependencies.Add(dependency.Moniker.FullName, dependency.Moniker.Version.ToVersion().ToString());
         }
-
-        project.Package.Namespace = PackageNamespace;
-        project.Package.Name = PackageName;
-        project.Package.Description = PackageDescription;
-        project.Package.VersionNumber = PackageVersion;
-        project.Package.WebsiteUrl = PackageWebsiteUrl;
-        project.Package.ContainsNsfwContent = bool.Parse(PackageContainsNsfwContent);
 
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
         return true;
