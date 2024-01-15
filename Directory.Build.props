@@ -43,6 +43,7 @@
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
         <ThunderstoreReadmePath>$(ProjectDir)../README.md</ThunderstoreReadmePath>
         <ThunderstoreIconPath>$(ProjectDir)assets/icons/in-deep.png</ThunderstoreIconPath>
+        <ThunderstoreOutDir>$(ProjectDir)dist/</ThunderstoreOutDir>
     </PropertyGroup>
 
     <ItemGroup>
