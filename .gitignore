@@ -26,20 +26,11 @@
 !.gitattributes
 !.git-blame-ignore-revs
 
-### Submodules
-!/submodules
-
 ## GitHub specific
 !.github/
 
-## Assets
-!assets/
-
-## Thunderstore metadata
-!thunderstore.toml
-
-## Thunderstore Assets
-!Thunderstore
+## Libraries
+!/libs
 
 ## Solution
 !SigurdLib.sln

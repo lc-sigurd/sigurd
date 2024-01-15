@@ -1,13 +1,10 @@
 using System;
-using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using Sigurd.ServerAPI.Features;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Sigurd.ServerAPI;
+namespace Sigurd.Common;
 
 /// <summary>
 /// The main Plugin class.
@@ -27,14 +24,12 @@ public sealed class Plugin : BaseUnityPlugin
 
         Log = Logger;
 
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
         Harmony.PatchAll();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
         Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
-
-        InitializeNetworking();
     }
 
     // For pre-placed items
@@ -42,25 +37,9 @@ public sealed class Plugin : BaseUnityPlugin
     {
         foreach (GrabbableObject grabbable in FindObjectsOfType<GrabbableObject>())
         {
-            if (!grabbable.TryGetComponent(out SItemNetworking _))
+            if (!grabbable.TryGetComponent(out Features.SItem _))
             {
-                grabbable.gameObject.AddComponent<SItemNetworking>();
-            }
-        }
-    }
-
-    internal void InitializeNetworking()
-    {
-        foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-        {
-            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var method in methods)
-            {
-                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    method.Invoke(null, null);
-                }
+                grabbable.gameObject.AddComponent<Features.SItem>();
             }
         }
     }

@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Sigurd.ServerAPI.Events.EventArgs.Player;
 
 /// <summary>
-/// Contains all the information after a <see cref="Features.Player"/> dies.
+/// Contains all the information after a <see cref="Common.Features.SPlayer"/> dies.
 /// </summary>
 public class DiedEventArgs : System.EventArgs
 {
     /// <summary>
     /// Gets the player that died.
     /// </summary>
-    public Features.Player Player { get; }
+    public Common.Features.SPlayer Player { get; }
 
     /// <summary>
     /// Gets the force that was added to the ragdoll.
@@ -40,7 +40,7 @@ public class DiedEventArgs : System.EventArgs
     /// <param name="spawnBody"><inheritdoc cref="SpawnBody" /></param>
     /// <param name="causeOfDeath"><inheritdoc cref="CauseOfDeath" /></param>
     /// <param name="deathAnimation"><inheritdoc cref="DeathAnimation" /></param>
-    public DiedEventArgs(Features.Player player, Vector3 force, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation)
+    public DiedEventArgs(Common.Features.SPlayer player, Vector3 force, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation)
     {
         Player = player;
         Force = force;

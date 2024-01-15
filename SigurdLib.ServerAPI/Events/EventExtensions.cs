@@ -1,3 +1,4 @@
+using System;
 using static Sigurd.ServerAPI.Events.CustomEventHandlers;
 
 namespace Sigurd.ServerAPI.Events;

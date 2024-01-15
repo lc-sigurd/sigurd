@@ -1,8 +1,13 @@
 <Project>
+    <!-- Build configurations -->
+    <PropertyGroup>
+        <Configurations>Debug;Release;BuildTasks</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
     <!-- compiler/msbuild switches -->
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>

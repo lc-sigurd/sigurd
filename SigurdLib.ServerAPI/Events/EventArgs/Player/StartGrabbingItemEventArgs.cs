@@ -1,20 +1,20 @@
-﻿namespace Sigurd.ServerAPI.Events.EventArgs.Player;
+namespace Sigurd.ServerAPI.Events.EventArgs.Player;
 
 /// <summary>
-/// Contains all the information before a <see cref="Features.Player"/> starts grabbing an <see cref="Features.Item"/>.
+/// Contains all the information before a <see cref="Common.Features.SPlayer"/> starts grabbing an <see cref="Common.Features.SItem"/>.
 /// This is when the pickup circle appears.
 /// </summary>
 public class StartGrabbingItemEventArgs : System.EventArgs
 {
     /// <summary>
-    /// Gets the <see cref="Features.Player"/> that is starting to grab the <see cref="Item"/>.
+    /// Gets the <see cref="Common.Features.SPlayer"/> that is starting to grab the <see cref="Item"/>.
     /// </summary>
-    public Features.Player Player { get; }
+    public Common.Features.SPlayer Player { get; }
 
     /// <summary>
-    /// Gets the <see cref="Features.Item"/> that will be grabbed.
+    /// Gets the <see cref="Common.Features.SItem"/> that will be grabbed.
     /// </summary>
-    public Features.Item Item { get; }
+    public Common.Features.SItem Item { get; }
 
     /// <summary>
     /// Gets or sets whether or not the <see cref="Item"/> is allowed to start being grabbed.
@@ -26,7 +26,7 @@ public class StartGrabbingItemEventArgs : System.EventArgs
     /// </summary>
     /// <param name="player"><inheritdoc cref="Player"/></param>
     /// <param name="item"><inheritdoc cref="Item"/></param>
-    public StartGrabbingItemEventArgs(Features.Player player, Features.Item item)
+    public StartGrabbingItemEventArgs(Common.Features.SPlayer player, Common.Features.SItem item)
     {
         Player = player;
         Item = item;

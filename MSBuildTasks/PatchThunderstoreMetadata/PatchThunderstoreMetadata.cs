@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using NetcodePatcher.MSBuild;
 using Serilog;
