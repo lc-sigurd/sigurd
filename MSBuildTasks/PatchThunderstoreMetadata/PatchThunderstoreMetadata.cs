@@ -86,6 +86,35 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
                     .Select(item => item.MakeRelativeToFile(ConfigurationFileOutputPath))
                     .ToArray()
             },
+            Publish = new ThunderstoreProject.PublishData {
+                Repository = PublishRepository,
+                Communities = PublishCommunities
+                    .Select(item => item.ItemSpec)
+                    .ToHashSet()
+                    .ToArray(),
+            }
+        };
+
+        var communityCategories = project.Publish.Communities
+            .ToDictionary(
+                community => community,
+                _ => new HashSet<string>()
+            );
+
+        foreach (var item in PublishCommunities) {
+            var itemCategories = item
+                .GetMetadata("CategorySlugs")
+                .Split(";")
+                .Where(slug => !string.IsNullOrWhiteSpace(slug))
+                .ToHashSet();
+            communityCategories[item.ItemSpec]
+                .UnionWith(itemCategories);
+        }
+
+        project.Publish.Categories = new ThunderstoreProject.CategoryDictionary {
+            Categories = communityCategories
+                .Select(item => (item.Key, item.Value.ToArray()))
+                .ToDictionary()
         };
 
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
