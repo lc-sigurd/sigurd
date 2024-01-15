@@ -1,9 +1,9 @@
 using System;
 
-namespace Sigurd.ServerAPI.Features;
+namespace Sigurd.Common.Features;
 
 /// <summary>
-/// Contains <see cref="Player"/> tip info.
+/// Contains <see cref="SPlayer"/> tip info.
 /// </summary>
 public class Tip : IComparable<Tip>
 {
@@ -33,7 +33,7 @@ public class Tip : IComparable<Tip>
     public int Priority { get; } = 0;
 
     /// <summary>
-    /// Gets whether or not the <see cref="Tip"/> is a warning.
+    /// Gets whether or not the <see cref="Tip"/> is a warning. 
     /// </summary>
     public bool IsWarning { get; } = false;
 

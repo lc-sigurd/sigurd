@@ -1,19 +1,19 @@
-﻿namespace Sigurd.ServerAPI.Events.EventArgs.Player;
+namespace Sigurd.ServerAPI.Events.EventArgs.Player;
 
 /// <summary>
-/// Contains all the information before a <see cref="Features.Player"/> grabs an <see cref="Features.Item"/>.
+/// Contains all the information before a <see cref="Common.Features.SPlayer"/> grabs an <see cref="Common.Features.SItem"/>.
 /// </summary>
 public class GrabbingItemEventArgs : System.EventArgs
 {
     /// <summary>
-    /// Gets the <see cref="Features.Player"/> that is grabbing the <see cref="Item"/>.
+    /// Gets the <see cref="Common.Features.SPlayer"/> that is grabbing the <see cref="Item"/>.
     /// </summary>
-    public Features.Player Player { get; }
+    public Common.Features.SPlayer Player { get; }
 
     /// <summary>
-    /// Gets the <see cref="Features.Item"/> that is being grabbed.
+    /// Gets the <see cref="Common.Features.SItem"/> that is being grabbed.
     /// </summary>
-    public Features.Item Item { get; }
+    public Common.Features.SItem Item { get; }
 
     /// <summary>
     /// Gets or sets whether or not the <see cref="Item"/> can be grabbed.
@@ -25,7 +25,7 @@ public class GrabbingItemEventArgs : System.EventArgs
     /// </summary>
     /// <param name="player"><inheritdoc cref="Player"/></param>
     /// <param name="item"><inheritdoc cref="Item"/></param>
-    public GrabbingItemEventArgs(Features.Player player, Features.Item item)
+    public GrabbingItemEventArgs(Common.Features.SPlayer player, Common.Features.SItem item)
     {
         Player = player;
         Item = item;

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Reflection.Emit;
 using GameNetcodeStuff;
 using HarmonyLib;
+using Sigurd.Common.Features;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
 using UnityEngine;
 
@@ -12,7 +14,7 @@ internal class Dying
     private static DyingEventArgs CallEvent(PlayerControllerB playerController, Vector3 force, bool spawnBody,
         CauseOfDeath causeOfDeath, int deathAnimation)
     {
-        DyingEventArgs ev = new DyingEventArgs(Features.Player.GetOrAdd(playerController), force, spawnBody,
+        DyingEventArgs ev = new DyingEventArgs(Common.Features.SPlayer.GetOrAdd(playerController), force, spawnBody,
             causeOfDeath, deathAnimation);
 
         Handlers.Player.OnDying(ev);
@@ -83,22 +85,63 @@ internal class Dying
 [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.KillPlayerClientRpc))]
 internal class Died
 {
-    private static void Prefix(PlayerControllerB __instance, bool spawnBody, Vector3 bodyVelocity,
+    private static void CallDyingEvent(PlayerControllerB playerController, bool spawnBody, Vector3 bodyVelocity,
         int causeOfDeath, int deathAnimation)
     {
-        Features.Player player = Features.Player.GetOrAdd(__instance);
-
-        // The local player Dying event has already been fired
+        SPlayer player = SPlayer.Get(playerController);
         if (player.IsLocalPlayer) return;
 
         Handlers.Player.OnDying(new DyingEventArgs(player, bodyVelocity,
             spawnBody, (CauseOfDeath)causeOfDeath, deathAnimation));
     }
 
-    private static void Postfix(PlayerControllerB __instance, bool spawnBody, Vector3 bodyVelocity,
+    private static void CallDiedEvent(PlayerControllerB playerController, bool spawnBody, Vector3 bodyVelocity,
         int causeOfDeath, int deathAnimation)
     {
-        Handlers.Player.OnDied(new DiedEventArgs(Features.Player.GetOrAdd(__instance), bodyVelocity,
+        Handlers.Player.OnDied(new DiedEventArgs(SPlayer.GetOrAdd(playerController), bodyVelocity,
             spawnBody, (CauseOfDeath)causeOfDeath, deathAnimation));
+    }
+
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    {
+        List<CodeInstruction> newInstructions = new List<CodeInstruction>(instructions);
+
+        {
+            const int offset = 1;
+
+            int index = newInstructions.FindIndex(i => i.opcode == OpCodes.Nop) + offset;
+
+            CodeInstruction[] inst = new CodeInstruction[]
+            {
+                // Died.CallDyingEvent(PlayerControllerB, Vector3, bool, CauseOfDeath, int)
+                new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Ldarg_2),
+                new CodeInstruction(OpCodes.Ldarg_3),
+                new CodeInstruction(OpCodes.Ldarg, 4),
+                new CodeInstruction(OpCodes.Ldarg, 5),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Died), nameof(Died.CallDyingEvent))),
+            };
+
+            newInstructions.InsertRange(index, inst);
+        }
+
+        {
+            int index = newInstructions.Count - 1;
+
+            CodeInstruction[] inst = new CodeInstruction[]
+            {
+                // Died.CallDiedEvent(PlayerControllerB, Vector3, bool, CauseOfDeath, int)
+                new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Ldarg_2),
+                new CodeInstruction(OpCodes.Ldarg_3),
+                new CodeInstruction(OpCodes.Ldarg, 4),
+                new CodeInstruction(OpCodes.Ldarg, 5),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Died), nameof(Died.CallDiedEvent))),
+            };
+
+            newInstructions.InsertRange(index, inst);
+        }
+
+        for (int i = 0; i < newInstructions.Count; i++) yield return newInstructions[i];
     }
 }

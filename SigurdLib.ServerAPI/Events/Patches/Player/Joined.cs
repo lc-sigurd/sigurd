@@ -2,7 +2,7 @@ using System.Collections;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
-using Unity.Netcode;
+using Sigurd.ServerAPI.Features;
 using UnityEngine;
 
 namespace Sigurd.ServerAPI.Events.Patches.Player;
@@ -10,15 +10,6 @@ namespace Sigurd.ServerAPI.Events.Patches.Player;
 [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnPlayerConnectedClientRpc))]
 internal static class Joined
 {
-    private static void Prefix(ulong clientId, int assignedPlayerObjectId)
-    {
-        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-        {
-            PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
-            Features.Player.GetOrAdd(playerController).NetworkClientId.Value = clientId;
-        }
-    }
-
     private static void Postfix(ulong clientId, int assignedPlayerObjectId)
     {
         PlayerControllerB playerController = StartOfRound.Instance.allPlayerScripts[assignedPlayerObjectId];
@@ -36,18 +27,32 @@ internal static class Joined
     {
         yield return new WaitUntil(() => StartOfRound.Instance.localPlayerController != null);
 
-        Features.Player player = Features.Player.GetOrAdd(controller);
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(controller);
 
         while (player == null)
         {
             yield return new WaitForSeconds(0.1f);
 
-            player = Features.Player.GetOrAdd(controller);
+            player = Common.Features.SPlayer.GetOrAdd(controller);
+        }
+
+        SPlayerNetworking playerNetworking = SPlayerNetworking.GetOrAdd(player);
+
+        while (playerNetworking == null)
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            playerNetworking = SPlayerNetworking.GetOrAdd(player);
         }
 
         if (player.IsLocalPlayer)
         {
-            Features.Player.LocalPlayer = player;
+            Common.Features.SPlayer.LocalPlayer = player;
+        }
+
+        if (player.IsHost)
+        {
+            Common.Features.SPlayer.HostPlayer = player;
         }
 
         Handlers.Player.OnJoined(new JoinedEventArgs(player));
@@ -59,11 +64,6 @@ internal static class Joined2
 {
     private static void Postfix(PlayerControllerB __instance)
     {
-        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-        {
-            Features.Player.GetOrAdd(__instance).NetworkClientId.Value = __instance.actualClientId;
-        }
-
         if (!Cache.Player.ConnectedPlayers.Contains(__instance.actualClientId))
         {
             Cache.Player.ConnectedPlayers.Add(__instance.actualClientId);

@@ -11,6 +11,7 @@
 
         <ThunderstoreName>Sigurd_Common</ThunderstoreName>
         <ThunderstoreDescription>Sigurd's common utilities</ThunderstoreDescription>
+        <HasBepInPlugin>true</HasBepInPlugin>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>

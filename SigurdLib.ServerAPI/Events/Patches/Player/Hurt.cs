@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Reflection.Emit;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using Sigurd.ServerAPI.Features;
 using UnityEngine;
 
 namespace Sigurd.ServerAPI.Events.Patches.Player;
@@ -12,14 +14,14 @@ internal class Hurt
     private static HurtingEventArgs CallHurtingEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
         int deathAnimation, bool fallDamage, Vector3 force)
     {
-        Features.Player player = Features.Player.GetOrAdd(playerController);
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
         HurtingEventArgs ev = new HurtingEventArgs(player, damage, hasSFX,
             causeOfDeath, deathAnimation, fallDamage, force);
 
         Handlers.Player.OnHurting(ev);
 
-        player.CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+        ((SPlayerNetworking)player).CallHurtingOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
 
         return ev;
     }
@@ -27,14 +29,14 @@ internal class Hurt
     private static HurtEventArgs CallHurtEvent(PlayerControllerB playerController, int damage, bool hasSFX, CauseOfDeath causeOfDeath,
         int deathAnimation, bool fallDamage, Vector3 force)
     {
-        Features.Player player = Features.Player.GetOrAdd(playerController);
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
         HurtEventArgs ev = new HurtEventArgs(player, damage, hasSFX,
             causeOfDeath, deathAnimation, fallDamage, force);
 
         Handlers.Player.OnHurt(ev);
 
-        player.CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+        ((SPlayerNetworking)player).CallHurtOnOtherClients(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
 
         return ev;
     }

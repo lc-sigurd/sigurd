@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Sigurd.ServerAPI;
+namespace Sigurd.Common;
 
 /// <summary>
 /// Provides a few useful utilities for the API.
@@ -70,6 +72,19 @@ public static class Utils
                     : char.ToLower(result[0]);
                 return new string(result);
             }, RegexOptions.IgnoreCase);
+        }
+
+        // In case it didn't work, just return a normal replace.
+        if (temp == input)
+        {
+            string t = input;
+
+            foreach (KeyValuePair<string, string> pair in map)
+            {
+                t = t.Replace(pair.Key, pair.Value);
+            }
+
+            return t;
         }
 
         return temp;

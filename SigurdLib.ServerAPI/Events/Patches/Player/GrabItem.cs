@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Reflection.Emit;
 using GameNetcodeStuff;
 using HarmonyLib;
+using Sigurd.Common.Features;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using Sigurd.ServerAPI.Extensions;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,8 +15,8 @@ internal class GrabbingItem
 {
     internal static StartGrabbingItemEventArgs CallStartGrabbingItem(PlayerControllerB playerController, GrabbableObject grabbableObject)
     {
-        StartGrabbingItemEventArgs ev = new StartGrabbingItemEventArgs(Features.Player.GetOrAdd(playerController),
-            Features.Item.GetOrAdd(grabbableObject));
+        StartGrabbingItemEventArgs ev = new StartGrabbingItemEventArgs(Common.Features.SPlayer.GetOrAdd(playerController),
+            Common.Features.SItem.Get(grabbableObject)!);
 
         Handlers.Player.OnStartGrabbingItem(ev);
 
@@ -22,10 +25,13 @@ internal class GrabbingItem
 
     internal static GrabbingItemEventArgs CallGrabbingItem(PlayerControllerB playerController, GrabbableObject grabbableObject)
     {
-        GrabbingItemEventArgs ev = new GrabbingItemEventArgs(Features.Player.GetOrAdd(playerController),
-            Features.Item.GetOrAdd(grabbableObject));
+        SPlayer player = SPlayer.GetOrAdd(playerController);
+        SItem item = SItem.Get(grabbableObject)!;
+        GrabbingItemEventArgs ev = new GrabbingItemEventArgs(player, item);
 
         Handlers.Player.OnGrabbingItem(ev);
+
+        player.GetNetworking().CallGrabbingItemOnOtherClients(item);
 
         return ev;
     }
@@ -103,8 +109,8 @@ internal class GrabbedItem
 {
     internal static void CallEvent(PlayerControllerB player)
     {
-        Handlers.Player.OnGrabbedItem(new GrabbedItemEventArgs(Features.Player.GetOrAdd(player),
-            Features.Item.GetOrAdd(player.currentlyHeldObjectServer)));
+        Handlers.Player.OnGrabbedItem(new GrabbedItemEventArgs(Common.Features.SPlayer.GetOrAdd(player),
+            Common.Features.SItem.Get(player.currentlyHeldObjectServer)!));
     }
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

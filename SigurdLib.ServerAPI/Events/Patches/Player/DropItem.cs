@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Reflection.Emit;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
+using Sigurd.ServerAPI.Features;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -13,15 +15,15 @@ internal class DropItem
     internal static DroppingItemEventArgs CallDroppingItemEvent(PlayerControllerB playerController, bool placeObject, Vector3 targetPosition,
         int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
     {
-        Features.Player player = Features.Player.GetOrAdd(playerController);
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
-        Features.Item item = Features.Item.GetOrAdd(playerController.currentlyHeldObjectServer);
+        Common.Features.SItem item = Common.Features.SItem.Get(playerController.currentlyHeldObjectServer)!;
 
         DroppingItemEventArgs ev = new DroppingItemEventArgs(player, item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
 
         Handlers.Player.OnDroppingItem(ev);
 
-        player.CallDroppingItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
+        ((SPlayerNetworking)player).CallDroppingItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
 
         return ev;
     }
@@ -29,15 +31,15 @@ internal class DropItem
     internal static void CallDroppedItemEvent(PlayerControllerB playerController, GrabbableObject grabbable, bool placeObject, Vector3 targetPosition,
         int floorYRotation, NetworkObject parentObjectTo, bool matchRotationOfParent, bool droppedInShip)
     {
-        Features.Player player = Features.Player.GetOrAdd(playerController);
+        Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(playerController);
 
-        Features.Item item = Features.Item.GetOrAdd(grabbable);
+        Common.Features.SItem item = Common.Features.SItem.Get(grabbable)!;
 
         DroppedItemEventArgs ev = new DroppedItemEventArgs(player, item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
 
         Handlers.Player.OnDroppedItem(ev);
 
-        player.CallDroppedItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
+        ((SPlayerNetworking)player).CallDroppedItemOnOtherClients(item, placeObject, targetPosition, floorYRotation, parentObjectTo, matchRotationOfParent, droppedInShip);
     }
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -164,7 +166,7 @@ internal class DropItem
                 //  int, NetworkObject, bool, bool)
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldarg_1),
-                new CodeInstruction(OpCodes.Ldarg_3),
+                new CodeInstruction(OpCodes.Ldloc_1),
                 new CodeInstruction(OpCodes.Ldloc_0),
                 new CodeInstruction(OpCodes.Ldarg_2),
                 new CodeInstruction(OpCodes.Ldarg, 4),

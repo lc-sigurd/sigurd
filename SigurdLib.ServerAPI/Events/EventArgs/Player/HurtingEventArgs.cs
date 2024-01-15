@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Sigurd.ServerAPI.Events.EventArgs.Player;
 
 /// <summary>
-/// Contains all the information before a <see cref="Features.Player"/> is hurt.
+/// Contains all the information before a <see cref="Common.Features.SPlayer"/> is hurt.
 /// </summary>
 public class HurtingEventArgs : System.EventArgs
 {
     /// <summary>
     /// Gets the player that is taking damage.
     /// </summary>
-    public Features.Player Player { get; }
+    public Common.Features.SPlayer Player { get; }
 
     /// <summary>
     /// Gets or sets the amount of damage the <see cref="Player"/> will take.
@@ -45,7 +45,7 @@ public class HurtingEventArgs : System.EventArgs
     /// <summary>
     /// Gets or sets whether this damage is allowed to occur.
     /// </summary>
-    public bool IsAllowed { get; set; }
+    public bool IsAllowed { get; set; } = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HurtingEventArgs"/> class.
@@ -57,7 +57,7 @@ public class HurtingEventArgs : System.EventArgs
     /// <param name="deathAnimation"><inheritdoc cref="DeathAnimation" /></param>
     /// <param name="fallDamage"><inheritdoc cref="FallDamage" /></param>
     /// <param name="force"><inheritdoc cref="Force" /></param>
-    public HurtingEventArgs(Features.Player player, int damage, bool hasSFX, CauseOfDeath causeOfDeath, int deathAnimation,
+    public HurtingEventArgs(Common.Features.SPlayer player, int damage, bool hasSFX, CauseOfDeath causeOfDeath, int deathAnimation,
         bool fallDamage, Vector3 force)
     {
         Player = player;

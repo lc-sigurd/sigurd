@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Sigurd.ServerAPI.Events.Cache;
 
 internal static class Player

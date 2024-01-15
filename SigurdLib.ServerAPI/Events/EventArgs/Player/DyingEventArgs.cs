@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Sigurd.ServerAPI.Events.EventArgs.Player;
 
 /// <summary>
-/// Contains all the information before a <see cref="Features.Player"/> is dies.
+/// Contains all the information before a <see cref="Common.Features.SPlayer"/> is dies.
 /// </summary>
 public class DyingEventArgs : System.EventArgs
 {
     /// <summary>
     /// Gets the player that is dying.
     /// </summary>
-    public Features.Player Player { get; }
+    public Common.Features.SPlayer Player { get; }
 
     /// <summary>
     /// Gets or sets the force to add to the ragdoll.
@@ -35,7 +35,7 @@ public class DyingEventArgs : System.EventArgs
     /// <summary>
     /// Gets or sets whether this death is allowed to occur.
     /// </summary>
-    public bool IsAllowed { get; set; }
+    public bool IsAllowed { get; set; } = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DyingEventArgs"/> class.
@@ -45,7 +45,7 @@ public class DyingEventArgs : System.EventArgs
     /// <param name="spawnBody"><inheritdoc cref="SpawnBody" /></param>
     /// <param name="causeOfDeath"><inheritdoc cref="CauseOfDeath" /></param>
     /// <param name="deathAnimation"><inheritdoc cref="DeathAnimation" /></param>
-    public DyingEventArgs(Features.Player player, Vector3 force, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation)
+    public DyingEventArgs(Common.Features.SPlayer player, Vector3 force, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation)
     {
         Player = player;
         Force = force;
