@@ -11,39 +11,53 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigurdLib.Networking", "Sig
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigurdLib", "SigurdLib\SigurdLib.csproj", "{D408CF8F-8228-47A6-93A2-A19B33BE26D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Common", "SigurdLib.Common\SigurdLib.Common.csproj", "{1E970938-AC7B-48C3-9963-9E3F9E989867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigurdLib.Common", "SigurdLib.Common\SigurdLib.Common.csproj", "{1E970938-AC7B-48C3-9963-9E3F9E989867}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuildTasks", "MSBuildTasks\MSBuildTasks.csproj", "{C26CC832-C210-4A65-95F7-554215A25D6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSBuildTasks", "MSBuildTasks\MSBuildTasks.csproj", "{C26CC832-C210-4A65-95F7-554215A25D6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		BuildTasks|Any CPU = BuildTasks|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-		BuildTasks|Any CPU = BuildTasks|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1040E4C2-5C3C-49A5-A4D1-9FB9664B1EC8}.BuildTasks|Any CPU.ActiveCfg = Release|Any CPU
+		{1040E4C2-5C3C-49A5-A4D1-9FB9664B1EC8}.BuildTasks|Any CPU.Build.0 = Release|Any CPU
 		{1040E4C2-5C3C-49A5-A4D1-9FB9664B1EC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1040E4C2-5C3C-49A5-A4D1-9FB9664B1EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1040E4C2-5C3C-49A5-A4D1-9FB9664B1EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1040E4C2-5C3C-49A5-A4D1-9FB9664B1EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A6E932B-22DD-4B66-8B92-9CB84EC0D999}.BuildTasks|Any CPU.ActiveCfg = Release|Any CPU
+		{6A6E932B-22DD-4B66-8B92-9CB84EC0D999}.BuildTasks|Any CPU.Build.0 = Release|Any CPU
 		{6A6E932B-22DD-4B66-8B92-9CB84EC0D999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A6E932B-22DD-4B66-8B92-9CB84EC0D999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A6E932B-22DD-4B66-8B92-9CB84EC0D999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A6E932B-22DD-4B66-8B92-9CB84EC0D999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6E7678D-6739-4ABC-88A0-A703C4D251D1}.BuildTasks|Any CPU.ActiveCfg = Release|Any CPU
+		{A6E7678D-6739-4ABC-88A0-A703C4D251D1}.BuildTasks|Any CPU.Build.0 = Release|Any CPU
 		{A6E7678D-6739-4ABC-88A0-A703C4D251D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6E7678D-6739-4ABC-88A0-A703C4D251D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6E7678D-6739-4ABC-88A0-A703C4D251D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6E7678D-6739-4ABC-88A0-A703C4D251D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D408CF8F-8228-47A6-93A2-A19B33BE26D3}.BuildTasks|Any CPU.ActiveCfg = Release|Any CPU
+		{D408CF8F-8228-47A6-93A2-A19B33BE26D3}.BuildTasks|Any CPU.Build.0 = Release|Any CPU
 		{D408CF8F-8228-47A6-93A2-A19B33BE26D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D408CF8F-8228-47A6-93A2-A19B33BE26D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D408CF8F-8228-47A6-93A2-A19B33BE26D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D408CF8F-8228-47A6-93A2-A19B33BE26D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E970938-AC7B-48C3-9963-9E3F9E989867}.BuildTasks|Any CPU.ActiveCfg = Release|Any CPU
+		{1E970938-AC7B-48C3-9963-9E3F9E989867}.BuildTasks|Any CPU.Build.0 = Release|Any CPU
 		{1E970938-AC7B-48C3-9963-9E3F9E989867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E970938-AC7B-48C3-9963-9E3F9E989867}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E970938-AC7B-48C3-9963-9E3F9E989867}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E970938-AC7B-48C3-9963-9E3F9E989867}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C26CC832-C210-4A65-95F7-554215A25D6C}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
 		{C26CC832-C210-4A65-95F7-554215A25D6C}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
+		{C26CC832-C210-4A65-95F7-554215A25D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C26CC832-C210-4A65-95F7-554215A25D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C26CC832-C210-4A65-95F7-554215A25D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C26CC832-C210-4A65-95F7-554215A25D6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
