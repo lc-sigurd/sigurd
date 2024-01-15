@@ -66,10 +66,15 @@ public static class MyPluginInfo
         Condition="$(IsThunderstorePackable) == 'true'"
     >
         <PatchThunderstoreMetadata
-            InputPath="$(ProjectDir)assets/thunderstore.toml"
-            OutputPath="$(ProjectDir)assets/thunderstore.toml.user"
-            Version="$(PlainVersion)"
-            Dependencies="@(ThunderstoreDependency)"
+            ConfigurationFileInputPath="$(ProjectDir)assets/thunderstore.toml"
+            ConfigurationFileOutputPath="$(ProjectDir)assets/thunderstore.toml.user"
+            PackageNamespace="$(ThunderstoreNamespace)"
+            PackageName="$(ThunderstoreName)"
+            PackageWebsiteUrl="$(ThunderstoreWebsiteUrl)"
+            PackageVersion="$(PlainVersion)"
+            PackageDescription="$(Description)"
+            PackageContainsNsfwContent="false"
+            PackageDependencies="@(ThunderstoreDependency)"
         />
     </Target>
 
