@@ -41,6 +41,7 @@
     <PropertyGroup>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
+        <ThunderstoreReadmePath>$(ProjectDir)../README.md</ThunderstoreReadmePath>
     </PropertyGroup>
 
     <ItemGroup>
