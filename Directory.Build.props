@@ -45,7 +45,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="/BepInEx/plugins/$(ProjectName)/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)assets/bundles" Destination="/BepInEx/plugins/$(ProjectName)/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../LICENSE" Destination="/"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
