@@ -1,3 +1,4 @@
+using Microsoft.Build.Framework;
 using Tomlet;
 using Tomlet.Attributes;
 using Tomlet.Models;
@@ -81,6 +82,14 @@ public class ThunderstoreProject : BaseToml<ThunderstoreProject>
             public string Source { get; set; } = "./dist";
             [TomlProperty("target")]
             public string Target { get; set; } = "";
+
+            public static CopyPath FromTaskItem(ITaskItem item)
+            {
+                return new() {
+                    Source = item.ItemSpec,
+                    Target = item.GetMetadata("Destination"),
+                };
+            }
         }
 
         [TomlProperty("copy")]
