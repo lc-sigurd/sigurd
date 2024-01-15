@@ -51,6 +51,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
         project.Package.Namespace = PackageNamespace;
         project.Package.Name = PackageName;
         project.Package.Description = Description;
+        project.Package.ContainsNsfwContent = false;
 
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
         return true;
