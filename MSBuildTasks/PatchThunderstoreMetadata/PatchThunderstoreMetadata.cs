@@ -8,43 +8,43 @@ namespace MSBuildTasks.PatchThunderstoreMetadata;
 public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 {
     [Required]
-    public string ConfigurationFileInputPath { get; set; }
+    public string ConfigurationFileInputPath { get; set; } = null!;
 
     [Required]
-    public string ConfigurationFileOutputPath { get; set; }
+    public string ConfigurationFileOutputPath { get; set; } = null!;
 
     [Required]
-    public string PackageNamespace { get; set; }
+    public string PackageNamespace { get; set; } = null!;
 
     [Required]
-    public string PackageName { get; set; }
+    public string PackageName { get; set; } = null!;
 
     [Required]
-    public string PackageDescription { get; set; }
+    public string PackageDescription { get; set; } = null!;
 
     [Required]
-    public string PackageVersion { get; set; }
+    public string PackageVersion { get; set; } = null!;
 
     [Required]
-    public string PackageWebsiteUrl { get; set; }
+    public string PackageWebsiteUrl { get; set; } = null!;
 
     [Required]
     public bool PackageContainsNsfwContent { get; set; }
 
     [Required]
-    public ITaskItem[] PackageDependencies { get; set; }
+    public ITaskItem[] PackageDependencies { get; set; } = null!;
 
     [Required]
-    public string BuildReadmePath { get; set; }
+    public string BuildReadmePath { get; set; } = null!;
 
     [Required]
-    public string BuildIconPath { get; set; }
+    public string BuildIconPath { get; set; } = null!;
 
     [Required]
-    public string BuildOutDir { get; set; }
+    public string BuildOutDir { get; set; } = null!;
 
     [Required]
-    public ITaskItem[] BuildCopyPaths { get; set; }
+    public ITaskItem[] BuildCopyPaths { get; set; } = null!;
 
     public override bool Execute()
     {
