@@ -72,7 +72,7 @@ public static class MyPluginInfo
             PackageName="$(ThunderstoreName)"
             PackageWebsiteUrl="$(ThunderstoreWebsiteUrl)"
             PackageVersion="$(PlainVersion)"
-            PackageDescription="$(Description)"
+            PackageDescription="$(ThunderstoreDescription)"
             PackageContainsNsfwContent="false"
             PackageDependencies="@(ThunderstoreDependency)"
         />
