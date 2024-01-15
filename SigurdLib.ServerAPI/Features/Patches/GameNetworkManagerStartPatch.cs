@@ -13,18 +13,18 @@ namespace Sigurd.ServerAPI.Features.Patches
     {
         private static readonly string BUNDLE_PATH = Path.Combine(Path.GetDirectoryName(Plugin.Instance.Info.Location), "Bundles", "networking");
 
-        private const string PLAYER_NETWORKING_ASSET_LOCATION = "assets/sigurd/playernetworkingprefab.prefab";
+    private const string PLAYER_NETWORKING_ASSET_LOCATION = "assets/sigurd/playernetworkingprefab.prefab";
 
-        private static void Postfix(GameNetworkManager __instance)
+    private static void Postfix(GameNetworkManager __instance)
+    {
+        if (!File.Exists(BUNDLE_PATH))
         {
-            if (!File.Exists(BUNDLE_PATH))
-            {
-                throw new Exception("Networking bundle not found at expected path.");
-            }
+            throw new Exception("Networking bundle not found at expected path.");
+        }
 
-            NetworkManager networkManager = __instance.GetComponent<NetworkManager>();
+        NetworkManager networkManager = __instance.GetComponent<NetworkManager>();
 
-            LoadedAssetBundle assets = BundleHelper.LoadAssetBundle(BUNDLE_PATH, false);
+        LoadedAssetBundle assets = BundleHelper.LoadAssetBundle(BUNDLE_PATH, false);
 
             GameObject playerObj = assets.GetAsset<GameObject>(PLAYER_NETWORKING_ASSET_LOCATION);
             playerObj.AddComponent<SPlayerNetworking>();

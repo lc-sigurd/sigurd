@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Sigurd.Common
@@ -24,55 +22,55 @@ namespace Sigurd.Common
                 { toReplace, replacement }
             };
 
-            return input.ReplaceWithCase(map);
-        }
+        return input.ReplaceWithCase(map);
+    }
 
-        // Thanks Elias https://stackoverflow.com/a/11105164
-        /// <summary>
-        /// Replaces a string and attempts to keep its casing.
-        /// </summary>
-        /// <param name="input">The input <see cref="string"/>.</param>
-        /// <param name="map">A <see cref="Dictionary{TKey, TValue}"/> of strings to replace and their replacement.</param>
-        /// <returns>The completed <see cref="string"/>.</returns>
-        public static string ReplaceWithCase(this string input, Dictionary<string, string> map)
+    // Thanks Elias https://stackoverflow.com/a/11105164
+    /// <summary>
+    /// Replaces a string and attempts to keep its casing.
+    /// </summary>
+    /// <param name="input">The input <see cref="string"/>.</param>
+    /// <param name="map">A <see cref="Dictionary{TKey, TValue}"/> of strings to replace and their replacement.</param>
+    /// <returns>The completed <see cref="string"/>.</returns>
+    public static string ReplaceWithCase(this string input, Dictionary<string, string> map)
+    {
+        string temp = input;
+        foreach (var entry in map)
         {
-            string temp = input;
-            foreach (var entry in map)
+            string key = entry.Key;
+            string value = entry.Value;
+            temp = Regex.Replace(temp, key, match =>
             {
-                string key = entry.Key;
-                string value = entry.Value;
-                temp = Regex.Replace(temp, key, match =>
+                bool isFirstUpper, isEachUpper, isAllUpper;
+
+                string sentence = match.Value;
+                char[] sentenceArray = sentence.ToCharArray();
+
+                string[] words = sentence.Split(' ');
+
+                isFirstUpper = char.IsUpper(sentenceArray[0]);
+
+                isEachUpper = words.All(w => char.IsUpper(w[0]) || !char.IsLetter(w[0]));
+
+                isAllUpper = sentenceArray.All(c => char.IsUpper(c) || !char.IsLetter(c));
+
+                if (isAllUpper)
+                    return value.ToUpper();
+
+                if (isEachUpper)
                 {
-                    bool isFirstUpper, isEachUpper, isAllUpper;
-
-                    string sentence = match.Value;
-                    char[] sentenceArray = sentence.ToCharArray();
-
-                    string[] words = sentence.Split(' ');
-
-                    isFirstUpper = char.IsUpper(sentenceArray[0]);
-
-                    isEachUpper = words.All(w => char.IsUpper(w[0]) || !char.IsLetter(w[0]));
-
-                    isAllUpper = sentenceArray.All(c => char.IsUpper(c) || !char.IsLetter(c));
-
-                    if (isAllUpper)
-                        return value.ToUpper();
-
-                    if (isEachUpper)
-                    {
-                        string capitalized = Regex.Replace(value, @"\b\w", charMatch => charMatch.Value.ToUpper());
-                        return capitalized;
-                    }
+                    string capitalized = Regex.Replace(value, @"\b\w", charMatch => charMatch.Value.ToUpper());
+                    return capitalized;
+                }
 
 
-                    char[] result = value.ToCharArray();
-                    result[0] = isFirstUpper
-                        ? char.ToUpper(result[0])
-                        : char.ToLower(result[0]);
-                    return new string(result);
-                }, RegexOptions.IgnoreCase);
-            }
+                char[] result = value.ToCharArray();
+                result[0] = isFirstUpper
+                    ? char.ToUpper(result[0])
+                    : char.ToLower(result[0]);
+                return new string(result);
+            }, RegexOptions.IgnoreCase);
+        }
 
             // In case it didn't work, just return a normal replace.
             if (temp == input)

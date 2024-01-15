@@ -8,6 +8,7 @@
 
 ## Build System/Scripts
 !/.config
+!/global.json
 !NuGet.Config
 !Directory.Build.props
 !Directory.Build.targets
@@ -24,6 +25,9 @@
 !.gitignore
 !.gitattributes
 !.git-blame-ignore-revs
+
+### Submodules
+!/submodules
 
 ## GitHub specific
 !.github/
@@ -45,6 +49,11 @@
 /SigurdLib*/[Bb]in
 /SigurdLib*/[Oo]bj
 /SigurdLib*/[Dd]ist
+
+### MSBuildTasks Project
+!/MSBuildTasks
+/MSBuildTasks/[Bb]in
+/MSBuildTasks/[Oo]bj
 
 ## Libraries
 !/libs*

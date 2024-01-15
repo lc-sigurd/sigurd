@@ -11,22 +11,28 @@
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
+        <HasBepInPlugin>true</HasBepInPlugin>
         <RequiresNetcodePatch>true</RequiresNetcodePatch>
 
         <RootNamespace>Sigurd.ServerAPI</RootNamespace>
-        
-        <NoWarn>1701;1702;8625;8603;8618;8600</NoWarn>
     </PropertyGroup>
-    
+
+    <!-- Dependencies for thunderstore.toml -->
+    <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetPluginVersion" BeforeTargets="PatchThunderstoreMetadata">
+        <ItemGroup>
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" Reference="false" />
+        </ItemGroup>
+    </Target>
+
     <!-- Development dependencies -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Runtime assembly references -->
     <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup Condition="$(CI) != 'true'">
@@ -55,7 +61,8 @@
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
     </ItemGroup>
+
     <ItemGroup>
-      <ProjectReference Include="..\SigurdLib.Common\SigurdLib.Common.csproj" />
+        <ProjectReference Include="$(ProjectDir)../SigurdLib.Common/SigurdLib.Common.csproj" />
     </ItemGroup>
 </Project>

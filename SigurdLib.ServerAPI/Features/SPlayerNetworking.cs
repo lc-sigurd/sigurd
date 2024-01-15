@@ -1,9 +1,6 @@
 using GameNetcodeStuff;
 using Sigurd.Common.Features;
 using Sigurd.ServerAPI.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -102,10 +99,10 @@ namespace Sigurd.ServerAPI.Features
             }
         }
 
-        [ClientRpc]
-        private void SetSprintMeterClientRpc(float value)
-        {
-            if (!NetworkManager.Singleton.IsClient) return;
+    [ClientRpc]
+    private void SetSprintMeterClientRpc(float value)
+    {
+        if (!NetworkManager.Singleton.IsClient) return;
 
             Player.SprintMeter = value;
         }
@@ -144,11 +141,11 @@ namespace Sigurd.ServerAPI.Features
             }
         }
 
-        // UpdatePlayerPositionClientRpc doesn't actually set the player's position, so we need a custom rpc to do so.
-        [ClientRpc]
-        private void TeleportPlayerClientRpc(Vector3 position)
-        {
-            if (!NetworkManager.Singleton.IsClient) return;
+    // UpdatePlayerPositionClientRpc doesn't actually set the player's position, so we need a custom rpc to do so.
+    [ClientRpc]
+    private void TeleportPlayerClientRpc(Vector3 position)
+    {
+        if (!NetworkManager.Singleton.IsClient) return;
 
             Player.Position = position;
         }
@@ -238,10 +235,10 @@ namespace Sigurd.ServerAPI.Features
             }
         }
 
-        [ClientRpc]
-        private void SetHealthClientRpc(int health)
-        {
-            if (!NetworkManager.Singleton.IsClient) return;
+    [ClientRpc]
+    private void SetHealthClientRpc(int health)
+    {
+        if (!NetworkManager.Singleton.IsClient) return;
 
             Player.Health = health;
         }
@@ -361,8 +358,8 @@ namespace Sigurd.ServerAPI.Features
 
             InventoryNetworking = GetComponent<PlayerInventoryNetworking>();
 
-            NetworkClientId.OnValueChanged += clientIdChanged;
-        }
+        NetworkClientId.OnValueChanged += clientIdChanged;
+    }
 
         private void Update()
         {
@@ -416,12 +413,12 @@ namespace Sigurd.ServerAPI.Features
         }
         #endregion
 
-        #region Event replication
-        internal void CallHurtingOnOtherClients(int damage, bool hasSFX, CauseOfDeath causeOfDeath,
-            int deathAnimation, bool fallDamage, Vector3 force)
-        {
-            CallHurtingOnOtherClientsServerRpc(damage, hasSFX, (int)causeOfDeath, deathAnimation, fallDamage, force);
-        }
+    #region Event replication
+    internal void CallHurtingOnOtherClients(int damage, bool hasSFX, CauseOfDeath causeOfDeath,
+        int deathAnimation, bool fallDamage, Vector3 force)
+    {
+        CallHurtingOnOtherClientsServerRpc(damage, hasSFX, (int)causeOfDeath, deathAnimation, fallDamage, force);
+    }
 
         [ServerRpc(RequireOwnership = false)]
         private void CallHurtingOnOtherClientsServerRpc(int damage, bool hasSFX, int causeOfDeath,
@@ -429,8 +426,8 @@ namespace Sigurd.ServerAPI.Features
         {
             if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
 
-            CallHurtingOnOtherClientsClientRpc(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
-        }
+        CallHurtingOnOtherClientsClientRpc(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+    }
 
         [ClientRpc]
         private void CallHurtingOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
@@ -442,11 +439,11 @@ namespace Sigurd.ServerAPI.Features
                 (CauseOfDeath)causeOfDeath, deathAnimation, fallDamage, force));
         }
 
-        internal void CallHurtOnOtherClients(int damage, bool hasSFX, CauseOfDeath causeOfDeath,
-            int deathAnimation, bool fallDamage, Vector3 force)
-        {
-            CallHurtOnOtherClientsServerRpc(damage, hasSFX, (int)causeOfDeath, deathAnimation, fallDamage, force);
-        }
+    internal void CallHurtOnOtherClients(int damage, bool hasSFX, CauseOfDeath causeOfDeath,
+        int deathAnimation, bool fallDamage, Vector3 force)
+    {
+        CallHurtOnOtherClientsServerRpc(damage, hasSFX, (int)causeOfDeath, deathAnimation, fallDamage, force);
+    }
 
         [ServerRpc(RequireOwnership = false)]
         private void CallHurtOnOtherClientsServerRpc(int damage, bool hasSFX, int causeOfDeath,
@@ -454,8 +451,8 @@ namespace Sigurd.ServerAPI.Features
         {
             if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
 
-            CallHurtOnOtherClientsClientRpc(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
-        }
+        CallHurtOnOtherClientsClientRpc(damage, hasSFX, causeOfDeath, deathAnimation, fallDamage, force);
+    }
 
         [ClientRpc]
         private void CallHurtOnOtherClientsClientRpc(int damage, bool hasSFX, int causeOfDeath,
@@ -480,8 +477,8 @@ namespace Sigurd.ServerAPI.Features
         {
             if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
 
-            CallDroppingItemOnOtherClientsClientRpc(itemNetworkId, placeObject, targetPosition, floorYRotation, hasParent, parentObjectToId, matchRotationOfParent, droppedInShip);
-        }
+        CallDroppingItemOnOtherClientsClientRpc(itemNetworkId, placeObject, targetPosition, floorYRotation, hasParent, parentObjectToId, matchRotationOfParent, droppedInShip);
+    }
 
         [ClientRpc]
         private void CallDroppingItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
@@ -505,8 +502,8 @@ namespace Sigurd.ServerAPI.Features
         {
             if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
 
-            CallDroppedItemOnOtherClientsClientRpc(itemNetworkId, placeObject, targetPosition, floorYRotation, hasParent, parentObjectToId, matchRotationOfParent, droppedInShip);
-        }
+        CallDroppedItemOnOtherClientsClientRpc(itemNetworkId, placeObject, targetPosition, floorYRotation, hasParent, parentObjectToId, matchRotationOfParent, droppedInShip);
+    }
 
         [ClientRpc]
         private void CallDroppedItemOnOtherClientsClientRpc(ulong itemNetworkId, bool placeObject, Vector3 targetPosition,
@@ -680,55 +677,55 @@ namespace Sigurd.ServerAPI.Features
             /// TODO: I'm not sure how feasible it is to get this to work in any other way, but I hate this.
             public SItem?[] Items => Player.PlayerController.ItemSlots.Select(i => i != null ? SItem.Dictionary[i] : null).ToArray();
 
-            /// <summary>
-            /// Gets the <see cref="Player"/>'s current item slot.
-            /// </summary>
-            public int CurrentSlot
+        /// <summary>
+        /// Gets the <see cref="Player"/>'s current item slot.
+        /// </summary>
+        public int CurrentSlot
+        {
+            get
             {
-                get
-                {
-                    return Player.PlayerController.currentItemSlot;
-                }
-                set
-                {
-                    if (Player.IsLocalPlayer) SetSlotServerRpc(value);
-                    else if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) SetSlotClientRpc(value);
-                }
+                return Player.PlayerController.currentItemSlot;
             }
-
-            [ServerRpc(RequireOwnership = false)]
-            private void SetSlotServerRpc(int slot, ServerRpcParams serverRpcParams = default)
+            set
             {
-                if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
-
-                SetSlotClientRpc(slot);
+                if (Player.IsLocalPlayer) SetSlotServerRpc(value);
+                else if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) SetSlotClientRpc(value);
             }
+        }
 
-            [ClientRpc]
-            private void SetSlotClientRpc(int slot)
-            {
-                Player.PlayerController.SwitchToItemSlot(slot);
-            }
+        [ServerRpc(RequireOwnership = false)]
+        private void SetSlotServerRpc(int slot, ServerRpcParams serverRpcParams = default)
+        {
+            if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
 
-            /// <summary>
-            /// Gets the first empty item slot, or -1 if there are none available.
-            /// </summary>
-            /// <returns></returns>
-            public int GetFirstEmptySlot()
-            {
-                return Player.PlayerController.FirstEmptyItemSlot();
-            }
+            SetSlotClientRpc(slot);
+        }
 
-            /// <summary>
-            /// Tries to get the first empty item slot.
-            /// </summary>
-            /// <param name="slot">Outputs the empty item slot.</param>
-            /// <returns><see langword="true"/> if there's an available slot, <see langword="false"/> otherwise.</returns>
-            public bool TryGetFirstEmptySlot(out int slot)
-            {
-                slot = Player.PlayerController.FirstEmptyItemSlot();
-                return slot != -1;
-            }
+        [ClientRpc]
+        private void SetSlotClientRpc(int slot)
+        {
+            Player.PlayerController.SwitchToItemSlot(slot);
+        }
+
+        /// <summary>
+        /// Gets the first empty item slot, or -1 if there are none available.
+        /// </summary>
+        /// <returns></returns>
+        public int GetFirstEmptySlot()
+        {
+            return Player.PlayerController.FirstEmptyItemSlot();
+        }
+
+        /// <summary>
+        /// Tries to get the first empty item slot.
+        /// </summary>
+        /// <param name="slot">Outputs the empty item slot.</param>
+        /// <returns><see langword="true"/> if there's an available slot, <see langword="false"/> otherwise.</returns>
+        public bool TryGetFirstEmptySlot(out int slot)
+        {
+            slot = Player.PlayerController.FirstEmptyItemSlot();
+            return slot != -1;
+        }
 
             /// <summary>
             /// Tries to add an <see cref="SItem"/> to the inventory in the first available slot.
@@ -779,11 +776,11 @@ namespace Sigurd.ServerAPI.Features
                         }
                     }
 
-                    return true;
-                }
-
-                return false;
+                return true;
             }
+
+            return false;
+        }
 
             /// <summary>
             /// Tries to add an <see cref="SItem"/> to the inventory in a specific slot.
@@ -835,24 +832,24 @@ namespace Sigurd.ServerAPI.Features
                         }
                     }
 
-                    return true;
-                }
-
-                return false;
+                return true;
             }
+
+            return false;
+        }
 
             [ClientRpc]
             private void SetItemInSlotClientRpc(int slot, ulong itemId)
             {
                 SItem item = SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
 
-                if (item != null)
+            if (item != null)
+            {
+                if (Player.IsLocalPlayer)
                 {
-                    if (Player.IsLocalPlayer)
-                    {
-                        HUDManager.Instance.itemSlotIcons[slot].sprite = item.ItemProperties.itemIcon;
-                        HUDManager.Instance.itemSlotIcons[slot].enabled = true;
-                    }
+                    HUDManager.Instance.itemSlotIcons[slot].sprite = item.ItemProperties.itemIcon;
+                    HUDManager.Instance.itemSlotIcons[slot].enabled = true;
+                }
 
                     item.GrabbableObject.heldByPlayerOnServer = Player.PlayerController;
                     item.GrabbableObject.EnablePhysics(false);
@@ -862,29 +859,29 @@ namespace Sigurd.ServerAPI.Features
                     item.GrabbableObject.isInFactory = Player.IsInFactory;
                     item.GrabbableObject.isHeld = true;
 
-                    Player.CarryWeight += Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
+                Player.CarryWeight += Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
 
-                    if (!Player.IsLocalPlayer)
-                    {
-                        item.GrabbableObject.parentObject = Player.PlayerController.serverItemHolder;
-                    }
-                    else
-                    {
-                        item.GrabbableObject.parentObject = Player.PlayerController.localItemHolder;
-                    }
-
-                    Player.PlayerController.ItemSlots[slot] = item.GrabbableObject;
+                if (!Player.IsLocalPlayer)
+                {
+                    item.GrabbableObject.parentObject = Player.PlayerController.serverItemHolder;
                 }
+                else
+                {
+                    item.GrabbableObject.parentObject = Player.PlayerController.localItemHolder;
+                }
+
+                Player.PlayerController.ItemSlots[slot] = item.GrabbableObject;
             }
+        }
 
             [ClientRpc]
             private void SetSlotAndItemClientRpc(int slot, ulong itemId)
             {
                 SItem item = SItem.List.FirstOrDefault(i => i.GrabbableObject.NetworkObjectId == itemId);
 
-                if (item != null)
-                {
-                    Player.PlayerController.SwitchToItemSlot(slot, item.GrabbableObject);
+            if (item != null)
+            {
+                Player.PlayerController.SwitchToItemSlot(slot, item.GrabbableObject);
 
                     item.GrabbableObject.heldByPlayerOnServer = Player.PlayerController;
                     item.GrabbableObject.EnablePhysics(false);
@@ -892,39 +889,39 @@ namespace Sigurd.ServerAPI.Features
                     item.GrabbableObject.hasHitGround = false;
                     item.GrabbableObject.isInFactory = Player.IsInFactory;
 
-                    Player.PlayerController.twoHanded = item.ItemProperties.twoHanded;
-                    Player.PlayerController.twoHandedAnimation = item.ItemProperties.twoHandedAnimation;
-                    Player.PlayerController.isHoldingObject = true;
-                    Player.CarryWeight += Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
+                Player.PlayerController.twoHanded = item.ItemProperties.twoHanded;
+                Player.PlayerController.twoHandedAnimation = item.ItemProperties.twoHandedAnimation;
+                Player.PlayerController.isHoldingObject = true;
+                Player.CarryWeight += Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
 
-                    if (!Player.IsLocalPlayer)
-                    {
-                        item.GrabbableObject.parentObject = Player.PlayerController.serverItemHolder;
-                    }
-                    else
-                    {
-                        item.GrabbableObject.parentObject = Player.PlayerController.localItemHolder;
-                    }
+                if (!Player.IsLocalPlayer)
+                {
+                    item.GrabbableObject.parentObject = Player.PlayerController.serverItemHolder;
+                }
+                else
+                {
+                    item.GrabbableObject.parentObject = Player.PlayerController.localItemHolder;
                 }
             }
+        }
 
-            /// <summary>
-            /// Removes an <see cref="Item"/> from the <see cref="Player"/>'s inventory at the current slot.
-            /// </summary>
-            /// <param name="slot"></param>
-            public void RemoveItem(int slot)
-            {
-                if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) RemoveItemClientRpc(slot);
-                else RemoveItemServerRpc(slot);
-            }
+        /// <summary>
+        /// Removes an <see cref="Item"/> from the <see cref="Player"/>'s inventory at the current slot.
+        /// </summary>
+        /// <param name="slot"></param>
+        public void RemoveItem(int slot)
+        {
+            if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) RemoveItemClientRpc(slot);
+            else RemoveItemServerRpc(slot);
+        }
 
-            [ServerRpc(RequireOwnership = false)]
-            private void RemoveItemServerRpc(int slot, ServerRpcParams serverRpcParams = default)
-            {
-                if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
+        [ServerRpc(RequireOwnership = false)]
+        private void RemoveItemServerRpc(int slot, ServerRpcParams serverRpcParams = default)
+        {
+            if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
 
-                RemoveItemClientRpc(slot);
-            }
+            RemoveItemClientRpc(slot);
+        }
 
             [ClientRpc]
             private void RemoveItemClientRpc(int slot)
@@ -934,58 +931,58 @@ namespace Sigurd.ServerAPI.Features
                     bool currentlyHeldOut = slot == Player.Inventory.CurrentSlot;
                     SItem item = Items[slot];
 
-                    if (item == null) return;
+                if (item == null) return;
 
-                    GrabbableObject grabbable = item.GrabbableObject;
+                GrabbableObject grabbable = item.GrabbableObject;
 
+                if (Player.IsLocalPlayer)
+                {
+                    HUDManager.Instance.itemSlotIcons[slot].enabled = false;
+
+                    if (item.IsTwoHanded) HUDManager.Instance.holdingTwoHandedItem.enabled = false;
+                }
+
+                if (currentlyHeldOut)
+                {
                     if (Player.IsLocalPlayer)
                     {
-                        HUDManager.Instance.itemSlotIcons[slot].enabled = false;
-
-                        if (item.IsTwoHanded) HUDManager.Instance.holdingTwoHandedItem.enabled = false;
+                        grabbable.DiscardItemOnClient();
                     }
-
-                    if (currentlyHeldOut)
+                    else
                     {
-                        if (Player.IsLocalPlayer)
-                        {
-                            grabbable.DiscardItemOnClient();
-                        }
-                        else
-                        {
-                            grabbable.DiscardItem();
-                        }
-
-                        Player.PlayerController.currentlyHeldObject = null;
-                        Player.PlayerController.currentlyHeldObjectServer = null;
-                        Player.PlayerController.isHoldingObject = false;
-
-                        if (item.IsTwoHanded)
-                        {
-                            Player.PlayerController.twoHanded = false;
-                            Player.PlayerController.twoHandedAnimation = false;
-                        }
+                        grabbable.DiscardItem();
                     }
 
-                    grabbable.heldByPlayerOnServer = false;
-                    grabbable.parentObject = null;
-                    item.EnablePhysics(false);
-                    item.EnableMeshes(true);
-                    item.Scale = item.GrabbableObject.originalScale;
+                    Player.PlayerController.currentlyHeldObject = null;
+                    Player.PlayerController.currentlyHeldObjectServer = null;
+                    Player.PlayerController.isHoldingObject = false;
 
-                    if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+                    if (item.IsTwoHanded)
                     {
-                        item.Position = Vector3.zero;
+                        Player.PlayerController.twoHanded = false;
+                        Player.PlayerController.twoHandedAnimation = false;
                     }
-
-                    grabbable.isHeld = false;
-                    grabbable.isPocketed = false;
-
-                    Player.CarryWeight -= Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
-
-                    Player.PlayerController.ItemSlots[slot] = null;
                 }
+
+                grabbable.heldByPlayerOnServer = false;
+                grabbable.parentObject = null;
+                item.EnablePhysics(false);
+                item.EnableMeshes(true);
+                item.Scale = item.GrabbableObject.originalScale;
+
+                if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+                {
+                    item.Position = Vector3.zero;
+                }
+
+                grabbable.isHeld = false;
+                grabbable.isPocketed = false;
+
+                Player.CarryWeight -= Mathf.Clamp(item.ItemProperties.weight - 1f, 0f, 10f);
+
+                Player.PlayerController.ItemSlots[slot] = null;
             }
+        }
 
             /// <summary>
             /// Removes an <see cref="Item"/> from the inventory. This should be called on all clients from a client rpc.
@@ -996,16 +993,16 @@ namespace Sigurd.ServerAPI.Features
                 RemoveItem(Array.IndexOf(Player.PlayerController.ItemSlots, item.GrabbableObject));
             }
 
-            /// <summary>
-            /// Removes all <see cref="Item"/>s from the <see cref="Player"/>'s inventory.
-            /// </summary>
-            public void RemoveAllItems()
+        /// <summary>
+        /// Removes all <see cref="Item"/>s from the <see cref="Player"/>'s inventory.
+        /// </summary>
+        public void RemoveAllItems()
+        {
+            for (int i = 0; i < Player.PlayerController.ItemSlots.Length; i++)
             {
-                for (int i = 0; i < Player.PlayerController.ItemSlots.Length; i++)
-                {
-                    RemoveItem(i);
-                }
+                RemoveItem(i);
             }
+        }
 
             private void Awake()
             {

@@ -12,25 +12,25 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// </summary>
         public Common.Features.SPlayer Player { get; }
 
-        /// <summary>
-        /// Gets the force that was added to the ragdoll.
-        /// </summary>
-        public Vector3 Force { get; }
+    /// <summary>
+    /// Gets the force that was added to the ragdoll.
+    /// </summary>
+    public Vector3 Force { get; }
 
-        /// <summary>
-        /// Gets whether or not a ragdoll was spawned.
-        /// </summary>
-        public bool SpawnBody { get; }
+    /// <summary>
+    /// Gets whether or not a ragdoll was spawned.
+    /// </summary>
+    public bool SpawnBody { get; }
 
-        /// <summary>
-        /// Gets the cause of death.
-        /// </summary>
-        public CauseOfDeath CauseOfDeath { get; }
+    /// <summary>
+    /// Gets the cause of death.
+    /// </summary>
+    public CauseOfDeath CauseOfDeath { get; }
 
-        /// <summary>
-        /// Gets the death animation index.
-        /// </summary>
-        public int DeathAnimation { get; }
+    /// <summary>
+    /// Gets the death animation index.
+    /// </summary>
+    public int DeathAnimation { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiedEventArgs"/> class.

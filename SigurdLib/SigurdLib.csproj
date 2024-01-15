@@ -11,9 +11,33 @@
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
+        <HasBepInPlugin>true</HasBepInPlugin>
 
         <RootNamespace>Sigurd</RootNamespace>
-
-        <NoWarn>1701;1702;8625;8603;8618;8600</NoWarn>
     </PropertyGroup>
+
+    <!-- Dependencies for thunderstore.toml -->
+    <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetPluginVersion" BeforeTargets="PatchThunderstoreMetadata">
+        <ItemGroup>
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_ClientAPI" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_ServerAPI" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Networking" Version="$(PlainVersion)" Reference="false" />
+        </ItemGroup>
+    </Target>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Runtime assembly references -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+        <PackageReference Include="UnityEngine.Modules" Version="5.4.21" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../SigurdLib.*/SigurdLib.*.csproj"/>
+    </ItemGroup>
 </Project>

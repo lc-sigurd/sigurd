@@ -12,25 +12,25 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// </summary>
         public Common.Features.SPlayer Player { get; }
 
-        /// <summary>
-        /// Gets or sets the force to add to the ragdoll.
-        /// </summary>
-        public Vector3 Force { get; set; }
+    /// <summary>
+    /// Gets or sets the force to add to the ragdoll.
+    /// </summary>
+    public Vector3 Force { get; set; }
 
-        /// <summary>
-        /// Gets or sets whether or not to spawn a ragdoll.
-        /// </summary>
-        public bool SpawnBody { get; set; }
+    /// <summary>
+    /// Gets or sets whether or not to spawn a ragdoll.
+    /// </summary>
+    public bool SpawnBody { get; set; }
 
-        /// <summary>
-        /// Gets or sets the cause of death.
-        /// </summary>
-        public CauseOfDeath CauseOfDeath { get; set; }
+    /// <summary>
+    /// Gets or sets the cause of death.
+    /// </summary>
+    public CauseOfDeath CauseOfDeath { get; set; }
 
-        /// <summary>
-        /// Gets or sets the death animation index.
-        /// </summary>
-        public int DeathAnimation { get; set; }
+    /// <summary>
+    /// Gets or sets the death animation index.
+    /// </summary>
+    public int DeathAnimation { get; set; }
 
         /// <summary>
         /// Gets or sets whether this death is allowed to occur.

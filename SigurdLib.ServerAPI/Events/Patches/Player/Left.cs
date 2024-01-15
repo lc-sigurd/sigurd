@@ -28,11 +28,11 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
             Handlers.Player.OnLeft(new LeftEventArgs(Common.Features.SPlayer.GetOrAdd(player)));
             Cache.Player.ConnectedPlayers.Clear();
 
-            foreach (PlayerControllerB playerController in StartOfRound.Instance.allPlayerScripts)
-            {
-                playerController.isPlayerDead = false;
-                playerController.isPlayerControlled = false;
-            }
+        foreach (PlayerControllerB playerController in StartOfRound.Instance.allPlayerScripts)
+        {
+            playerController.isPlayerDead = false;
+            playerController.isPlayerControlled = false;
+        }
 
             Features.SPlayerNetworking.Dictionary.Clear();
             Features.SItemNetworking.Dictionary.Clear();

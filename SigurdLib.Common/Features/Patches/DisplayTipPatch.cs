@@ -13,25 +13,24 @@ namespace Sigurd.Common.Features.Patches
         {
             SPlayer player = SPlayer.LocalPlayer;
 
-            if (player == null) return true;
+        if (player == null) return true;
 
-            Tip tip = new Tip(headerText, bodyText, 5, 0, isWarning, useSave, prefsKey, 0);
+        Tip tip = new Tip(headerText, bodyText, 5, 0, isWarning, useSave, prefsKey, 0);
 
-            if (player.CurrentTip != null && player.CurrentTip.TimeLeft >= 1.5f)
-            {
-                // Ensures the current tip will continue afterwards
-                player.CurrentTip.TipId = int.MinValue;
-                player.TipQueue.Insert(0, player.CurrentTip);
-            }
+        if (player.CurrentTip != null && player.CurrentTip.TimeLeft >= 1.5f)
+        {
+            // Ensures the current tip will continue afterwards
+            player.CurrentTip.TipId = int.MinValue;
+            player.TipQueue.Insert(0, player.CurrentTip);
+        }
 
-            player.CurrentTip = tip;
+        player.CurrentTip = tip;
 
-            HUDManager.Instance.tipsPanelAnimator.speed = 1;
-            HUDManager.Instance.tipsPanelAnimator.ResetTrigger("TriggerHint");
+        HUDManager.Instance.tipsPanelAnimator.speed = 1;
+        HUDManager.Instance.tipsPanelAnimator.ResetTrigger("TriggerHint");
 
             SPlayer.DisplayTip(tip.Header, tip.Message, isWarning, useSave, prefsKey);
 
-            return false;
-        }
+        return false;
     }
 }

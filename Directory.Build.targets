@@ -1,6 +1,8 @@
 <Project>
+    <Import Project="$(MSBuildThisFileDirectory)/MSBuildTasks/MSBuildTasks.targets" Condition="$(MSBuildProjectName) != 'MSBuildTasks'"/>
+
     <!-- prevent referenced assemblies from being copied to output folders -->
-    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences" Condition="$(ClearCopyLocalPaths) == 'true'">
         <ItemGroup>
             <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
         </ItemGroup>
@@ -14,23 +16,31 @@
         </PropertyGroup>
     </Target>
 
-    <Target Name="AddGeneratedFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)MyPluginInfo.cs">
+    <!-- https://github.com/BepInEx/BepInEx.Templates/blob/9d628c67de0a84337f38f755eeb6646696ae8423/BepInEx.PluginInfoProps/BepInEx.PluginInfoProps.props -->
+    <!-- BepInEx.PluginInfoProps Copyright (c) 2021 BepInEx -->
+    <Target
+        Name="AddGeneratedFile"
+        BeforeTargets="BeforeCompile;CoreCompile"
+        Condition="$(HasBepInPlugin) == 'true'"
+        Inputs="$(MSBuildAllProjects)"
+        Outputs="$(IntermediateOutputPath)MyPluginInfo.cs"
+    >
         <PropertyGroup>
             <BepInExPluginGuid Condition="'$(BepInExPluginGuid)' == ''">$(AssemblyName)</BepInExPluginGuid>
             <BepInExPluginName Condition="'$(BepInExPluginName)' == ''">$(Product)</BepInExPluginName>
             <BepInExPluginVersion Condition="'$(BepInExPluginVersion)' == ''">$(Version)</BepInExPluginVersion>
             <GeneratedText><![CDATA[
-namespace $(RootNamespace)
-{
+namespace $(RootNamespace)%3B
+
 #pragma warning disable 1591
-    public static class MyPluginInfo
-    {
-        public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
-        public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
-        public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
-    }
-#pragma warning restore 1591
+public static class MyPluginInfo
+{
+    public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
+    public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
+    public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
 }
+#pragma warning restore 1591
+
       ]]></GeneratedText>
             <GeneratedFilePath>$(IntermediateOutputPath)MyPluginInfo.cs</GeneratedFilePath>
         </PropertyGroup>
@@ -50,13 +60,27 @@ namespace $(RootNamespace)
     </Target>
 
     <Target
+        Name="PatchThunderstoreMetadata"
+        DependsOnTargets="SetPluginVersion"
+        BeforeTargets="ThunderstorePack"
+        Condition="$(IsThunderstorePackable) == 'true'"
+    >
+        <PatchThunderstoreMetadata
+            InputPath="$(ProjectDir)assets/thunderstore.toml"
+            OutputPath="$(ProjectDir)assets/thunderstore.toml.user"
+            Version="$(PlainVersion)"
+            Dependencies="@(ThunderstoreDependency)"
+        />
+    </Target>
+
+    <Target
         Name="ThunderstorePack"
+        DependsOnTargets="NetcodePatch;SetPluginVersion;PatchThunderstoreMetadata"
         AfterTargets="PostBuildEvent"
         Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'"
-        DependsOnTargets="NetcodePatch;SetPluginVersion"
     >
         <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
-        <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)"/>
+        <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml.user --package-version $(PlainVersion)"/>
         <ItemGroup>
             <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
         </ItemGroup>

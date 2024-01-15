@@ -1,4 +1,4 @@
-namespace Sigurd.ServerAPI.Events.EventArgs.Player
+﻿namespace Sigurd.ServerAPI.Events.EventArgs.Player
 {
     /// <summary>
     /// Contains all the information before a <see cref="Common.Features.SPlayer"/> grabs an <see cref="Common.Features.SItem"/>.
@@ -15,10 +15,10 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// </summary>
         public Common.Features.SItem Item { get; }
 
-        /// <summary>
-        /// Gets or sets whether or not the <see cref="Item"/> can be grabbed.
-        /// </summary>
-        public bool IsAllowed { get; set; } = true;
+    /// <summary>
+    /// Gets or sets whether or not the <see cref="Item"/> can be grabbed.
+    /// </summary>
+    public bool IsAllowed { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrabbingItemEventArgs"/> class.

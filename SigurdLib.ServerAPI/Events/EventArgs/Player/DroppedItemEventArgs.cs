@@ -18,35 +18,35 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// </summary>
         public Common.Features.SItem Item { get; }
 
-        /// <summary>
-        /// Gets whether or not the <see cref="Item"/> was placed.
-        /// </summary>
-        public bool Placing { get; }
+    /// <summary>
+    /// Gets whether or not the <see cref="Item"/> was placed.
+    /// </summary>
+    public bool Placing { get; }
 
-        /// <summary>
-        /// Gets the target end position of the <see cref="Item"/>.
-        /// </summary>
-        public Vector3 TargetPosition { get; }
+    /// <summary>
+    /// Gets the target end position of the <see cref="Item"/>.
+    /// </summary>
+    public Vector3 TargetPosition { get; }
 
-        /// <summary>
-        /// Gets the target Y rotation of the <see cref="Item"/>.
-        /// </summary>
-        public int FloorYRotation { get; }
+    /// <summary>
+    /// Gets the target Y rotation of the <see cref="Item"/>.
+    /// </summary>
+    public int FloorYRotation { get; }
 
-        /// <summary>
-        /// Gets the parent <see cref="NetworkObject"/>, if there is one.
-        /// </summary>
-        public NetworkObject? ParentObjectTo { get; }
+    /// <summary>
+    /// Gets the parent <see cref="NetworkObject"/>, if there is one.
+    /// </summary>
+    public NetworkObject? ParentObjectTo { get; }
 
-        /// <summary>
-        /// Gets whether or not to match the rotation of the <see cref="ParentObjectTo"/>.
-        /// </summary>
-        public bool MatchRotationOfParent { get; }
+    /// <summary>
+    /// Gets whether or not to match the rotation of the <see cref="ParentObjectTo"/>.
+    /// </summary>
+    public bool MatchRotationOfParent { get; }
 
-        /// <summary>
-        /// Gets whether or not the <see cref="Item"/> was dropped in the ship.
-        /// </summary>
-        public bool DroppedInShip { get; }
+    /// <summary>
+    /// Gets whether or not the <see cref="Item"/> was dropped in the ship.
+    /// </summary>
+    public bool DroppedInShip { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DroppedItemEventArgs"/> class.

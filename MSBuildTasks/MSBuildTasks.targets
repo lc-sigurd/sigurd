@@ -1,0 +1,9 @@
+<Project>
+    <PropertyGroup Condition=" '$(MSBuildTasksAssembly)' == '' ">
+        <MSBuildTasksAssemblyDir Condition=" '$(MSBuildTasksAssemblyDir)' == '' ">$(MSBuildThisFileDirectory)bin/BuildTasks/</MSBuildTasksAssemblyDir>
+        <MSBuildTasksAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(MSBuildTasksAssemblyDir)net8.0/MSBuildTasks.dll</MSBuildTasksAssembly>
+        <MSBuildTasksAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(MSBuildTasksAssemblyDir)net472/MSBuildTasks.dll</MSBuildTasksAssembly>
+    </PropertyGroup>
+
+    <UsingTask TaskName="MSBuildTasks.PatchThunderstoreMetadata.PatchThunderstoreMetadata" AssemblyFile="$(MSBuildTasksAssembly)" />
+</Project>

@@ -17,6 +17,7 @@ jobs:
         with:
           fetch-depth: 0
           filter: tree:0
+          submodules: recursive
 
       - name: Setup .NET environment
         uses: actions/setup-dotnet@v3
@@ -28,9 +29,13 @@ jobs:
           dotnet restore
           dotnet tool restore
 
-      - name: Build solution
+      - name: Build MSBuild tasks
         run: |
-          dotnet build
+          dotnet build -c BuildTasks
+
+      - name: Build and pack solution
+        run: |
+          dotnet pack -c Release
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

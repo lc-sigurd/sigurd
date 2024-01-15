@@ -1,3 +1,4 @@
+using System.Collections;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
@@ -18,21 +19,21 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
             {
                 Cache.Player.ConnectedPlayers.Add(clientId);
 
-                playerController.StartCoroutine(JoinedCoroutine(playerController));
-            }
+            playerController.StartCoroutine(JoinedCoroutine(playerController));
         }
+    }
 
-        // Since we have to wait for players' client id to sync to the player instance, we have to constantly check
-        // if the player and its controller were linked yet. Very annoying.
-        internal static IEnumerator JoinedCoroutine(PlayerControllerB controller)
-        {
-            yield return new WaitUntil(() => StartOfRound.Instance.localPlayerController != null);
+    // Since we have to wait for players' client id to sync to the player instance, we have to constantly check
+    // if the player and its controller were linked yet. Very annoying.
+    internal static IEnumerator JoinedCoroutine(PlayerControllerB controller)
+    {
+        yield return new WaitUntil(() => StartOfRound.Instance.localPlayerController != null);
 
             Common.Features.SPlayer player = Common.Features.SPlayer.GetOrAdd(controller);
 
-            while (player == null)
-            {
-                yield return new WaitForSeconds(0.1f);
+        while (player == null)
+        {
+            yield return new WaitForSeconds(0.1f);
 
                 player = Common.Features.SPlayer.GetOrAdd(controller);
             }
@@ -56,9 +57,9 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
                 Common.Features.SPlayer.HostPlayer = player;
             }
 
-            Handlers.Player.OnJoined(new JoinedEventArgs(player));
-        }
+        Handlers.Player.OnJoined(new JoinedEventArgs(player));
     }
+}
 
     [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.ConnectClientToPlayerObject))]
     internal static class Joined2
@@ -69,8 +70,7 @@ namespace Sigurd.ServerAPI.Events.Patches.Player
             {
                 Cache.Player.ConnectedPlayers.Add(__instance.actualClientId);
 
-                __instance.StartCoroutine(Joined.JoinedCoroutine(__instance));
-            }
+            __instance.StartCoroutine(Joined.JoinedCoroutine(__instance));
         }
     }
 }

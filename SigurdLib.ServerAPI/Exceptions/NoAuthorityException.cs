@@ -1,9 +1,6 @@
-using System;
+namespace Sigurd.ServerAPI.Exceptions;
 
-namespace Sigurd.ServerAPI.Exceptions
+internal class NoAuthorityException : Exception
 {
-    internal class NoAuthorityException : Exception
-    {
-        internal NoAuthorityException(string message) : base(message) { }
-    }
+    internal NoAuthorityException(string message) : base(message) { }
 }

@@ -1,4 +1,4 @@
-namespace Sigurd.ServerAPI.Events.EventArgs.Player
+﻿namespace Sigurd.ServerAPI.Events.EventArgs.Player
 {
     /// <summary>
     /// Contains all the information after a <see cref="Common.Features.SPlayer"/> grabs an <see cref="Common.Features.SItem"/>.

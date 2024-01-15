@@ -12,35 +12,35 @@ namespace Sigurd.ServerAPI.Events.EventArgs.Player
         /// </summary>
         public Common.Features.SPlayer Player { get; }
 
-        /// <summary>
-        /// Gets or sets the amount of damage the <see cref="Player"/> will take.
-        /// </summary>
-        public int Damage { get; set; }
+    /// <summary>
+    /// Gets or sets the amount of damage the <see cref="Player"/> will take.
+    /// </summary>
+    public int Damage { get; set; }
 
-        /// <summary>
-        /// Gets or sets whether or not this damage will play sfx, if it has any.
-        /// </summary>
-        public bool HasSFX { get; set; }
+    /// <summary>
+    /// Gets or sets whether or not this damage will play sfx, if it has any.
+    /// </summary>
+    public bool HasSFX { get; set; }
 
-        /// <summary>
-        /// Gets or sets the cause of death.
-        /// </summary>
-        public CauseOfDeath CauseOfDeath { get; set; }
+    /// <summary>
+    /// Gets or sets the cause of death.
+    /// </summary>
+    public CauseOfDeath CauseOfDeath { get; set; }
 
-        /// <summary>
-        /// Gets or sets the death animation index.
-        /// </summary>
-        public int DeathAnimation { get; set; }
+    /// <summary>
+    /// Gets or sets the death animation index.
+    /// </summary>
+    public int DeathAnimation { get; set; }
 
-        /// <summary>
-        /// Gets or sets whether or not this damage is considered fall damage.
-        /// </summary>
-        public bool FallDamage { get; set; }
+    /// <summary>
+    /// Gets or sets whether or not this damage is considered fall damage.
+    /// </summary>
+    public bool FallDamage { get; set; }
 
-        /// <summary>
-        /// Gets or sets the force to add to the ragdoll if the player is killed.
-        /// </summary>
-        public Vector3 Force { get; set; }
+    /// <summary>
+    /// Gets or sets the force to add to the ragdoll if the player is killed.
+    /// </summary>
+    public Vector3 Force { get; set; }
 
         /// <summary>
         /// Gets or sets whether this damage is allowed to occur.

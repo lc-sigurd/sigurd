@@ -1,3 +1,4 @@
+using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -7,35 +8,35 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Sigurd.ServerAPI
+namespace Sigurd.ServerAPI;
+
+/// <summary>
+/// The main Plugin class.
+/// </summary>
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+public sealed class Plugin : BaseUnityPlugin
 {
-    /// <summary>
-    /// The main Plugin class.
-    /// </summary>
-    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    public sealed class Plugin : BaseUnityPlugin
+    internal static Plugin Instance { get; private set; } = null!;
+
+    internal static ManualLogSource Log { get; private set; } = null!;
+
+    internal static Harmony Harmony { get; private set; } = null!;
+
+    private void Awake()
     {
-        internal static Plugin Instance { get; private set; }
+        Instance = this;
 
-        internal static ManualLogSource Log { get; private set; }
+        Log = Logger;
 
-        internal static Harmony Harmony { get; private set; }
+        Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
+        Harmony.PatchAll();
 
-        private void Awake()
-        {
-            Instance = this;
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
-            Log = Logger;
+        Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
 
-            Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
-            Harmony.PatchAll();
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-
-            Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
-
-            InitializeNetworking();
-        }
+        InitializeNetworking();
+    }
 
         // For pre-placed items
         internal void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -49,18 +50,17 @@ namespace Sigurd.ServerAPI
             }
         }
 
-        internal void InitializeNetworking()
+    internal void InitializeNetworking()
+    {
+        foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
         {
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (var method in methods)
             {
-                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (var method in methods)
+                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                if (attributes.Length > 0)
                 {
-                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        method.Invoke(null, null);
-                    }
+                    method.Invoke(null, null);
                 }
             }
         }
