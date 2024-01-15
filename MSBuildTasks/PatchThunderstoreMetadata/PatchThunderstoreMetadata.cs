@@ -83,7 +83,10 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             Readme = BuildReadmePath,
             Icon = BuildIconPath,
             OutDir = BuildOutDir,
-            CopyPaths = [],
+            CopyPaths = BuildCopyPaths
+                .Select(ThunderstoreProject.BuildData.CopyPath.FromTaskItem)
+                .Select(item => item.MakeRelativeToFile(ConfigurationFileOutputPath))
+                .ToArray()
         };
 
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
