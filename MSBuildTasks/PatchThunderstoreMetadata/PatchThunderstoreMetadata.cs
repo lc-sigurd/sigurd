@@ -22,7 +22,13 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     public string PackageDescription { get; set; }
 
     [Required]
-    public string Version { get; set; }
+    public string PackageVersion { get; set; }
+
+    [Required]
+    public string PackageWebsiteUrl { get; set; }
+
+    [Required]
+    public string PackageContainsNsfwContent { get; set; }
 
     [Required]
     public ITaskItem[] Dependencies { get; set; }
@@ -50,8 +56,10 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 
         project.Package.Namespace = PackageNamespace;
         project.Package.Name = PackageName;
-        project.Package.ContainsNsfwContent = false;
         project.Package.Description = PackageDescription;
+        project.Package.VersionNumber = PackageVersion;
+        project.Package.WebsiteUrl = PackageWebsiteUrl;
+        project.Package.ContainsNsfwContent = bool.Parse(PackageContainsNsfwContent);
 
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
         return true;
