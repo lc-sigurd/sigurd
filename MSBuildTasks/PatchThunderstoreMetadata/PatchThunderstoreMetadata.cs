@@ -79,6 +79,13 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             project.Package.Dependencies.Add(dependency.Moniker.FullName, dependency.Moniker.Version.ToVersion().ToString());
         }
 
+        project.Build = new ThunderstoreProject.BuildData {
+            Readme = BuildReadmePath,
+            Icon = BuildIconPath,
+            OutDir = BuildOutDir,
+            CopyPaths = [],
+        };
+
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
         return true;
     }
