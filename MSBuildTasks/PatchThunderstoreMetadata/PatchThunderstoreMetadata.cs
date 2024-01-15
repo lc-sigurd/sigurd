@@ -31,7 +31,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     public string PackageContainsNsfwContent { get; set; }
 
     [Required]
-    public ITaskItem[] Dependencies { get; set; }
+    public ITaskItem[] PackageDependencies { get; set; }
 
     public override bool Execute()
     {
@@ -40,13 +40,13 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             .WriteTo.TaskLoggingHelper(Log)
             .CreateLogger();
 
-        Serilog.Log.Information("Plugin meta-manifest patcher started. There are {DepCount} items to consider", Dependencies.Length);
+        Serilog.Log.Information("Plugin meta-manifest patcher started. There are {DepCount} items to consider", PackageDependencies.Length);
 
         var project = ThunderstoreCLI.Models.ThunderstoreProject.Deserialize(File.ReadAllText(ConfigurationFileInputPath));
         if (project?.Package is null)
             return false;
 
-        var dependenciesToAdd = Dependencies.Select(ThunderstorePackageDependency.FromTaskItem);
+        var dependenciesToAdd = PackageDependencies.Select(ThunderstorePackageDependency.FromTaskItem);
 
         foreach (var dependency in dependenciesToAdd)
         {
