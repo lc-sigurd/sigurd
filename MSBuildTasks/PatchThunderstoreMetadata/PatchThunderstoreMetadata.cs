@@ -48,6 +48,14 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     [Required]
     public ITaskItem[] BuildCopyPaths { get; set; } = null!;
 
+    public string PublishRepository { get; set; } = "https://thunderstore.io";
+
+    [Required]
+    public ITaskItem[] PublishCommunities { get; set; } = null!;
+
+    [Required]
+    public ITaskItem[] PublishCategories { get; set; } = null!;
+
     public override bool Execute()
     {
         Serilog.Log.Logger = new LoggerConfiguration()
