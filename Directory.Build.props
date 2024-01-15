@@ -41,9 +41,9 @@
     <PropertyGroup>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
-        <ThunderstoreReadmePath>$(MSBuildProjectDirectory)../README.md</ThunderstoreReadmePath>
-        <ThunderstoreIconPath>$(MSBuildProjectDirectory)assets/icons/in-deep.png</ThunderstoreIconPath>
-        <ThunderstoreOutDir>$(MSBuildProjectDirectory)dist/</ThunderstoreOutDir>
+        <ThunderstoreReadmePath>../../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>icons/in-deep.png</ThunderstoreIconPath>
+        <ThunderstoreOutDir>../dist</ThunderstoreOutDir>
     </PropertyGroup>
 
     <ItemGroup>
