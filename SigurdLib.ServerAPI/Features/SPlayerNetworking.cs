@@ -1,9 +1,9 @@
-using GameNetcodeStuff;
-using Sigurd.Common.Features;
-using Sigurd.ServerAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameNetcodeStuff;
+using Sigurd.Common.Features;
+using Sigurd.ServerAPI.Exceptions;
 using Unity.Netcode;
 using UnityEngine;
 

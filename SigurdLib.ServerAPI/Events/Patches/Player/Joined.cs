@@ -1,9 +1,8 @@
+using System.Collections;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Sigurd.ServerAPI.Events.EventArgs.Player;
 using Sigurd.ServerAPI.Features;
-using System.Collections;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Sigurd.ServerAPI.Events.Patches.Player;

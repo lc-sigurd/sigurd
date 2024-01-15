@@ -1,9 +1,7 @@
-using BepInEx.Logging;
-using BepInEx;
-using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using BepInEx;
+using BepInEx.Logging;
+using HarmonyLib;
 using UnityEngine.SceneManagement;
 
 namespace Sigurd.Common;

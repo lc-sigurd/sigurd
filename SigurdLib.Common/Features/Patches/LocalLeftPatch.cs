@@ -1,8 +1,4 @@
-using GameNetcodeStuff;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sigurd.Common.Features.Patches;
 

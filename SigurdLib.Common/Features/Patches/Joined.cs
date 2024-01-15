@@ -1,10 +1,6 @@
+using System.Collections;
 using GameNetcodeStuff;
 using HarmonyLib;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Sigurd.Common.Features.Patches;

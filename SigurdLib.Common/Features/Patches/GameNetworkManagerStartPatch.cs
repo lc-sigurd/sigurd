@@ -1,10 +1,5 @@
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace Sigurd.Common.Features.Patches;
 
