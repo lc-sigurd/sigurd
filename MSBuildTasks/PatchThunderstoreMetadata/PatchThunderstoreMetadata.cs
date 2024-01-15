@@ -59,39 +59,33 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 
         Serilog.Log.Information("Plugin meta-manifest patcher started.");
 
-        var project = ThunderstoreProject.Deserialize(File.ReadAllText(ConfigurationFileInputPath));
-        if (project is null) {
-            Serilog.Log.Fatal("Couldn't read project file.");
-            return false;
-        }
-
-        project.Config = new ThunderstoreProject.ConfigData {
-            SchemaVersion = ConfigurationFileSchemaVersion
-        };
-
-        project.Package = new ThunderstoreProject.PackageData {
-            Name = PackageName,
-            Namespace = PackageNamespace,
-            Description = PackageDescription,
-            VersionNumber = PackageVersion,
-            WebsiteUrl = PackageWebsiteUrl,
-            ContainsNsfwContent = PackageContainsNsfwContent,
-            Dependencies = PackageDependencies
-                .Select(ThunderstorePackageDependency.FromTaskItem)
-                .ToDictionary(
-                    dep => dep.Moniker.FullName,
-                    dep => dep.Moniker.Version.ToVersion().ToString()
-                ),
-        };
-
-        project.Build = new ThunderstoreProject.BuildData {
-            Readme = BuildReadmePath,
-            Icon = BuildIconPath,
-            OutDir = BuildOutDir,
-            CopyPaths = BuildCopyPaths
-                .Select(ThunderstoreProject.BuildData.CopyPath.FromTaskItem)
-                .Select(item => item.MakeRelativeToFile(ConfigurationFileOutputPath))
-                .ToArray()
+        var project = new ThunderstoreProject {
+            Config = new ThunderstoreProject.ConfigData {
+                SchemaVersion = ConfigurationFileSchemaVersion
+            },
+            Package = new ThunderstoreProject.PackageData {
+                Name = PackageName,
+                Namespace = PackageNamespace,
+                Description = PackageDescription,
+                VersionNumber = PackageVersion,
+                WebsiteUrl = PackageWebsiteUrl,
+                ContainsNsfwContent = PackageContainsNsfwContent,
+                Dependencies = PackageDependencies
+                    .Select(ThunderstorePackageDependency.FromTaskItem)
+                    .ToDictionary(
+                        dep => dep.Moniker.FullName,
+                        dep => dep.Moniker.Version.ToVersion().ToString()
+                    ),
+            },
+            Build = new ThunderstoreProject.BuildData {
+                Readme = BuildReadmePath,
+                Icon = BuildIconPath,
+                OutDir = BuildOutDir,
+                CopyPaths = BuildCopyPaths
+                    .Select(ThunderstoreProject.BuildData.CopyPath.FromTaskItem)
+                    .Select(item => item.MakeRelativeToFile(ConfigurationFileOutputPath))
+                    .ToArray()
+            },
         };
 
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
