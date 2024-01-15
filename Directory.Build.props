@@ -41,16 +41,16 @@
     <PropertyGroup>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
-        <ThunderstoreReadmePath>$(ProjectDir)../README.md</ThunderstoreReadmePath>
-        <ThunderstoreIconPath>$(ProjectDir)assets/icons/in-deep.png</ThunderstoreIconPath>
-        <ThunderstoreOutDir>$(ProjectDir)dist/</ThunderstoreOutDir>
+        <ThunderstoreReadmePath>$(MSBuildProjectDirectory)../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>$(MSBuildProjectDirectory)assets/icons/in-deep.png</ThunderstoreIconPath>
+        <ThunderstoreOutDir>$(MSBuildProjectDirectory)dist/</ThunderstoreOutDir>
     </PropertyGroup>
 
     <ItemGroup>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="/BepInEx/plugins/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath Include="$(ProjectDir)assets/bundles" Destination="/BepInEx/plugins/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../CHANGELOG.md" Destination="/"/>
-        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../LICENSE" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)assets/bundles" Destination="/BepInEx/plugins/$(ProjectName)/"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)../LICENSE" Destination="/"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
