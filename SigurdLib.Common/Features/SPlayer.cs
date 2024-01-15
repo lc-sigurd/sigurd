@@ -45,7 +45,7 @@ public class SPlayer : MonoBehaviour
     /// </summary>
     public List<Tip> TipQueue { get; internal set; } = new List<Tip>();
 
-    internal Tip CurrentTip { get; set; }
+    internal Tip? CurrentTip { get; set; }
 
     internal int NextTipId = int.MinValue;
 
@@ -314,6 +314,11 @@ public class SPlayer : MonoBehaviour
     {
         Tip tip = new Tip(header, message, duration, priority, isWarning, useSave, prefsKey, NextTipId++);
 
+        if (!HUDManager.Instance.CanTipDisplay(tip.IsWarning, tip.UseSave, tip.PreferenceKey))
+        {
+            return;
+        }
+
         if (TipQueue.Count == 0)
         {
             TipQueue.Add(tip);
@@ -358,6 +363,11 @@ public class SPlayer : MonoBehaviour
     {
         Tip tip = new Tip(header, message, duration, int.MaxValue, isWarning, useSave, prefsKey, NextTipId++);
 
+        if (!HUDManager.Instance.CanTipDisplay(tip.IsWarning, tip.UseSave, tip.PreferenceKey))
+        {
+            return;
+        }
+
         // if there is a tip with >= 1.5 seconds left, queue it back up
         if (CurrentTip != null && CurrentTip.TimeLeft >= 1.5f)
         {
@@ -371,34 +381,38 @@ public class SPlayer : MonoBehaviour
         HUDManager.Instance.tipsPanelAnimator.speed = 1;
         HUDManager.Instance.tipsPanelAnimator.ResetTrigger("TriggerHint");
 
-        DisplayTip(CurrentTip.Header, CurrentTip.Message, isWarning, useSave, prefsKey);
+        DisplayTip();
     }
 
-    internal static void DisplayTip(string headerText, string bodyText, bool isWarning = false, bool useSave = false, string prefsKey = "LC_Tip1")
+    internal void DisplayTip()
     {
-        if (!HUDManager.Instance.CanTipDisplay(isWarning, useSave, prefsKey))
+        if (CurrentTip == null) return;
+
+        if (!HUDManager.Instance.CanTipDisplay(CurrentTip.IsWarning, CurrentTip.UseSave, CurrentTip.PreferenceKey))
         {
+            CurrentTip = null;
             return;
         }
-        if (useSave)
+
+        if (CurrentTip.UseSave)
         {
-            if (HUDManager.Instance.tipsPanelCoroutine != null)
-            {
-                HUDManager.Instance.StopCoroutine(HUDManager.Instance.tipsPanelCoroutine);
-            }
-            HUDManager.Instance.tipsPanelCoroutine = HUDManager.Instance.StartCoroutine(HUDManager.Instance.TipsPanelTimer(prefsKey));
+            ES3.Save(CurrentTip.PreferenceKey, true, "LCGeneralSaveData");
         }
-        HUDManager.Instance.tipsPanelHeader.text = headerText;
-        HUDManager.Instance.tipsPanelBody.text = bodyText;
-        if (isWarning)
+
+        HUDManager.Instance.tipsPanelHeader.text = CurrentTip.Header;
+        HUDManager.Instance.tipsPanelBody.text = CurrentTip.Message;
+
+        if (CurrentTip.IsWarning)
         {
             HUDManager.Instance.tipsPanelAnimator.SetTrigger("TriggerWarning");
             RoundManager.PlayRandomClip(HUDManager.Instance.UIAudio, HUDManager.Instance.warningSFX, false, 1f, 0);
             return;
         }
+
         HUDManager.Instance.tipsPanelAnimator.SetTrigger("TriggerHint");
         RoundManager.PlayRandomClip(HUDManager.Instance.UIAudio, HUDManager.Instance.tipsSFX, false, 1f, 0);
     }
+
 
     #region Unity related things
     private void Start()
@@ -444,7 +458,7 @@ public class SPlayer : MonoBehaviour
             CurrentTip = TipQueue[0];
             TipQueue.RemoveAt(0);
 
-            DisplayTip(CurrentTip.Header, CurrentTip.Message, CurrentTip.IsWarning, CurrentTip.UseSave, CurrentTip.PreferenceKey);
+            DisplayTip();
         }
     }
     #endregion
