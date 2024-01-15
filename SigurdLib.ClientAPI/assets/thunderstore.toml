@@ -1,15 +1,6 @@
 [config]
 schemaVersion = "0.0.1"
 
-[package]
-namespace = "Sigurd"
-name = "Sigurd_ClientAPI"
-description = "Sigurd's client-sided api"
-websiteUrl = "https://github.com/lc-sigurd/Sigurd"
-containsNsfwContent = false
-[package.dependencies]
-
-
 [build]
 icon = "icons/in-deep.png"
 readme = "../../README.md"
