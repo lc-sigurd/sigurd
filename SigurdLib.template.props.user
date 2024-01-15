@@ -5,16 +5,16 @@
         <TestProfileDir>$(AppData)/r2modmanPlus-local/LethalCompany/profiles/Test Sigurd/</TestProfileDir>
     </PropertyGroup>
 
-    <!-- Enable by setting the Condition attribute to "true". -->
+    <!-- Enable by removing the 'false and' part of the condition -->
     <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="$(IsThunderstorePackable)">
         <PropertyGroup>
             <TestProfilePluginDir>$(TestProfileDir)BepInEx/plugins/$(ThunderstoreNamespace)-$(ThunderstoreName)/$(ThunderstoreName)/</TestProfilePluginDir>
         </PropertyGroup>
         <MakeDir Directories="$(TestProfilePluginDir)" Condition="!Exists('$(TestProfilePluginDir)')"/>
         <ItemGroup>
-            <TestProfileStageFiles Include="$(TargetPath)"/>
-            <TestProfileStageFiles Include="$(ProjectDir)assets/bundles/*"/>
+            <TestProfileStageFiles Include="$(TargetPath)" DestinationFolder="$(TestProfilePluginDir)"/>
+            <TestProfileStageFiles Include="$(ProjectDir)assets/bundles/*" DestinationFolder="$(TestProfilePluginDir)bundles/"/>
         </ItemGroup>
-        <Copy SourceFiles="@(TestProfileStageFiles)" DestinationFolder="$(TestProfilePluginDir)" />
+        <Copy SourceFiles="@(TestProfileStageFiles->'%(Identity)')" DestinationFolder="%(DestinationFolder)" />
     </Target>
 </Project>
