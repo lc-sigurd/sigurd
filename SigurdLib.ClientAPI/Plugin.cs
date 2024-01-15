@@ -2,34 +2,32 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Sigurd.ClientAPI.ChatCommands;
-using System;
 
-namespace Sigurd.ClientAPI
+namespace Sigurd.ClientAPI;
+
+/// <summary>
+/// The main Plugin class.
+/// </summary>
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+public sealed class Plugin : BaseUnityPlugin
 {
-    /// <summary>
-    /// The main Plugin class.
-    /// </summary>
-    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    public sealed class Plugin : BaseUnityPlugin
+    internal static Plugin Instance { get; private set; } = null!;
+
+    internal static ManualLogSource Log { get; private set; } = null!;
+
+    internal static Harmony Harmony { get; private set; } = null!;
+
+    private void Awake()
     {
-        internal static Plugin Instance { get; private set; }
+        Instance = this;
 
-        internal static ManualLogSource Log { get; private set; }
+        Log = Logger;
 
-        internal static Harmony Harmony { get; private set; }
+        CommandRegistry.CommandPrefix = Config.Bind("Commands", "Prefix", "/", "Command prefix");
 
-        private void Awake()
-        {
-            Instance = this;
+        Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
+        Harmony.PatchAll();
 
-            Log = Logger;
-
-            CommandRegistry.CommandPrefix = Config.Bind("Commands", "Prefix", "/", "Command prefix");
-
-            Harmony = new Harmony($"{MyPluginInfo.PLUGIN_GUID}-{DateTime.Now.Ticks}");
-            Harmony.PatchAll();
-
-            Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
-        }
+        Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} ({MyPluginInfo.PLUGIN_VERSION}) has awoken.");
     }
 }

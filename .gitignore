@@ -8,6 +8,7 @@
 
 ## Build System/Scripts
 !/.config
+!/global.json
 !NuGet.Config
 !Directory.Build.props
 !Directory.Build.targets
@@ -28,14 +29,8 @@
 ## GitHub specific
 !.github/
 
-## Assets
-!assets/
-
-## Thunderstore metadata
-!thunderstore.toml
-
-## Thunderstore Assets
-!Thunderstore
+## Libraries
+!/libs
 
 ## Solution
 !SigurdLib.sln
@@ -46,8 +41,11 @@
 /SigurdLib*/[Oo]bj
 /SigurdLib*/[Dd]ist
 
-## Libraries
-!/libs*
+### MSBuildTasks Project
+!/MSBuildTasks
+/MSBuildTasks/[Bb]in
+/MSBuildTasks/[Oo]bj
 
 # Explicit exceptions/ignores
 **.user
+!**.template.*.user

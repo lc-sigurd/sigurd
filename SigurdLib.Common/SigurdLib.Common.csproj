@@ -9,23 +9,24 @@
         <PackageId>SigurdLib.Common</PackageId>
         <Description>Sigurd's common utilities. Will never contain vanilla-breaking components.</Description>
 
+        <ThunderstoreName>Sigurd_Common</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's common utilities</ThunderstoreDescription>
+
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
 
         <RootNamespace>Sigurd.Common</RootNamespace>
-
-        <NoWarn>1701;1702;8625;8603;8618;8600</NoWarn>
     </PropertyGroup>
 
     <!-- Development dependencies -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Runtime assembly references -->
     <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup Condition="$(CI) != 'true'">

@@ -6,27 +6,13 @@
 
 ## Contributing
 
-### `SigurdLib.props.user`
-
-You'll need to create an MSBuild props file to tell the solution where Lethal Company resides
-on your PC. Here's a template for that file, which should be called `SigurdLib.props.user` and
-placed into the repository root:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<Project>
-    <PropertyGroup>
-        <LethalCompanyDir>C:/Program Files (x86)/Steam/steamapps/common/Lethal Company/</LethalCompanyDir>
-        <TestProfileDir>$(APPDATA)/r2modmanPlus-local/LethalCompany/profiles/Test Sigurd/</TestProfileDir>
-    </PropertyGroup>
-
-    <!-- Enable by setting the Condition attribute to "true". *nix users should switch out `copy` for `cp`. -->
-    <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="false">
-        <MakeDir
-            Directories="$(TestProfileDir)BepInEx/plugins/Sigurd-Sigurd/Sigurd"
-            Condition="!Exists('$(TestProfileDir)BepInEx/plugins/Sigurd-Sigurd/Sigurd')"
-        />
-        <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(TestProfileDir)BepInEx/plugins/Sigurd-Sigurd/Sigurd/&quot;" />
-    </Target>
-</Project>
-```
-
+You'll need to:
+1. Fork and clone. (We use GitHub Flow)
+2. Duplicate the `SigurdLib.template.props.user` file and rename it to
+`SigurdLib.props.user`.
+3. Edit the properties defined in the new file to match your environment.
+   Most importantly, set the `<LethalCompanyDir>` property to the
+   filepath of your Lethal Company installation folder (including trailing
+   path separator `/` or `\`).
+4. `dotnet tool restore`
+5. Attempt build

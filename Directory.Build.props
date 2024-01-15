@@ -2,9 +2,12 @@
     <!-- compiler/msbuild switches -->
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1701;1702;0436</NoWarn>
+        <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
     </PropertyGroup>
 
     <!-- NuGet metadata -->
@@ -13,12 +16,48 @@
         <Company>Sigurd Team</Company>
         <IsPackable>false</IsPackable>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/EvaisaDev/LethalLib</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/EvaisaDev/LethalLib</RepositoryUrl>
+        <RepositoryUrl>https://github.com/lc-sigurd/Sigurd</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
+        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>
+
+    <!-- Thunderstore metadata -->
+    <ItemDefinitionGroup>
+        <ThunderstoreDependency>
+            <Version/>
+            <Reference>true</Reference>
+        </ThunderstoreDependency>
+        <ThunderstoreBuildCopyPath>
+            <Destination/>
+        </ThunderstoreBuildCopyPath>
+        <ThunderstorePublishCommunity>
+            <CategorySlugs/>
+        </ThunderstorePublishCommunity>
+    </ItemDefinitionGroup>
+
+    <PropertyGroup>
+        <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
+        <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
+        <ThunderstoreReadmePath>../../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>icons/in-deep.png</ThunderstoreIconPath>
+        <ThunderstoreOutDir>../dist</ThunderstoreOutDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../LICENSE" Destination="/"/>
+        <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="libraries"/>
+    </ItemGroup>
+
+    <!-- .NET Framework (.NET 4) reference assemblies  -->
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
@@ -35,5 +74,14 @@
         </PackageReference>
     </ItemGroup>
 
+    <!-- Release optimisations -->
+    <PropertyGroup Condition="$(Configuration) == 'Release'">
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <!-- Import local user props -->
     <Import Project="$(SolutionDir)SigurdLib.props.user" Condition="$(CI) != 'true'"/>
 </Project>
