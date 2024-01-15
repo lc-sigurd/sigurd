@@ -34,6 +34,18 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     [Required]
     public ITaskItem[] PackageDependencies { get; set; }
 
+    [Required]
+    public string BuildReadmePath { get; set; }
+
+    [Required]
+    public string BuildIconPath { get; set; }
+
+    [Required]
+    public string BuildOutDir { get; set; }
+
+    [Required]
+    public ITaskItem[] BuildCopyEntries { get; set; }
+
     public override bool Execute()
     {
         Serilog.Log.Logger = new LoggerConfiguration()
