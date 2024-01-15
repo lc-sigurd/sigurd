@@ -57,3 +57,4 @@
 
 # Explicit exceptions/ignores
 **.user
+!**.template.*.user
