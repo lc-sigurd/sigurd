@@ -5,7 +5,7 @@
         <TestProfileDir>$(AppData)/r2modmanPlus-local/LethalCompany/profiles/Test Sigurd/</TestProfileDir>
     </PropertyGroup>
 
-    <!-- Enable by setting the Condition attribute to "true". *nix users should switch out `copy` for `cp`. -->
+    <!-- Enable by setting the Condition attribute to "true". -->
     <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="false">
         <PropertyGroup>
             <TestProfilePluginDir>$(TestProfileDir)BepInEx/plugins/$(ThunderstoreNamespace)-$(ThunderstoreName)/$(ThunderstoreName)/</TestProfilePluginDir>
