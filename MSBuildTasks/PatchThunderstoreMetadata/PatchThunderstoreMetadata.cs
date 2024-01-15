@@ -8,6 +8,9 @@ namespace MSBuildTasks.PatchThunderstoreMetadata;
 public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 {
     [Required]
+    public string ConfigurationFileSchemaVersion { get; set; } = null!;
+
+    [Required]
     public string ConfigurationFileInputPath { get; set; } = null!;
 
     [Required]
@@ -60,6 +63,10 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             Serilog.Log.Fatal("Couldn't read project file.");
             return false;
         }
+
+        project.Config = new ThunderstoreProject.ConfigData {
+            SchemaVersion = ConfigurationFileSchemaVersion
+        };
 
         project.Package = new ThunderstoreProject.PackageData {
             Name = PackageName,
