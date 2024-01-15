@@ -9,6 +9,8 @@
         <PackageId>SigurdLib.Common</PackageId>
         <Description>Sigurd's common utilities. Will never contain vanilla-breaking components.</Description>
 
+        <ThunderstoreName>Sigurd_Common</ThunderstoreName>
+
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
 

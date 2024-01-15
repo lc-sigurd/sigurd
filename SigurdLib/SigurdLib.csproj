@@ -9,6 +9,8 @@
         <PackageId>SigurdLib</PackageId>
         <Description>Sigurd, the Lethal Company Library.</Description>
 
+        <ThunderstoreName>Sigurd</ThunderstoreName>
+
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
         <HasBepInPlugin>true</HasBepInPlugin>

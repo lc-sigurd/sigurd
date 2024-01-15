@@ -9,6 +9,8 @@
         <PackageId>SigurdLib.ClientAPI</PackageId>
         <Description>Sigurd's client-sided api. Does not require everyone to have to use.</Description>
 
+        <ThunderstoreName>Sigurd_ClientAPI</ThunderstoreName>
+
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
         <HasBepInPlugin>true</HasBepInPlugin>

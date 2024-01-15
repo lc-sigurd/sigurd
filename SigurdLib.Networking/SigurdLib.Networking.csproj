@@ -9,6 +9,8 @@
         <PackageId>SigurdLib.Networking</PackageId>
         <Description>Sigurd's networking solution. The host must have this, clients are optional.</Description>
 
+        <ThunderstoreName>Sigurd_Networking</ThunderstoreName>
+
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
         <HasBepInPlugin>true</HasBepInPlugin>
