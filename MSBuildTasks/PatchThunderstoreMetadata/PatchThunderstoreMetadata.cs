@@ -7,10 +7,10 @@ namespace MSBuildTasks.PatchThunderstoreMetadata;
 public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 {
     [Required]
-    public string InputPath { get; set; }
+    public string ConfigurationFileInputPath { get; set; }
 
     [Required]
-    public string OutputPath { get; set; }
+    public string ConfigurationFileOutputPath { get; set; }
 
     [Required]
     public string PackageNamespace { get; set; }
@@ -33,7 +33,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 
         Serilog.Log.Information("Plugin meta-manifest patcher started. There are {DepCount} items to consider", Dependencies.Length);
 
-        var project = ThunderstoreCLI.Models.ThunderstoreProject.Deserialize(File.ReadAllText(InputPath));
+        var project = ThunderstoreCLI.Models.ThunderstoreProject.Deserialize(File.ReadAllText(ConfigurationFileInputPath));
         if (project?.Package is null)
             return false;
 
@@ -45,10 +45,10 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             project.Package.Dependencies.Add(dependency.Moniker.FullName, dependency.Moniker.Version.ToVersion().ToString());
         }
 
-        File.WriteAllText(OutputPath, project.Serialize());
         project.Package.Namespace = PackageNamespace;
         project.Package.Name = PackageName;
 
+        File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
         return true;
     }
 }
