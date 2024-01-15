@@ -28,6 +28,16 @@
     </ItemGroup>
 
     <!-- Thunderstore metadata -->
+    <ItemDefinitionGroup>
+        <ThunderstoreDependency>
+            <Version/>
+            <Reference>true</Reference>
+        </ThunderstoreDependency>
+        <ThunderstoreBuildCopy>
+            <Destination/>
+        </ThunderstoreBuildCopy>
+    </ItemDefinitionGroup>
+
     <PropertyGroup>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
