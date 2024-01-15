@@ -7,7 +7,7 @@
         <Product>SigurdLib.ServerAPI</Product>
 
         <PackageId>SigurdLib.ServerAPI</PackageId>
-        <Description>Sigurd's server-sided api. Everyone must have this for it to work properly.</Description>
+        <Description>Sigurd's server-sided modding API</Description>
 
         <ThunderstoreName>Sigurd_ServerAPI</ThunderstoreName>
 
