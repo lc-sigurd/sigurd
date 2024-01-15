@@ -33,9 +33,9 @@
             <Version/>
             <Reference>true</Reference>
         </ThunderstoreDependency>
-        <ThunderstoreBuildCopy>
+        <ThunderstoreBuildCopyPath>
             <Destination/>
-        </ThunderstoreBuildCopy>
+        </ThunderstoreBuildCopyPath>
     </ItemDefinitionGroup>
 
     <PropertyGroup>
