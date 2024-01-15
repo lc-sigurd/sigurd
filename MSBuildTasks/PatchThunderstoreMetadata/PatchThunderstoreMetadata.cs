@@ -44,7 +44,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
     public string BuildOutDir { get; set; }
 
     [Required]
-    public ITaskItem[] BuildCopyEntries { get; set; }
+    public ITaskItem[] BuildCopyPaths { get; set; }
 
     public override bool Execute()
     {
