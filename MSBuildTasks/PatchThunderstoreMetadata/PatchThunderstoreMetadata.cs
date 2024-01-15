@@ -68,7 +68,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
             VersionNumber = PackageVersion,
             WebsiteUrl = PackageWebsiteUrl,
             ContainsNsfwContent = PackageContainsNsfwContent,
-            Dependencies = new Dictionary<string, string>(),
+            Dependencies = [],
         };
 
         var dependenciesToAdd = PackageDependencies.Select(ThunderstorePackageDependency.FromTaskItem);
