@@ -62,7 +62,6 @@ public static class MyPluginInfo
     <Target
         Name="PatchThunderstoreMetadata"
         DependsOnTargets="SetPluginVersion"
-        BeforeTargets="ThunderstorePack"
         Condition="$(IsThunderstorePackable) == 'true'"
     >
         <PatchThunderstoreMetadata
