@@ -10,23 +10,23 @@ namespace Sigurd.Networking;
 /// Base class for Network Variables.
 /// </summary>
 /// <remarks>Only for internal purposes.</remarks>
-public abstract class SigurdNetworkVariableBase
+public abstract class SNetworkVariableBase
 {
     internal readonly string UniqueName;
 
     private protected static bool CurrentlyConnected;
     private protected bool MadeDuringConnection { get; }
 
-    private static Dictionary<string, SigurdNetworkVariableBase> StoredMenuVariables { get; } = [];
-    internal static Dictionary<string, SigurdNetworkVariableBase> StoredLobbyVariables { get; } = [];
+    private static Dictionary<string, SNetworkVariableBase> StoredMenuVariables { get; } = [];
+    internal static Dictionary<string, SNetworkVariableBase> StoredLobbyVariables { get; } = [];
 
-    internal SigurdNetworkVariableBase(string uniqueName)
+    internal SNetworkVariableBase(string uniqueName)
     {
         if (StoredMenuVariables.ContainsKey(uniqueName) || StoredLobbyVariables.ContainsKey(uniqueName))
             throw new Exception($"{uniqueName} already registered");
 
-        //? Add ".var" to unique name to help prevent conflicting names?
-        UniqueName = uniqueName;
+        // Add ".var" to unique name to help prevent conflicting names
+        UniqueName = $"{uniqueName}.var";
 
         if (CurrentlyConnected)
         {
@@ -47,6 +47,9 @@ public abstract class SigurdNetworkVariableBase
     {
         CurrentlyConnected = false;
         StoredMenuVariables.Do(variable => variable.Value.UnregisterVariable());
+        StoredLobbyVariables.Do(variable => variable.Value.UnregisterVariable());
+
+        StoredLobbyVariables.Clear();
     }
 
     protected abstract void RegisterVariable();
@@ -55,7 +58,7 @@ public abstract class SigurdNetworkVariableBase
 
 /// <typeparam name="TData">The serializable data type of the message.</typeparam>
 // ReSharper disable once ClassNeverInstantiated.Global
-public class SigurdNetworkVariable<TData> : SigurdNetworkVariableBase
+public class SNetworkVariable<TData> : SNetworkVariableBase
 {
     private bool _isDirty;
     private TData _value = default!;
@@ -96,7 +99,7 @@ public class SigurdNetworkVariable<TData> : SigurdNetworkVariableBase
     /// Create a new server-owned network variable.
     /// </summary>
     /// <param name="uniqueName"></param>
-    public SigurdNetworkVariable(string uniqueName) : base(uniqueName)
+    public SNetworkVariable(string uniqueName) : base(uniqueName)
     {
         if (MadeDuringConnection)
             RegisterVariable();
@@ -191,7 +194,7 @@ public class SigurdNetworkVariable<TData> : SigurdNetworkVariableBase
     /// </summary>
     /// <param name="sender">The client the message is received from</param>
     /// <returns>(<see cref="bool"/>) If the variable is owned.</returns>
-    private bool CheckIfOwned(ulong sender = 999999)
+    private bool CheckIfOwned(ulong sender = ulong.MaxValue)
     {
         // Check if current or sent client is Server if unowned
         if (_ownerObject == null && !(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost || sender == NetworkManager.ServerClientId)) return false;
