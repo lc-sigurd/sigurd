@@ -695,6 +695,7 @@ internal static class RegisterPatch
     internal static void Postfix()
     {
         Network.RegisterMessages();
+        SigurdNetworkVariableBase.RegisterVariables();
     }
 }
 
@@ -704,5 +705,6 @@ internal static class UnregisterPatch
     internal static void Postfix()
     {
         Network.UnregisterMessages();
+        SigurdNetworkVariableBase.UnregisterVariables();
     }
 }
