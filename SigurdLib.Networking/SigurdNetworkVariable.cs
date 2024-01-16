@@ -127,7 +127,13 @@ public class SigurdNetworkVariable<TData> : SigurdNetworkVariableBase
         // Ensure that the variable is changed by the right client
         if (!CheckIfOwned(wrapped.Sender)) return;
 
-        _value = SerializationUtility.DeserializeValue<TData>(wrapped.Message, DataFormat.Binary);
+        var newValue = SerializationUtility.DeserializeValue<TData>(wrapped.Message, DataFormat.Binary);
+
+        // Check to see if the value is the same (including if it was null before and null now for support for nullable types)
+        if (newValue != null && newValue.Equals(_value) || newValue == null && _value == null)
+            return;
+
+        _value = newValue;
 
         OnValueChanged?.Invoke(_value);
     }
