@@ -1,12 +1,11 @@
+using HarmonyLib;
+using OdinSerializer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using HarmonyLib;
-using Newtonsoft.Json;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -20,14 +19,14 @@ public static class Network
     internal const string MESSAGE_RELAY_UNIQUE_NAME = "SIGURD_NETWORK_RELAY_MESSAGE";
     internal static Dictionary<string, NetworkMessageFinalizerBase> NetworkMessageFinalizers { get; } = new();
 
-    internal static byte[] ToBytes(this object @object)
+    internal static byte[] ToBytes<T>(this T @object)
     {
-        return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@object));
+        return SerializationUtility.SerializeValue(@object, DataFormat.Binary);
     }
 
     internal static T? ToObject<T>(this byte[] bytes) where T : class
     {
-        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(bytes));
+        return SerializationUtility.DeserializeValue<T>(bytes, DataFormat.Binary);
     }
 
     internal static bool StartedNetworking { get; set; } = false;
@@ -188,6 +187,7 @@ public static class Network
                     method.CreateDelegate(typeof(Action<,>)
                         .MakeGenericType(typeof(ulong), messageType))
                 ]);
+            return;
         }
 
         throw new Exception($"Detected NetworkMessage attribute on a method with no parameters '{method.Name}'.");
@@ -582,6 +582,7 @@ internal class NetworkMessageFinalizer<T> : NetworkMessageFinalizerBase where T 
         }
 
         NetworkMessageWrapper wrapped = new NetworkMessageWrapper(UniqueName, StartOfRound.Instance.localPlayerController.actualClientId, obj.ToBytes());
+
         byte[] serialized = wrapped.ToBytes();
 
         using FastBufferWriter writer = new FastBufferWriter(FastBufferWriter.GetWriteSize(serialized), Unity.Collections.Allocator.Temp);
@@ -665,11 +666,11 @@ internal class NetworkMessageFinalizer<T> : NetworkMessageFinalizerBase where T 
 
 internal class NetworkMessageWrapper
 {
-    public string UniqueName { get; set; } = null!;
+    public string UniqueName = null!;
 
-    public ulong Sender { get; set; }
+    public ulong Sender;
 
-    public byte[]? Message { get; set; }
+    public byte[]? Message;
 
     internal NetworkMessageWrapper(string uniqueName, ulong sender)
     {
