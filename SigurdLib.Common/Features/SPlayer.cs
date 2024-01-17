@@ -570,23 +570,8 @@ public class SPlayer : MonoBehaviour
             }
             set
             {
-                if (Player.IsLocalPlayer) SetSlotServerRpc(value);
-                else if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) SetSlotClientRpc(value);
+                Player.PlayerController.SwitchToItemSlot(value);
             }
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void SetSlotServerRpc(int slot, ServerRpcParams serverRpcParams = default)
-        {
-            if (serverRpcParams.Receive.SenderClientId != Player.ClientId) return;
-
-            SetSlotClientRpc(slot);
-        }
-
-        [ClientRpc]
-        private void SetSlotClientRpc(int slot)
-        {
-            Player.PlayerController.SwitchToItemSlot(slot);
         }
 
         /// <summary>
