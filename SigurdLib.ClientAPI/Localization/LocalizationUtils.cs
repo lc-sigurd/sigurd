@@ -18,12 +18,12 @@ public static class LocalizationUtils
     /// <summary>
     /// Register locale files from a specific directory.
     /// </summary>
-    /// <param name="path">The path of the locales. If left blank, will use (PluginInfo.Location)/locales</param>
-    /// <returns>A <see cref="Localizer"/>.</returns>
-    /// <exception cref="Exception">Thrown when locales directory is not found.</exception>
-    public static Localizer RegisterLocales(string path = "")
+    /// <param name="path">The path of the locales. If left blank, will use (PluginInfo.Location)/locales/(CurrentCulture.Name)</param>
+    /// <returns>A <see cref="Locale"/>.</returns>
+    /// <exception cref="Exception">Thrown when locale path is not found.</exception>
+    public static Locale RegisterLocale(string path = "")
     {
-        if (path == string.Empty)
+        if (path.IsNullOrWhiteSpace())
         {
             MethodBase m = new StackTrace().GetFrame(1).GetMethod();
             Assembly assembly = m.ReflectedType.Assembly;
@@ -32,18 +32,11 @@ public static class LocalizationUtils
 
             PluginInfo pluginInfo = Chainloader.PluginInfos[attribute.GUID];
 
-            path = Path.Combine(Path.GetDirectoryName(pluginInfo.Location), "locales");
+            path = Path.Combine(Path.GetDirectoryName(pluginInfo.Location), "locales", System.Globalization.CultureInfo.CurrentCulture.Name.ToLower(), ".json");
         }
 
-        if (!Directory.Exists(path)) throw new Exception($"Locales directory not found at: {path}");
+        if (!File.Exists(path)) throw new Exception($"Locale file not found at: {path}");
 
-        Dictionary<string, Locale> locales = new Dictionary<string, Locale>();
-
-        foreach (string filePath in Directory.GetFiles(path, "*.json"))
-        {
-            locales.Add(Path.GetFileNameWithoutExtension(filePath).ToLower(), new Locale(JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(filePath))!));
-        }
-
-        return new Localizer(locales);
+        return new Locale(JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(path))!);
     }
 }
