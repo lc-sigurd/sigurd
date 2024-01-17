@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using HarmonyLib;
 using Unity.Netcode;
 using OdinSerializer;
@@ -9,7 +10,7 @@ namespace Sigurd.Networking;
 /// <summary>
 /// Base class for Network Variables.
 /// </summary>
-/// <remarks>Only for internal purposes.</remarks>
+/// <remarks>For internal purposes only.</remarks>
 public abstract class SNetworkVariableBase
 {
     internal readonly string UniqueName;
@@ -23,7 +24,7 @@ public abstract class SNetworkVariableBase
     internal SNetworkVariableBase(string uniqueName)
     {
         if (StoredMenuVariables.ContainsKey(uniqueName) || StoredLobbyVariables.ContainsKey(uniqueName))
-            throw new Exception($"{uniqueName} already registered");
+            throw new UniqueNameException($"{uniqueName} already registered");
 
         // Add ".var" to unique name to help prevent conflicting names
         UniqueName = $"{uniqueName}.var";
@@ -56,21 +57,18 @@ public abstract class SNetworkVariableBase
     protected abstract void UnregisterVariable();
 }
 
-/// <typeparam name="TData">The serializable data type of the message.</typeparam>
+/// <typeparam name="T">The serializable data type of the message.</typeparam>
 // ReSharper disable once ClassNeverInstantiated.Global
-public class SNetworkVariable<TData> : SNetworkVariableBase
+public class SNetworkVariable<T> : SNetworkVariableBase
 {
     private bool _isDirty;
-    private TData _value = default!;
-/*
-    private TData _preConnectValue; //? Reset value to before connection?
-*/
-    private readonly NetworkObject? _ownerObject = null;
+    private T _value = default!;
+    private readonly NetworkObject? _ownerObject;
 
     /// <summary>
     /// Get or set the value of the variable.
     /// </summary>
-    public TData Value
+    public T Value
     {
         get => _value;
         set
@@ -92,15 +90,20 @@ public class SNetworkVariable<TData> : SNetworkVariableBase
     /// <summary>
     /// The callback to invoke when the variable's value changes.
     /// </summary>
-    /// <remarks>Invoked when changed locally and on the network.</remarks>
-    public event Action<TData>? OnValueChanged;
+    /// <remarks>Invoked when changed locally and/or over the network.</remarks>
+    public event Action<T>? OnValueChanged;
 
     /// <summary>
     /// Create a new server-owned network variable.
     /// </summary>
-    /// <param name="uniqueName"></param>
-    public SNetworkVariable(string uniqueName) : base(uniqueName)
+    /// <param name="uniqueName">The name of the network message.</param>
+    /// <exception cref="UniqueNameException">Thrown when the name is not unique.</exception>
+    public SNetworkVariable(string uniqueName) : this(uniqueName, null!) {}
+
+    internal SNetworkVariable(string uniqueName, NetworkObject networkObject) : base(uniqueName)
     {
+        _ownerObject = networkObject;
+
         if (MadeDuringConnection)
             RegisterVariable();
     }
@@ -130,7 +133,7 @@ public class SNetworkVariable<TData> : SNetworkVariableBase
         // Ensure that the variable is changed by the right client
         if (!CheckIfOwned(wrapped.Sender)) return;
 
-        var newValue = SerializationUtility.DeserializeValue<TData>(wrapped.Message, DataFormat.Binary);
+        var newValue = SerializationUtility.DeserializeValue<T>(wrapped.Message, DataFormat.Binary);
 
         // Check to see if the value is the same (including if it was null before and null now for support for nullable types)
         if (newValue != null && newValue.Equals(_value) || newValue == null && _value == null)

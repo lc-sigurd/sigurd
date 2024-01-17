@@ -688,6 +688,14 @@ internal class NetworkMessageWrapper
     internal NetworkMessageWrapper() { }
 }
 
+internal class UniqueNameException : Exception
+{
+    public UniqueNameException(string message)
+    {
+
+    }
+}
+
 [HarmonyPatch(typeof(NetworkManager), nameof(NetworkManager.StartClient))]
 [HarmonyPatch(typeof(NetworkManager), nameof(NetworkManager.StartHost))]
 internal static class RegisterPatch
@@ -695,7 +703,7 @@ internal static class RegisterPatch
     internal static void Postfix()
     {
         Network.RegisterMessages();
-        SigurdNetworkVariableBase.RegisterVariables();
+        SNetworkVariableBase.RegisterVariables();
     }
 }
 
@@ -705,6 +713,6 @@ internal static class UnregisterPatch
     internal static void Postfix()
     {
         Network.UnregisterMessages();
-        SigurdNetworkVariableBase.UnregisterVariables();
+        SNetworkVariableBase.UnregisterVariables();
     }
 }
