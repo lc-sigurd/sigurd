@@ -18,10 +18,10 @@ public static class LocalizationUtils
     /// <summary>
     /// Register locale files from a specific directory.
     /// </summary>
-    /// <param name="path">The path of the locales. If left blank, will use (PluginInfo.Location)/locales/(CurrentCulture.Name)</param>
+    /// <param name="path">The path of the locale. If left blank, will use (PluginInfo.Location)/locales/(CurrentCulture.Name)</param>
     /// <returns>A <see cref="Locale"/>.</returns>
     /// <exception cref="Exception">Thrown when locale path is not found.</exception>
-    public static Locale RegisterLocale(string path = "")
+    public static Locale RegisterLocale(string path = "", string fallbackLanguage = "en-us")
     {
         if (path.IsNullOrWhiteSpace())
         {
@@ -35,7 +35,9 @@ public static class LocalizationUtils
             path = Path.Combine(Path.GetDirectoryName(pluginInfo.Location), "locales", System.Globalization.CultureInfo.CurrentCulture.Name.ToLower(), ".json");
         }
 
-        if (!File.Exists(path)) throw new Exception($"Locale file not found at: {path}");
+        if (!File.Exists(path)) path = Path.Combine(Path.GetDirectoryName(path), $"{fallbackLanguage}.json");
+
+        if (!File.Exists(path)) throw new Exception($"Locale file and fallback not found.");
 
         return new Locale(JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(path))!);
     }
