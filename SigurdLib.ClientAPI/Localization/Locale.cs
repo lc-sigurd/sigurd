@@ -22,6 +22,10 @@ public class Locale
     /// <returns>A localized string.</returns>
     public string Get(string key, string defaultValue = "")
     {
-        return pairs.TryGetValue(key, out string value) ? value : defaultValue;
+        if (pairs.TryGetValue(key, out string value)) return value;
+
+        if (!string.IsNullOrWhiteSpace(defaultValue)) return defaultValue;
+
+        return key;
     }
 }
