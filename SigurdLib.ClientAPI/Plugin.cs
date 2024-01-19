@@ -12,6 +12,11 @@ namespace Sigurd.ClientAPI;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public sealed class Plugin : BaseUnityPlugin
 {
+    /// <summary>
+    /// This Plugin's GUID.
+    /// </summary>
+    public const string Guid = MyPluginInfo.PLUGIN_GUID;
+
     internal static Plugin Instance { get; private set; } = null!;
 
     internal static ManualLogSource Log { get; private set; } = null!;
