@@ -59,6 +59,7 @@
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)..\libs\odin-serializer\OdinSerializer.dll</HintPath>
         </Reference>
