@@ -132,7 +132,7 @@ internal class RawCommandSplitter
             }
         }
 
-        private void Advance() => _position += 1;
+        private void Advance(int positions = 1) => _position += positions;
 
         private char Current => _rawCommand[_position];
 
