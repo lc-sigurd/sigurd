@@ -74,6 +74,7 @@ internal class RawCommandSplitter
                     }
 
                     _currentState ^= State.WithinSingleQuotes;
+                    _currentState |= State.AllowEmptyToken;
                     Advance();
                     continue;
                 }
@@ -86,6 +87,7 @@ internal class RawCommandSplitter
                     }
 
                     _currentState ^= State.WithinDoubleQuotes;
+                    _currentState |= State.AllowEmptyToken;
                     Advance();
                     continue;
                 }
@@ -103,11 +105,12 @@ internal class RawCommandSplitter
                 }
 
                 if (IsDelimiter(Current)) {
-                    if (_tokenBuilder.Length > 0) {
+                    if (TokenIsValid()) {
                         yield return _tokenBuilder.ToString();
                     }
 
                     _tokenBuilder.Clear();
+                    _currentState &= ~State.AllowEmptyToken;
                     Advance();
                     continue;
                 }
@@ -116,7 +119,6 @@ internal class RawCommandSplitter
                 Advance();
             }
 
-            if (_tokenBuilder.Length > 0) {
             if (InState(State.WithinSingleQuotes)) {
                 throw new RawCommandSyntaxException("Mismatched single-quote");
             }
@@ -128,6 +130,8 @@ internal class RawCommandSplitter
             if (InState(State.Escaped)) {
                 throw new RawCommandSyntaxException("Cannot escape end-of-command");
             }
+
+            if (TokenIsValid()) {
                 yield return _tokenBuilder.ToString();
             }
         }
@@ -138,12 +142,15 @@ internal class RawCommandSplitter
 
         private bool InState(State state) => (_currentState & state) > 0;
 
+        private bool TokenIsValid() => InState(State.AllowEmptyToken) || _tokenBuilder.Length > 0;
+
         [Flags]
         enum State {
             Default = 0,
             WithinSingleQuotes = 1 << 0,
             WithinDoubleQuotes = 1 << 1,
             Escaped = 1 << 2,
+            AllowEmptyToken = 1 << 3,
         }
 
         public class InvalidStateException : Exception
