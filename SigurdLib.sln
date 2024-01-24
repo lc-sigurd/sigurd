@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Util", "SigurdLib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Util.Tests", "SigurdLib.Util.Tests\SigurdLib.Util.Tests.csproj", "{5E4870D9-2E31-4B2E-8F73-45C2810833FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Terminal", "SigurdLib.Terminal\SigurdLib.Terminal.csproj", "{A43DA28B-F528-4622-AA4C-255104D60EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Terminal.Tests", "SigurdLib.Terminal.Tests\SigurdLib.Terminal.Tests.csproj", "{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,18 @@ Global
 		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
+		{A43DA28B-F528-4622-AA4C-255104D60EB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A43DA28B-F528-4622-AA4C-255104D60EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A43DA28B-F528-4622-AA4C-255104D60EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A43DA28B-F528-4622-AA4C-255104D60EB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A43DA28B-F528-4622-AA4C-255104D60EB9}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
+		{A43DA28B-F528-4622-AA4C-255104D60EB9}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
+		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
+		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

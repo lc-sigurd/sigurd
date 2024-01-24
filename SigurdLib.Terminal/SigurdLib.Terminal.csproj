@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
+        <AssemblyName>com.sigurd.sigurd.terminal</AssemblyName>
+
+        <Id>SigurdLib.Terminal</Id>
+        <Product>SigurdLib.Terminal</Product>
+
+        <PackageId>SigurdLib.Terminal</PackageId>
+        <Description>Sigurd's terminal rewrite.</Description>
+
+        <ThunderstoreName>Sigurd_Terminal</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's terminal rewrite</ThunderstoreDescription>
+        <HasBepInPlugin>true</HasBepInPlugin>
+
+        <IsPackable>true</IsPackable>
+        <IsThunderstorePackable>true</IsThunderstorePackable>
+
+        <RootNamespace>Sigurd.Terminal</RootNamespace>
+    </PropertyGroup>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Runtime assembly references -->
+    <Import Project="$(ProjectDir)../libs/unitask/import.props"/>
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup Condition="$(CI) != 'true'">
+        <Reference Include="Assembly-CSharp" Publicize="true">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+        </Reference>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.InputSystem">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Unity.InputSystem.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.Netcode.Runtime">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Unity.Netcode.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup Condition="$(CI) == 'true'">
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
+    </ItemGroup>
+</Project>
