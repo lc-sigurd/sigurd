@@ -117,6 +117,17 @@ internal class RawCommandSplitter
             }
 
             if (_tokenBuilder.Length > 0) {
+            if (InState(State.WithinSingleQuotes)) {
+                throw new RawCommandSyntaxException("Mismatched single-quote");
+            }
+
+            if (InState(State.WithinDoubleQuotes)) {
+                throw new RawCommandSyntaxException("Mismatched double-quote");
+            }
+
+            if (InState(State.Escaped)) {
+                throw new RawCommandSyntaxException("Cannot escape end-of-command");
+            }
                 yield return _tokenBuilder.ToString();
             }
         }
@@ -142,6 +153,15 @@ internal class RawCommandSplitter
             public InvalidStateException(string message) : base(message) { }
 
             public InvalidStateException(string message, Exception inner) : base(message, inner) { }
+        }
+
+        public class RawCommandSyntaxException : Exception
+        {
+            public RawCommandSyntaxException() { }
+
+            public RawCommandSyntaxException(string message) : base(message) { }
+
+            public RawCommandSyntaxException(string message, Exception inner) : base(message, inner) { }
         }
     }
 }
