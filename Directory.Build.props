@@ -57,9 +57,9 @@
 
     <ItemGroup>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
-        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../CHANGELOG.md" Destination="/"/>
-        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../LICENSE" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../LICENSE" Destination="/"/>
         <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="libraries"/>
     </ItemGroup>
 
