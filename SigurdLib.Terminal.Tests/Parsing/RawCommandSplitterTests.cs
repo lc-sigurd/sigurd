@@ -1,7 +1,7 @@
 using System.Linq;
 using Sigurd.Terminal.Parsing;
 
-namespace SigurdLib.Terminal.Tests.Terminal.Parsing;
+namespace SigurdLib.Terminal.Tests.Parsing;
 
 public class RawCommandSplitterTests
 {
