@@ -47,6 +47,7 @@
     </ItemDefinitionGroup>
 
     <PropertyGroup>
+        <IsThunderstorePackable>false</IsThunderstorePackable>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
         <ThunderstoreReadmePath>../../README.md</ThunderstoreReadmePath>
