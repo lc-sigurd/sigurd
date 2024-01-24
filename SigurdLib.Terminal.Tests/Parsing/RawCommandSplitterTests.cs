@@ -21,4 +21,28 @@ public class RawCommandSplitterTests
     {
         AssertSplitTextEquals("foobarbaz", ["foobarbaz"]);
     }
+
+    [Fact]
+    public void TestSimpleSingleQuoted()
+    {
+        AssertSplitTextEquals("'foo' 'bar' 'baz'", ["foo", "bar", "baz"]);
+    }
+
+    [Fact]
+    public void TestSingleQuotedConcatenation()
+    {
+        AssertSplitTextEquals("'foo''bar' baz", ["foobar", "baz"]);
+    }
+
+    [Fact]
+    public void TestSingleQuotedDelimiter()
+    {
+        AssertSplitTextEquals("'foo bar'", ["foo bar"]);
+    }
+
+    [Fact]
+    public void TestSingleQuotedEmptyString()
+    {
+        AssertSplitTextEquals("foo '' bar", ["foo", "", "bar"]);
+    }
 }
