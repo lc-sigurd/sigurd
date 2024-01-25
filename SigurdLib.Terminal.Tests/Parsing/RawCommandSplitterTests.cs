@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Sigurd.Terminal.Parsing;
 
@@ -10,6 +11,13 @@ public class RawCommandSplitterTests
         Assert.Equal(splitText, RawCommandSplitter.Split(textToSplit).ToArray());
     }
 
+    private void AssertSplitTextThrows<TException>(string textToSplit) where TException : Exception
+    {
+        Assert.Throws<TException>(() => RawCommandSplitter.Split(textToSplit).ToArray());
+    }
+
+    #region Unquoted Tests
+
     [Fact]
     public void TestSimpleSplit()
     {
@@ -21,6 +29,44 @@ public class RawCommandSplitterTests
     {
         AssertSplitTextEquals("foobarbaz", ["foobarbaz"]);
     }
+
+    #endregion
+
+    #region Unquoted Escape Tests
+
+    [Fact]
+    public void TestDelimiterEscape()
+    {
+        AssertSplitTextEquals("foo\\ bar baz", ["foo bar", "baz"]);
+    }
+
+    [Fact]
+    public void TestSingleQuoteEscape()
+    {
+        AssertSplitTextEquals("foo\\'bar baz", ["foo'bar", "baz"]);
+    }
+
+    [Fact]
+    public void TestDoubleQuoteEscape()
+    {
+        AssertSplitTextEquals("foo\\\"bar baz", ["foo\"bar", "baz"]);
+    }
+
+    [Fact]
+    public void TestEscapeEscape()
+    {
+        AssertSplitTextEquals("foo\\\\bar baz", ["foo\\bar", "baz"]);
+    }
+
+    [Fact]
+    public void TestEndOfFileEscape()
+    {
+        AssertSplitTextThrows<RawCommandSplitter.RawCommandSyntaxException>(@"foo bar \");
+    }
+
+    #endregion
+
+    #region Single Quoted Tests
 
     [Fact]
     public void TestSimpleSingleQuoted()
@@ -45,4 +91,44 @@ public class RawCommandSplitterTests
     {
         AssertSplitTextEquals("foo '' bar", ["foo", "", "bar"]);
     }
+
+    #endregion
+
+    #region Double Quoted Tests
+
+    [Fact]
+    public void TestSimpleDoubleQuoted()
+    {
+        AssertSplitTextEquals("\"foo\" \"bar\" \"baz\"", ["foo", "bar", "baz"]);
+    }
+
+    [Fact]
+    public void TestDoubleQuotedConcatenation()
+    {
+        AssertSplitTextEquals("\"foo\"\"bar\" baz", ["foobar", "baz"]);
+    }
+
+    [Fact]
+    public void TestDoubleQuotedDelimiter()
+    {
+        AssertSplitTextEquals("\"foo bar\"", ["foo bar"]);
+    }
+
+    [Fact]
+    public void TestDoubleQuotedEmptyString()
+    {
+        AssertSplitTextEquals("foo \"\" bar", ["foo", "", "bar"]);
+    }
+
+    #endregion
+
+    #region Composite Tests
+
+    [Fact]
+    public void TestCompositeQuotedConcatenation()
+    {
+        AssertSplitTextEquals("'foo'\"bar\" baz", ["foobar", "baz"]);
+    }
+
+    #endregion
 }
