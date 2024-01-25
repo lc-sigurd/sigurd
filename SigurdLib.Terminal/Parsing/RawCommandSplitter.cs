@@ -152,23 +152,23 @@ internal class RawCommandSplitter
             Escaped = 1 << 2,
             AllowEmptyToken = 1 << 3,
         }
+    }
 
-        public class InvalidStateException : Exception
-        {
-            public InvalidStateException() { }
+    public class InvalidStateException : Exception
+    {
+        public InvalidStateException() { }
 
-            public InvalidStateException(string message) : base(message) { }
+        public InvalidStateException(string message) : base(message) { }
 
-            public InvalidStateException(string message, Exception inner) : base(message, inner) { }
-        }
+        public InvalidStateException(string message, Exception inner) : base(message, inner) { }
+    }
 
-        public class RawCommandSyntaxException : Exception
-        {
-            public RawCommandSyntaxException() { }
+    public class RawCommandSyntaxException : Exception
+    {
+        public RawCommandSyntaxException() { }
 
-            public RawCommandSyntaxException(string message) : base(message) { }
+        public RawCommandSyntaxException(string message) : base(message) { }
 
-            public RawCommandSyntaxException(string message, Exception inner) : base(message, inner) { }
-        }
+        public RawCommandSyntaxException(string message, Exception inner) : base(message, inner) { }
     }
 }
