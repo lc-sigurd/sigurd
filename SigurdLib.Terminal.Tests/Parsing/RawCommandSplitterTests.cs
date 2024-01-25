@@ -92,6 +92,12 @@ public class RawCommandSplitterTests
         AssertSplitTextEquals("foo '' bar", ["foo", "", "bar"]);
     }
 
+    [Fact]
+    public void TestMismatchedSingleQuote()
+    {
+        AssertSplitTextThrows<RawCommandSplitter.RawCommandSyntaxException>("foo ' bar");
+    }
+
     #endregion
 
     #region Double Quoted Tests
@@ -118,6 +124,12 @@ public class RawCommandSplitterTests
     public void TestDoubleQuotedEmptyString()
     {
         AssertSplitTextEquals("foo \"\" bar", ["foo", "", "bar"]);
+    }
+
+    [Fact]
+    public void TestMismatchedDoubleQuote()
+    {
+        AssertSplitTextThrows<RawCommandSplitter.RawCommandSyntaxException>("foo \" bar");
     }
 
     #endregion
