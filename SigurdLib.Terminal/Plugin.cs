@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-
-[assembly: InternalsVisibleTo("SigurdLib.Terminal.Tests")]
 
 namespace Sigurd.Terminal;
 
