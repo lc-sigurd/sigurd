@@ -15,6 +15,11 @@
         <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
     </PropertyGroup>
 
+    <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(ProjectName), '^SigurdLib.(.*)(?&lt;!Tests)$'))">
+        <InternalsVisibleTo Include="$(ProjectName).Tests" />
+        <InternalsVisibleTo Include="SigurdLib" />
+    </ItemGroup>
+
     <!-- NuGet metadata -->
     <PropertyGroup>
         <Authors>Lordfirespeed,Steven4547466</Authors>
