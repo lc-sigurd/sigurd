@@ -3,17 +3,17 @@
         <Reference Include="UniTask">
             <HintPath>$(MSBuildThisFileDirectory)UniTask.dll</HintPath>
         </Reference>
-        <Reference Include="UniTask">
-            <HintPath>$(MSBuildThisFileDirectory)Addressables.dll</HintPath>
+        <Reference Include="UniTask.Addressables">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.Addressables.dll</HintPath>
         </Reference>
-        <Reference Include="UniTask">
-            <HintPath>$(MSBuildThisFileDirectory)DOTween.dll</HintPath>
+        <Reference Include="UniTask.DOTween">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.DOTween.dll</HintPath>
         </Reference>
-        <Reference Include="UniTask">
-            <HintPath>$(MSBuildThisFileDirectory)Linq.dll</HintPath>
+        <Reference Include="UniTask.Linq">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.Linq.dll</HintPath>
         </Reference>
-        <Reference Include="UniTask">
-            <HintPath>$(MSBuildThisFileDirectory)TextMeshPro.dll</HintPath>
+        <Reference Include="UniTask.TextMeshPro">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.TextMeshPro.dll</HintPath>
         </Reference>
     </ItemGroup>
 </Project>
