@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sigurd.Terminal.Parsing;
+namespace Sigurd.Terminal.CommandLine.Parsing;
 
 internal class RawCommandSplitter
 {

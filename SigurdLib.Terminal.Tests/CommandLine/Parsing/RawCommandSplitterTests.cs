@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using Sigurd.Terminal.Parsing;
+using Sigurd.Terminal.CommandLine.Parsing;
 
-namespace SigurdLib.Terminal.Tests.Parsing;
+namespace SigurdLib.Terminal.Tests.CommandLine.Parsing;
 
 public class RawCommandSplitterTests
 {
