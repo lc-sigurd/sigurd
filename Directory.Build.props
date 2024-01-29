@@ -66,6 +66,7 @@
         <ThunderstoreBuildCopyPath Include="$(ProjectDir)../CHANGELOG.md" Destination="/"/>
         <ThunderstoreBuildCopyPath Include="$(ProjectDir)../LICENSE" Destination="/"/>
         <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="libraries"/>
+        <ThunderstoreDependency Include="BepInEx-BepInExPack" Version="5.4.2100" Reference="false" />
     </ItemGroup>
 
     <!-- .NET Framework (.NET 4) reference assemblies  -->
