@@ -15,7 +15,7 @@ public interface IReverseTag<TValue>
     /// <summary>
     /// The tags the <see cref="IReverseTag{TValue}"/> is contained by.
     /// </summary>
-    IEnumerable<TagKey<TValue, IRegistrar<TValue>>> Tags { get; }
+    IEnumerable<ITagKey<TValue, IRegistrar<TValue>>> Tags { get; }
 
     /// <summary>
     /// Determines whether the <see cref="IReverseTag{TValue}"/> belongs to a
