@@ -27,6 +27,7 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+        <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Runtime assembly references -->
