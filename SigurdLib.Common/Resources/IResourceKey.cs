@@ -9,7 +9,7 @@ public interface IResourceKey
 {
     private static readonly ConcurrentDictionary<InternKey, WeakReference> Values = new();
 
-    public static ResourceKey<TValue> Create<TValue>(ResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
+    public static ResourceKey<TValue> Create<TValue>(IResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
         where TValue : class
     {
         return Create<TValue>(registryKey.Location, location);
