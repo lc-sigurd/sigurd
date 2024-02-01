@@ -6,16 +6,16 @@ namespace Sigurd.Common.Core;
 
 public interface IRegistrar
 {
-    public static TValue Register<TValue, TRegistryValue>(IRegistry<TRegistryValue> registry, ResourceLocation name, TValue value)
-        where TValue : TRegistryValue
-        where TRegistryValue : class
+    public static TValue Register<TValue, TRegistry>(IRegistry<TRegistry> registry, ResourceLocation name, TValue value)
+        where TValue : TRegistry
+        where TRegistry : class
     {
         throw new NotImplementedException();
     }
 
-    public static TValue Register<TValue, TRegistryValue>(IRegistry<TRegistryValue> registry, ResourceKey<TRegistryValue> key, TValue value)
-        where TValue : TRegistryValue
-        where TRegistryValue : class
+    public static TValue Register<TValue, TRegistry>(IRegistry<TRegistry> registry, ResourceKey<TRegistry> key, TValue value)
+        where TValue : TRegistry
+        where TRegistry : class
     {
         throw new NotImplementedException();
     }
