@@ -16,6 +16,7 @@ public interface IHolder
     }
 
     public sealed record Direct<THeld>(THeld Value) : IHolder<THeld>
+        where THeld : class
     {
         /// <inheritdoc />
         public IEnumerable<ITagKey<THeld, IRegistrar<THeld>>> Tags => Array.Empty<ITagKey<THeld, IRegistrar<THeld>>>();
@@ -49,6 +50,7 @@ public interface IHolder
     }
 
     public sealed class Reference<THeld> : IHolder<THeld>
+        where THeld : class
     {
         private readonly IHolderOwner<THeld> _owner;
         private readonly Generic.HashSet<ITagKey<THeld, IRegistrar<THeld>>> _tags = [];
@@ -109,6 +111,7 @@ public interface IHolder
 }
 
 public interface IHolder<TValue> : IHolder, IReverseTag<TValue>
+    where TValue : class
 {
     bool IReverseTag<TValue>.Contains(ITagKey<TValue, IRegistrar<TValue>> tagKey) => Is(tagKey);
 

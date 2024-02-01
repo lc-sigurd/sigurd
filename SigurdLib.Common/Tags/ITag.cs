@@ -12,6 +12,7 @@ namespace Sigurd.Common.Tags;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 public interface ITag<TValue> : IReadOnlyCollection<TValue>
+    where TValue : class
 {
     /// <summary>
     /// The <see cref="TagKey{TValue,TRegistry}"/> of this tag.

@@ -6,6 +6,7 @@ namespace Sigurd.Common.Tags;
 /// <inheritdoc />
 public class TagKey<TValue, TRegistry> : ITagKey<TValue, TRegistry>
     where TRegistry : IRegistrar<TValue>
+    where TValue : class
 {
     /// <inheritdoc />
     public IResourceKey<TRegistry> RegistryKey { get; }
@@ -29,7 +30,9 @@ public class TagKey<TValue, TRegistry> : ITagKey<TValue, TRegistry>
     }
 
     /// <inheritdoc />
-    public TagKey<TCasted, TOtherRegistry>? Cast<TCasted, TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey) where TOtherRegistry : IRegistrar<TCasted>
+    public TagKey<TCasted, TOtherRegistry>? Cast<TCasted, TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
+        where TOtherRegistry : IRegistrar<TCasted>
+        where TCasted : class
     {
         return IsFor(registryKey) ? this as TagKey<TCasted, TOtherRegistry> : null;
     }

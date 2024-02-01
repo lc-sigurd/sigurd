@@ -10,11 +10,13 @@ public interface IResourceKey
     private static readonly ConcurrentDictionary<InternKey, WeakReference> Values = new();
 
     public static ResourceKey<TValue> Create<TValue>(ResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
+        where TValue : class
     {
         return Create<TValue>(registryKey.Location, location);
     }
 
     public static ResourceKey<IRegistry<TValue>> CreateRegistryKey<TValue>(ResourceLocation registryName)
+         where TValue : class
     {
         return Create<IRegistry<TValue>>(Registries.RootRegistryName, registryName);
     }

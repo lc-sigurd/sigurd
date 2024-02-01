@@ -11,6 +11,7 @@ namespace Sigurd.Common.Tags;
 /// the reverse tag somewhere.
 /// </summary>
 public interface IReverseTag<TValue>
+    where TValue : class
 {
     /// <summary>
     /// The tags the <see cref="IReverseTag{TValue}"/> is contained by.

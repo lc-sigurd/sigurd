@@ -49,8 +49,9 @@ public interface ITagKey
 }
 
 /// <inheritdoc />
-public interface ITagKey<out TValue, TRegistry> : ITagKey
+public interface ITagKey<out TValue, out TRegistry> : ITagKey
     where TRegistry : IRegistrar<TValue>
+    where TValue : class
 {
     /// <summary>
     /// The <see cref="IResourceKey{TValue}"/> of the registry the <see cref="ITagKey{TValue,TRegistry}"/> targets.
@@ -61,5 +62,6 @@ public interface ITagKey<out TValue, TRegistry> : ITagKey
         where TOtherRegistry : IRegistrar;
 
     public TagKey<TCasted, TOtherRegistry>? Cast<TCasted, TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
-        where TOtherRegistry : IRegistrar<TCasted>;
+        where TOtherRegistry : IRegistrar<TCasted>
+        where TCasted : class;
 }
