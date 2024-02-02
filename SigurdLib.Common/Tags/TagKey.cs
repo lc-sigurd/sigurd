@@ -28,7 +28,8 @@ public class TagKey<TValue> : ITagKey<TValue>
         return RegistryKey.Equals(registryKey);
     }
 
-    public TagKey<TCasted>? Cast<TCasted>(ResourceKey<IRegistrar<TCasted>> registryKey)
+    /// <inheritdoc />
+    public ITagKey<TCasted>? Cast<TCasted>(ResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class
     {
         return IsFor(registryKey) ? this as TagKey<TCasted> : null;
