@@ -19,7 +19,7 @@ public interface IResourceKey
     public static ResourceKey<IRegistry<TValue>> CreateRegistryKey<TValue>(ResourceLocation registryName)
          where TValue : class
     {
-        return Create<IRegistry<TValue>>(Registries.RootRegistryName, registryName);
+        return Create<IRegistry<TValue>>(SigurdRegistries.RootRegistryName, registryName);
     }
 
     private static ResourceKey<TValue> Create<TValue>(ResourceLocation registryName, ResourceLocation location)

@@ -3,7 +3,7 @@ using Sigurd.Common.Resources;
 
 namespace Sigurd.Common.Core;
 
-public class Registries
+public class SigurdRegistries
 {
     public static readonly ResourceLocation RootRegistryName = new ResourceLocation("root");
 
