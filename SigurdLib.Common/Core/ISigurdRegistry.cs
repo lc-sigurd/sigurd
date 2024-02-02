@@ -6,15 +6,15 @@ using Sigurd.Common.Resources;
 namespace Sigurd.Common.Core;
 
 /// <summary>
-/// Covariant interface for <see cref="IBetterRegistry{TValue}"/>.
+/// Covariant interface for <see cref="ISigurdRegistry{TValue}"/>.
 /// </summary>
 /// <typeparam name="TValue">The registered value type.</typeparam>
-public interface IBetterRegistar<out TValue> : IEnumerable<TValue>
+public interface ISigurdRegistrar<out TValue> : IEnumerable<TValue>
 {
     /// <summary>
     /// The registry's uniquely identifying key, which wraps <see cref="RegistryName"/>.
     /// </summary>
-    IResourceKey<IBetterRegistar<TValue>> RegistryKey { get; }
+    IResourceKey<ISigurdRegistrar<TValue>> RegistryKey { get; }
 
     /// <summary>
     /// The registry's uniquely identifying name.
@@ -23,12 +23,12 @@ public interface IBetterRegistar<out TValue> : IEnumerable<TValue>
 }
 
 /// <summary>
-/// Defines <see langword="delegate"/> types and other <see langword="static"/> members for <see cref="IBetterRegistry{TValue}"/>.
+/// Defines <see langword="delegate"/> types and other <see langword="static"/> members for <see cref="ISigurdRegistry{TValue}"/>.
 /// </summary>
-public interface IBetterRegistry
+public interface ISigurdRegistry
 {
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="IBetterRegistry{TValue}.OnAdd"/>.
+    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnAdd"/>.
     /// </summary>
     class AddEventArgs<TValue> : EventArgs
     {
@@ -36,7 +36,7 @@ public interface IBetterRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="IBetterRegistry{TValue}.OnClear"/>.
+    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnClear"/>.
     /// </summary>
     class ClearEventArgs<TValue> : EventArgs
     {
@@ -44,7 +44,7 @@ public interface IBetterRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="IBetterRegistry{TValue}.OnCreate"/>.
+    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnCreate"/>.
     /// </summary>
     class CreateEventArgs<TValue> : EventArgs
     {
@@ -52,7 +52,7 @@ public interface IBetterRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="IBetterRegistry{TValue}.OnValidate"/>.
+    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnValidate"/>.
     /// </summary>
     class ValidateEventArgs<TValue> : EventArgs
     {
@@ -60,7 +60,7 @@ public interface IBetterRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="IBetterRegistry{TValue}.OnBake"/>.
+    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnBake"/>.
     /// </summary>
     class BakeEventArgs<TValue> : EventArgs
     {
@@ -71,8 +71,8 @@ public interface IBetterRegistry
 /// <summary>
 /// Main interface for the registry system. Use this to query the registry system.
 /// </summary>
-/// <typeparam name="TValue">The type registered by the <see cref="IBetterRegistry{TValue}"/>.</typeparam>
-public interface IBetterRegistry<TValue> : IBetterRegistar<TValue>, IReadOnlyCollection<TValue>
+/// <typeparam name="TValue">The type registered by the <see cref="ISigurdRegistry{TValue}"/>.</typeparam>
+public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCollection<TValue>
     where TValue : class
 {
     #region Registration
@@ -96,23 +96,23 @@ public interface IBetterRegistry<TValue> : IBetterRegistar<TValue>, IReadOnlyCol
     #region Content Queries
 
     /// <summary>
-    /// Determines whether the <see cref="IBetterRegistry{TValue}"/> contains a specific <see cref="ResourceLocation"/> key.
+    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific <see cref="ResourceLocation"/> key.
     /// </summary>
-    /// <param name="key">The <see cref="ResourceLocation"/> to locate in the <see cref="IBetterRegistry{TValue}" />.</param>
-    /// <returns><see langword="true"/> if the <paramref name="key"/> is found in the <see cref="IBetterRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
+    /// <param name="key">The <see cref="ResourceLocation"/> to locate in the <see cref="ISigurdRegistry{TValue}" />.</param>
+    /// <returns><see langword="true"/> if the <paramref name="key"/> is found in the <see cref="ISigurdRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
     bool ContainsKey(ResourceLocation key);
 
     /// <summary>
-    /// Determines whether the <see cref="IBetterRegistry{TValue}"/> contains a specific value.
+    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific value.
     /// </summary>
-    /// <param name="value">The value to locate in the <see cref="IBetterRegistry{TValue}" />.</param>
-    /// <returns><see langword="true"/> if the <paramref name="value"/> is found in the <see cref="IBetterRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
+    /// <param name="value">The value to locate in the <see cref="ISigurdRegistry{TValue}" />.</param>
+    /// <returns><see langword="true"/> if the <paramref name="value"/> is found in the <see cref="ISigurdRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
     bool ContainsValue(TValue value);
 
     /// <summary>
-    /// Determines whether the <see cref="IBetterRegistry{TValue}"/> is empty.
+    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> is empty.
     /// </summary>
-    /// <returns><see langword="true"/> if the <see cref="IBetterRegistry{TValue}"/> contains no entries; Otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if the <see cref="ISigurdRegistry{TValue}"/> contains no entries; Otherwise, <see langword="false"/>.</returns>
     bool IsEmpty() => Count == 0;
 
     #endregion
@@ -238,28 +238,28 @@ public interface IBetterRegistry<TValue> : IBetterRegistar<TValue>, IReadOnlyCol
     /// Event invoked when contents are added to the registry. This will be invoked when the registry
     /// is rebuilt on the client side due to a server-side synchronization.
     /// </summary>
-    event EventHandler<IBetterRegistry.AddEventArgs<TValue>> OnAdd;
+    event EventHandler<ISigurdRegistry.AddEventArgs<TValue>> OnAdd;
 
     /// <summary>
     /// Event invoked when the registry's contents are cleared. This will be invoked before a registry
     /// is rebuilt.
     /// </summary>
-    event EventHandler<IBetterRegistry.ClearEventArgs<TValue>> OnClear;
+    event EventHandler<ISigurdRegistry.ClearEventArgs<TValue>> OnClear;
 
     /// <summary>
-    /// Event invoked when a registry instance is created.
+    /// Event invoked when a registry instance is initially created.
     /// </summary>
-    event EventHandler<IBetterRegistry.CreateEventArgs<TValue>> OnCreate;
+    event EventHandler<ISigurdRegistry.CreateEventArgs<TValue>> OnCreate;
 
     /// <summary>
     /// Event invoked when the registry's contents are validated.
     /// </summary>
-    event EventHandler<IBetterRegistry.ValidateEventArgs<TValue>> OnValidate;
+    event EventHandler<ISigurdRegistry.ValidateEventArgs<TValue>> OnValidate;
 
     /// <summary>
     /// Event invoked when the registry has finished processing.
     /// </summary>
-    event EventHandler<IBetterRegistry.ClearEventArgs<TValue>> OnBake;
+    event EventHandler<ISigurdRegistry.BakeEventArgs<TValue>> OnBake;
 
     #endregion
 }
