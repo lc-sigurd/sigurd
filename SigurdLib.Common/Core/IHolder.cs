@@ -122,7 +122,7 @@ public interface IHolder<TValue> : IHolder, IReverseTag<TValue>
     bool IReverseTag<TValue>.Contains(ITagKey<TValue> tagKey) => Is(tagKey);
 
     /// <summary>
-    /// The held <see cref="TValue"/>.
+    /// The held <typeparamref name="TValue"/>.
     /// </summary>
     TValue Value { get; }
 
