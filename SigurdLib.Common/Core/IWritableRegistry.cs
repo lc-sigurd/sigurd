@@ -7,5 +7,5 @@ public interface IWritableRegistry<TValue> : IRegistry<TValue>
 {
     IHolder.Reference<TValue> Register(ResourceKey<TValue> key, TValue value);
 
-    bool isEmpty();
+    bool IsEmpty();
 }

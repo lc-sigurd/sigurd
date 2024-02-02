@@ -5,9 +5,9 @@ namespace Sigurd.Common.Tags;
 
 
 /// <summary>
-/// A tag is a collection of elements with an identifying <see cref="ITagKey{TValue,TRegistry}"/>.
+/// A tag is a collection of elements with an identifying <see cref="ITagKey{TValue}"/>.
 /// Tags will always be empty until they are bound.
-/// A tag instance provided for a given <see cref="ITagKey{TValue, TRegistry}"/> from a given
+/// A tag instance provided for a given <see cref="ITagKey{TValue}"/> from a given
 /// <see cref="ITagManager"/>
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
@@ -17,7 +17,7 @@ public interface ITag<TValue> : IReadOnlyCollection<TValue>
     /// <summary>
     /// The <see cref="TagKey{TValue,TRegistry}"/> of this tag.
     /// </summary>
-    TagKey<TValue, IRegistrar<TValue>> Key { get; }
+    TagKey<TValue> Key { get; }
 
     /// <summary>
     /// Determine whether this tag was loaded with a value. If this is <see langword="false"/>, the tag is

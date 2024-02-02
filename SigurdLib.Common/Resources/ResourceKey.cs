@@ -38,8 +38,7 @@ public class ResourceKey<TValue> : IResourceKey<TValue>
     }
 
     /// <inheritdoc />
-    public IResourceKey<TCasted>? Cast<TCasted, TRegistry>(IResourceKey<TRegistry> registryKey)
-        where TRegistry : IRegistrar<TCasted>
+    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class
     {
         return IsFor(registryKey) ? this as ResourceKey<TCasted> : null;

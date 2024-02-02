@@ -27,8 +27,8 @@ public interface IHolderGetter<THeld> : IHolderGetter
     IHolder.Reference<THeld> GetOrThrow(IResourceKey<THeld> resourceKey) => Get(resourceKey)
         .IfNone(() => throw new InvalidOperationException($"Missing element {resourceKey}"));
 
-    Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld, IRegistrar<THeld>> tagKey);
+    Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey);
 
-    IHolderSet.Named<THeld> GetOrThrow(ITagKey<THeld, IRegistrar<THeld>> tagKey) => Get(tagKey)
+    IHolderSet.Named<THeld> GetOrThrow(ITagKey<THeld> tagKey) => Get(tagKey)
         .IfNone(() => throw new InvalidOperationException($"Missing tag {tagKey}"));
 }

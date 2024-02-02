@@ -16,16 +16,16 @@ public interface IReverseTag<TValue>
     /// <summary>
     /// The tags the <see cref="IReverseTag{TValue}"/> is contained by.
     /// </summary>
-    IEnumerable<ITagKey<TValue, IRegistrar<TValue>>> Tags { get; }
+    IEnumerable<ITagKey<TValue>> Tags { get; }
 
     /// <summary>
     /// Determines whether the <see cref="IReverseTag{TValue}"/> belongs to a
-    /// particular <see cref="ITagKey{TValue,TRegistry}"/>.
+    /// particular <see cref="ITagKey{TValue}"/>.
     /// </summary>
-    /// <param name="tagKey">The <see cref="ITagKey{TValue,TRegistry}"/> to locate in the <see cref="IReverseTag{TValue}"/>'s tags.</param>
+    /// <param name="tagKey">The <see cref="ITagKey{TValue}"/> to locate in the <see cref="IReverseTag{TValue}"/>'s tags.</param>
     /// <returns>
     /// <see langword="true" /> if <paramref name="tagKey" /> is found in the <see cref="IReverseTag{TValue}"/>'s tags; otherwise, <see langword="false" />.</returns>
-    bool Contains(ITagKey<TValue, IRegistrar<TValue>> tagKey);
+    bool Contains(ITagKey<TValue> tagKey);
 
     /// <summary>
     /// Determines whether the <see cref="IReverseTag{TValue}"/> belongs to a

@@ -18,7 +18,7 @@ public interface IHolderLookup
         delegate IEnumerable<IHolder.Reference<THeld>> ElementsGetter();
         ElementsGetter ElementsGet { init; }
 
-        delegate Option<IHolderSet.Named<THeld>> TagKeyGetter(ITagKey<THeld, IRegistrar<THeld>> tagKey);
+        delegate Option<IHolderSet.Named<THeld>> TagKeyGetter(ITagKey<THeld> tagKey);
         TagKeyGetter TagKeyGet { init; }
 
         delegate IEnumerable<IHolderSet.Named<THeld>> TagsGetter();
@@ -55,7 +55,7 @@ public interface IHolderLookup
         public IHolderDelegate<THeld>.TagKeyGetter TagKeyGet { protected get; init; }
 
         /// <inheritdoc />
-        public Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld, IRegistrar<THeld>> tagKey) => TagKeyGet(tagKey);
+        public Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey) => TagKeyGet(tagKey);
 
         /// <inheritdoc />
         public IHolderDelegate<THeld>.TagsGetter TagsGet { protected get; init; }
@@ -98,40 +98,29 @@ public interface IHolderLookup
         public class Delegate<THeld> : RegistryLookup<THeld>, IHolderDelegate<THeld>
             where THeld : class
         {
-            protected readonly RegistryLookup<THeld> Parent;
-
-            public Delegate(RegistryLookup<THeld> parent)
-            {
-                Parent = parent;
-                ResourceKeyGet = key => Parent.Get(key);
-                ElementsGet = () => Parent.Elements;
-                TagKeyGet = key => Parent.Get(key);
-                TagsGet = () => Parent.Tags;
-            }
+            /// <inheritdoc />
+            public required IResourceKey<IRegistrar<THeld>> Key { get; init; }
 
             /// <inheritdoc />
-            public IResourceKey<IRegistrar<THeld>> Key => Parent.Key;
-
-            /// <inheritdoc />
-            public IHolderDelegate<THeld>.ResourceKeyGetter ResourceKeyGet { protected get; init; }
+            public required IHolderDelegate<THeld>.ResourceKeyGetter ResourceKeyGet { protected get; init; }
 
             /// <inheritdoc />
             public Option<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey) => ResourceKeyGet(resourceKey);
 
             /// <inheritdoc />
-            public IHolderDelegate<THeld>.ElementsGetter ElementsGet { protected get; init; }
+            public required IHolderDelegate<THeld>.ElementsGetter ElementsGet { protected get; init; }
 
             /// <inheritdoc />
             public IEnumerable<IHolder.Reference<THeld>> Elements => ElementsGet();
 
             /// <inheritdoc />
-            public IHolderDelegate<THeld>.TagKeyGetter TagKeyGet { protected get; init; }
+            public required IHolderDelegate<THeld>.TagKeyGetter TagKeyGet { protected get; init; }
 
             /// <inheritdoc />
-            public Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld, IRegistrar<THeld>> tagKey) => TagKeyGet(tagKey);
+            public Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey) => TagKeyGet(tagKey);
 
             /// <inheritdoc />
-            public IHolderDelegate<THeld>.TagsGetter TagsGet { protected get; init; }
+            public required IHolderDelegate<THeld>.TagsGetter TagsGet { protected get; init; }
 
             /// <inheritdoc />
             public IEnumerable<IHolderSet.Named<THeld>> Tags => TagsGet();
@@ -154,7 +143,7 @@ public interface IHolderLookup<THeld> : IHolderGetter<THeld>, IHolderLookup
 
     IEnumerable<IHolderSet.Named<THeld>> Tags { get; }
 
-    IEnumerable<ITagKey<THeld, IRegistrar<THeld>>> TagIds => Tags.Select(holderSet => holderSet.Key);
+    IEnumerable<ITagKey<THeld>> TagIds => Tags.Select(holderSet => holderSet.Key);
 
     IHolderLookup<THeld> WithFilteredElements(Predicate<THeld> predicate)
     {

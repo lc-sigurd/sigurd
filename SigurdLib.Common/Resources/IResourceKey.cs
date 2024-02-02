@@ -61,7 +61,6 @@ public interface IResourceKey<out TValue> : IResourceKey, IComparable<IResourceK
     public bool IsFor<TRegistry>(IResourceKey<TRegistry> registryKey)
         where TRegistry : IRegistrar;
 
-    public IResourceKey<TCasted>? Cast<TCasted, TRegistry>(IResourceKey<TRegistry> registryKey)
-        where TRegistry : IRegistrar<TCasted>
+    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class;
 }

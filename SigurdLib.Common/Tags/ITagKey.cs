@@ -7,7 +7,7 @@ using Sigurd.Common.Resources;
 namespace Sigurd.Common.Tags;
 
 /// <summary>
-/// An <see cref="ITagKey{TValue,TRegistry}"/> is used to uniquely identify an <see cref="ITag{TValue}"/>.
+/// An <see cref="ITagKey{TValue}"/> is used to uniquely identify an <see cref="ITag{TValue}"/>.
 /// </summary>
 public interface ITagKey
 {
@@ -21,8 +21,7 @@ public interface ITagKey
     /// <typeparam name="TRegistry">The target registry type.</typeparam>
     /// <typeparam name="TValue">The type of object contained by the target registry.</typeparam>
     /// <returns>The newly created <see cref="TagKey{TValue,TRegistry}"/>.</returns>
-    public static TagKey<TValue, TRegistry> Create<TRegistry, TValue>(IResourceKey<TRegistry> registryKey, ResourceLocation location)
-        where TRegistry : IRegistrar<TValue>
+    public static TagKey<TValue> Create<TValue>(IResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
         where TValue : class
     {
         var internKey = new InternKey(registryKey.Location, location);
@@ -31,13 +30,13 @@ public interface ITagKey
             _ => new WeakReference(KeyFactory())
         ).Target;
 
-        if (possibleTagKey is TagKey<TValue, TRegistry> definiteTagKey) return definiteTagKey;
+        if (possibleTagKey is TagKey<TValue> definiteTagKey) return definiteTagKey;
 
         definiteTagKey = KeyFactory();
         Values[internKey] = new WeakReference(definiteTagKey);
         return definiteTagKey;
 
-        TagKey<TValue, TRegistry> KeyFactory() => new TagKey<TValue, TRegistry>(registryKey, location);
+        TagKey<TValue> KeyFactory() => new TagKey<TValue>(registryKey, location);
     }
 
     /// <summary>
@@ -49,19 +48,16 @@ public interface ITagKey
 }
 
 /// <inheritdoc />
-public interface ITagKey<out TValue, out TRegistry> : ITagKey
-    where TRegistry : IRegistrar<TValue>
-    where TValue : class
+public interface ITagKey<out TValue> : ITagKey where TValue : class
 {
     /// <summary>
-    /// The <see cref="IResourceKey{TValue}"/> of the registry the <see cref="ITagKey{TValue,TRegistry}"/> targets.
+    /// The <see cref="IResourceKey{TValue}"/> of the registry the <see cref="ITagKey{TValue}"/> targets.
     /// </summary>
-    public IResourceKey<TRegistry> RegistryKey { get; }
+    public IResourceKey<IRegistrar<TValue>> RegistryKey { get; }
 
     public bool IsFor<TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
         where TOtherRegistry : IRegistrar;
 
-    public TagKey<TCasted, TOtherRegistry>? Cast<TCasted, TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
-        where TOtherRegistry : IRegistrar<TCasted>
+    public TagKey<TCasted>? Cast<TCasted>(ResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class;
 }

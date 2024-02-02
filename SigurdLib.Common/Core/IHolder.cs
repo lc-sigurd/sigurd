@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LanguageExt;
 using Sigurd.Common.Resources;
 using Sigurd.Common.Tags;
@@ -19,7 +20,7 @@ public interface IHolder
         where THeld : class
     {
         /// <inheritdoc />
-        public IEnumerable<ITagKey<THeld, IRegistrar<THeld>>> Tags => Array.Empty<ITagKey<THeld, IRegistrar<THeld>>>();
+        public IEnumerable<ITagKey<THeld>> Tags => Array.Empty<ITagKey<THeld>>();
 
         /// <inheritdoc />
         public bool IsBound => true;
@@ -34,7 +35,7 @@ public interface IHolder
         public bool Is(Predicate<IResourceKey<THeld>> predicate) => false;
 
         /// <inheritdoc />
-        public bool Is(ITagKey<THeld, IRegistrar<THeld>> tagKey) => false;
+        public bool Is(ITagKey<THeld> tagKey) => false;
 
         /// <inheritdoc />
         public Either<IResourceKey<THeld>, THeld> Unwrap() => Either<IResourceKey<THeld>, THeld>.Right(Value);
@@ -53,11 +54,11 @@ public interface IHolder
         where THeld : class
     {
         private readonly IHolderOwner<THeld> _owner;
-        private readonly Generic.HashSet<ITagKey<THeld, IRegistrar<THeld>>> _tags = [];
+        private Generic.HashSet<ITagKey<THeld>> _tags = [];
         private IResourceKey<THeld>? _key;
         private THeld? _value;
 
-        private Reference(IHolderOwner<THeld> owner, IResourceKey<THeld>? key, THeld? value)
+        public Reference(IHolderOwner<THeld> owner, IResourceKey<THeld>? key, THeld? value)
         {
             _owner = owner;
             _key = key;
@@ -65,13 +66,17 @@ public interface IHolder
         }
 
         /// <inheritdoc />
-        public IEnumerable<ITagKey<THeld, IRegistrar<THeld>>> Tags => _tags;
+        public IEnumerable<ITagKey<THeld>> Tags {
+            get => _tags.AsEnumerable();
+            set => _tags = value.ToHashSet();
+        }
 
         public IResourceKey<THeld> Key {
             get {
                 if (_key is not null) return _key;
                 throw new InvalidOperationException($"Trying to access unbound value '{_value}' from registry {_owner}");
             }
+            set => _key = value;
         }
 
         public THeld Value {
@@ -79,6 +84,7 @@ public interface IHolder
                 if (_value is not null) return _value;
                 throw new InvalidOperationException($"Trying to access unbound value '{_key}' from registry {_owner}");
             }
+            set => _value = value;
         }
 
         /// <inheritdoc />
@@ -94,7 +100,7 @@ public interface IHolder
         public bool Is(Predicate<IResourceKey<THeld>> predicate) => predicate(Key);
 
         /// <inheritdoc />
-        public bool Is(ITagKey<THeld, IRegistrar<THeld>> tagKey) => _tags.Contains(tagKey);
+        public bool Is(ITagKey<THeld> tagKey) => _tags.Contains(tagKey);
 
         /// <inheritdoc />
         public Either<IResourceKey<THeld>, THeld> Unwrap() => Either<IResourceKey<THeld>, THeld>.Left(Key);
@@ -113,7 +119,7 @@ public interface IHolder
 public interface IHolder<TValue> : IHolder, IReverseTag<TValue>
     where TValue : class
 {
-    bool IReverseTag<TValue>.Contains(ITagKey<TValue, IRegistrar<TValue>> tagKey) => Is(tagKey);
+    bool IReverseTag<TValue>.Contains(ITagKey<TValue> tagKey) => Is(tagKey);
 
     /// <summary>
     /// The held <see cref="TValue"/>.
@@ -138,7 +144,7 @@ public interface IHolder<TValue> : IHolder, IReverseTag<TValue>
 
     bool Is(Predicate<IResourceKey<TValue>> predicate);
 
-    bool Is(ITagKey<TValue, IRegistrar<TValue>> tagKey);
+    bool Is(ITagKey<TValue> tagKey);
 
     Either<IResourceKey<TValue>, TValue> Unwrap();
 

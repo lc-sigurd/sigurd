@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using LanguageExt;
 using Sigurd.Common.Resources;
+using Sigurd.Common.Tags;
 
 namespace Sigurd.Common.Core;
 
@@ -27,9 +29,9 @@ public interface IRegistrar
         throw new NotImplementedException();
     }
 
-    HashSet<ResourceLocation> NameSet { get; }
+    ISet<ResourceLocation> NameSet { get; }
 
-    bool ContainsName(ResourceLocation? name);
+    bool ContainsName(ResourceLocation name);
 }
 
 public interface IKeyed<out T>
@@ -44,15 +46,38 @@ public interface IRegistrar<out TValue> : IRegistrar, IKeyed<IRegistrar<TValue>>
 
 public interface IRegistry<TValue> : IRegistrar<TValue> where TValue : class
 {
-    ResourceLocation? GetName(TValue value);
+    ResourceLocation? GetName(TValue? value);
 
-    HashSet<IResourceKey<TValue>> KeySet { get; }
-
-    bool ContainsKey(IResourceKey<TValue>? key);
+    Option<IResourceKey<TValue>> GetKey(TValue? value);
 
     TValue? Get(IResourceKey<TValue>? key);
 
-    IResourceKey<TValue>? GetKey(TValue value);
+    Option<IHolder.Reference<TValue>> GetHolder(IResourceKey<TValue> key);
 
-    HashSet<KeyValuePair<IResourceKey<TValue>, TValue>> EntrySet { get; }
+    IHolder.Reference<TValue> GetHolderOrThrow(IResourceKey<TValue> key) => GetHolder(key)
+        .IfNone(() => throw new InvalidOperationException($"Missing key in {Key}: {key}"));
+
+    IHolder<TValue> WrapAsHolder(TValue value);
+
+    ISet<IResourceKey<TValue>> KeySet { get; }
+
+    bool ContainsKey(IResourceKey<TValue> key);
+
+    ISet<KeyValuePair<IResourceKey<TValue>, TValue>> EntrySet { get; }
+
+    IEnumerable<IHolder.Reference<TValue>> Holders { get; }
+
+    IEnumerable<KeyValuePair<ITagKey<TValue>, IHolderSet.Named<TValue>>> Tags { get; }
+
+    IEnumerable<ITagKey<TValue>> TagKeys { get; }
+
+    Option<IHolderSet.Named<TValue>> GetTag(ITagKey<TValue> tagKey);
+
+    void ResetTags();
+
+    void BindTags(Dictionary<ITagKey<TValue>, List<IHolder<TValue>>> tagMap);
+
+    IHolderOwner<TValue> HolderOwner { get; }
+
+    IHolderLookup.RegistryLookup<TValue> AsLookup();
 }

@@ -13,16 +13,21 @@ public interface IHolderSet
     public abstract class ListBacked<THeld> : IHolderSet<THeld>
         where THeld : class
     {
-        protected abstract IReadOnlyList<IHolder<THeld>> Contents { get; }
+        private List<IHolder<THeld>> _contents = new();
+
+        public virtual IEnumerable<IHolder<THeld>> Contents {
+            protected get => _contents;
+            set => _contents = value.ToList();
+        }
 
         /// <inheritdoc />
-        public int Count => Contents.Count;
+        public int Count => _contents.Count;
 
         /// <inheritdoc />
         public Option<IHolder<THeld>> GetRandomElement(Random randomSource)
         {
-            if (Contents.Count == 0) return Option<IHolder<THeld>>.None;
-            return Option<IHolder<THeld>>.Some(Contents[randomSource.Next(Count)]);
+            if (_contents.Count == 0) return Option<IHolder<THeld>>.None;
+            return Option<IHolder<THeld>>.Some(_contents[randomSource.Next(Count)]);
         }
 
         /// <inheritdoc />
@@ -37,10 +42,10 @@ public interface IHolderSet
         public abstract bool Contains(IHolder<THeld> holder);
 
         /// <inheritdoc />
-        public abstract Either<ITagKey<THeld, IRegistrar<THeld>>, IEnumerable<IHolder<THeld>>> Unwrap();
+        public abstract Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap();
 
         /// <inheritdoc />
-        public abstract Option<ITagKey<THeld, IRegistrar<THeld>>> UnwrapKey();
+        public abstract Option<ITagKey<THeld>> UnwrapKey();
     }
 
     public sealed class Direct<THeld> : ListBacked<THeld>
@@ -55,15 +60,18 @@ public interface IHolderSet
         }
 
         /// <inheritdoc />
-        protected override IReadOnlyList<IHolder<THeld>> Contents => _contents;
+        public override IEnumerable<IHolder<THeld>> Contents {
+            protected get => _contents;
+            set { }
+        }
 
         /// <inheritdoc />
-        public override Either<ITagKey<THeld, IRegistrar<THeld>>, IEnumerable<IHolder<THeld>>> Unwrap()
-            => Either<ITagKey<THeld, IRegistrar<THeld>>, IEnumerable<IHolder<THeld>>>.Right(_contents);
+        public override Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap()
+            => Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>>.Right(_contents);
 
         /// <inheritdoc />
-        public override Option<ITagKey<THeld, IRegistrar<THeld>>> UnwrapKey()
-            => Option<ITagKey<THeld, IRegistrar<THeld>>>.None;
+        public override Option<ITagKey<THeld>> UnwrapKey()
+            => Option<ITagKey<THeld>>.None;
 
         /// <inheritdoc />
         public override bool Contains(IHolder<THeld> holder)
@@ -83,28 +91,22 @@ public interface IHolderSet
         where THeld : class
     {
         private readonly IHolderOwner<THeld> _owner;
-        private List<IHolder<THeld>> _contents = new();
 
-        public ITagKey<THeld, IRegistrar<THeld>> Key { get; }
+        public ITagKey<THeld> Key { get; }
 
-        public Named(IHolderOwner<THeld> owner, TagKey<THeld, IRegistrar<THeld>> key)
+        public Named(IHolderOwner<THeld> owner, TagKey<THeld> key)
         {
             _owner = owner;
             Key = key;
         }
 
         /// <inheritdoc />
-        protected override IReadOnlyList<IHolder<THeld>> Contents => _contents;
-
-        public void Bind(IEnumerable<IHolder<THeld>> contents) => _contents = contents.ToList();
-
-        /// <inheritdoc />
-        public override Either<ITagKey<THeld, IRegistrar<THeld>>, IEnumerable<IHolder<THeld>>> Unwrap()
-            => Either<ITagKey<THeld, IRegistrar<THeld>>, IEnumerable<IHolder<THeld>>>.Left(Key);
+        public override Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap()
+            => Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>>.Left(Key);
 
         /// <inheritdoc />
-        public override Option<ITagKey<THeld, IRegistrar<THeld>>> UnwrapKey()
-            => Option<ITagKey<THeld, IRegistrar<THeld>>>.Some(Key);
+        public override Option<ITagKey<THeld>> UnwrapKey()
+            => Option<ITagKey<THeld>>.Some(Key);
 
         /// <inheritdoc />
         public override bool Contains(IHolder<THeld> holder) => holder.Is(Key);
@@ -113,7 +115,7 @@ public interface IHolderSet
         public override bool CanSerializeIn(IHolderOwner<THeld> owner) => _owner.canSerializeIn(owner);
 
         /// <inheritdoc />
-        public override string ToString() => $"NamedSet({Key})[{String.Join(", ", _contents)}]";
+        public override string ToString() => $"NamedSet({Key})[{String.Join(", ", Contents)}]";
     }
 }
 
@@ -126,7 +128,7 @@ public interface IHolderSet<THeld> : IHolderSet, IReadOnlyCollection<IHolder<THe
 
     Option<IHolder<THeld>> GetRandomElement(Random randomSource);
 
-    Either<ITagKey<THeld, IRegistrar<THeld>>, IEnumerable<IHolder<THeld>>> Unwrap();
+    Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap();
 
-    Option<ITagKey<THeld, IRegistrar<THeld>>> UnwrapKey();
+    Option<ITagKey<THeld>> UnwrapKey();
 }

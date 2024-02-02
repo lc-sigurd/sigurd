@@ -4,17 +4,16 @@ using Sigurd.Common.Resources;
 namespace Sigurd.Common.Tags;
 
 /// <inheritdoc />
-public class TagKey<TValue, TRegistry> : ITagKey<TValue, TRegistry>
-    where TRegistry : IRegistrar<TValue>
+public class TagKey<TValue> : ITagKey<TValue>
     where TValue : class
 {
     /// <inheritdoc />
-    public IResourceKey<TRegistry> RegistryKey { get; }
+    public IResourceKey<IRegistrar<TValue>> RegistryKey { get; }
 
     /// <inheritdoc />
     public ResourceLocation Location { get; }
 
-    internal TagKey(IResourceKey<TRegistry> registryKey, ResourceLocation location)
+    internal TagKey(IResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
     {
         RegistryKey = registryKey;
         Location = location;
@@ -29,11 +28,9 @@ public class TagKey<TValue, TRegistry> : ITagKey<TValue, TRegistry>
         return RegistryKey.Equals(registryKey);
     }
 
-    /// <inheritdoc />
-    public TagKey<TCasted, TOtherRegistry>? Cast<TCasted, TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
-        where TOtherRegistry : IRegistrar<TCasted>
+    public TagKey<TCasted>? Cast<TCasted>(ResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class
     {
-        return IsFor(registryKey) ? this as TagKey<TCasted, TOtherRegistry> : null;
+        return IsFor(registryKey) ? this as TagKey<TCasted> : null;
     }
 }
