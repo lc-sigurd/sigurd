@@ -140,7 +140,7 @@ internal class RawCommandSplitter
 
         private char Current => _rawCommand[_position];
 
-        private bool InState(State state) => (_currentState & state) > 0;
+        private bool InState(State state) => (_currentState & state) == state;
 
         private bool TokenIsValid() => InState(State.AllowEmptyToken) || _tokenBuilder.Length > 0;
 
