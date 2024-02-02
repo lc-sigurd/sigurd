@@ -61,7 +61,7 @@ public interface ITagKey<out TValue> : ITagKey where TValue : class
     /// </summary>
     /// <param name="registryKey">Registry to test against.</param>
     /// <typeparam name="TOtherRegistry">Type of the test registry.</typeparam>
-    /// <returns><see langword="true"/> when compatible with the provided registry. Otherwise, false.</returns>
+    /// <returns><see langword="true"/> when compatible with the provided registry; Otherwise, <see langword="false"/>.</returns>
     public bool IsFor<TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
         where TOtherRegistry : IRegistrar;
 
