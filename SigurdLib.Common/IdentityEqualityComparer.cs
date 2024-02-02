@@ -5,7 +5,7 @@ namespace Sigurd.Common;
 
 // https://stackoverflow.com/a/8946825
 // Copyright (c) 2012 Jon Skeet
-public sealed class IdentityEqualityComparer<T> : IEqualityComparer<T>
+internal sealed class IdentityEqualityComparer<T> : IEqualityComparer<T>
     where T : class
 {
     public int GetHashCode(T value) => RuntimeHelpers.GetHashCode(value);
