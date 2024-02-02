@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using JetBrains.Annotations;
 using Sigurd.Common.Core;
 using Sigurd.Common.Extensions;
 using Sigurd.Common.Resources;
@@ -44,6 +45,7 @@ public interface ITagKey
     /// </summary>
     public ResourceLocation Location { get; }
 
+    [UsedImplicitly]
     private readonly record struct InternKey(ResourceLocation RegistryName, ResourceLocation Location);
 }
 
