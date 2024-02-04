@@ -78,17 +78,17 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     #region Registration
 
     /// <summary>
-    ///
+    /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
     /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
+    /// <param name="key"><see cref="string"/> path used in <see cref="ResourceLocation"/> key for the new entry.</param>
+    /// <param name="value">Value for the new entry.</param>
     void Register(string key, TValue value);
 
     /// <summary>
-    ///
+    /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
     /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
+    /// <param name="key"><see cref="ResourceLocation"/> key for the new entry.</param>
+    /// <param name="value">Value for the new entry.</param>
     void Register(ResourceLocation key, TValue value);
 
     #endregion
