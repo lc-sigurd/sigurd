@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <!-- Enable by removing the 'false and' part of the condition -->
-    <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="$(IsThunderstorePackable)">
+    <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="false and $(IsThunderstorePackable)">
         <PropertyGroup>
             <TestProfilePluginDir>$(TestProfileDir)BepInEx/plugins/$(ThunderstoreNamespace)-$(ThunderstoreName)/$(ThunderstoreName)/</TestProfilePluginDir>
         </PropertyGroup>
