@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sigurd.Common.Collections.Generic;
 
-namespace Sigurd.Common.System.Collections.ObjectModel;
+namespace Sigurd.Common.Collections.ObjectModel;
 
 internal static class SetExtensionMethods
 {

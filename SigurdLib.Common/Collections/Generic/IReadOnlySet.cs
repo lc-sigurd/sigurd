@@ -3,13 +3,16 @@
 // The .NET Foundation licenses this file to the Sigurd Team under the MIT license.
 // The Sigurd Team licenses this file to you under the LGPL-3.0-or-later license.
 
-namespace System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+
+namespace Sigurd.Common.Collections.Generic;
 
 /// <summary>
 /// Provides a readonly abstraction of a set.
 /// </summary>
 /// <typeparam name="T">The type of elements in the set.</typeparam>
-internal interface IReadOnlySet<T> : IReadOnlyCollection<T>
+public interface IReadOnlySet<T> : IReadOnlyCollection<T>
 {
     /// <summary>
     /// Determines if the set contains a specific item
