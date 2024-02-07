@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Sigurd.Common.Extensions;
 
-internal static class IDictionaryExtensions
+internal static class DictionaryExtensions
 {
     public delegate TValue ValueProvider<TKey, TValue>(TKey key);
 
