@@ -163,7 +163,7 @@ internal class RawCommandSplitter
         public InvalidStateException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class RawCommandSyntaxException : Exception
+    public class RawCommandSyntaxException : ArgumentException
     {
         public RawCommandSyntaxException() { }
 
