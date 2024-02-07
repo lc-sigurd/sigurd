@@ -15,8 +15,7 @@ internal static class DictionaryExtensions
         ValueProvider<TKey, TValue> provider
     )
     {
-        TValue value;
-        if (dictionary.TryGetValue(key, out value)) return value;
+        if (dictionary.TryGetValue(key, out var value)) return value;
 
         value = provider(key);
         dictionary[key] = value;
@@ -28,8 +27,7 @@ internal static class DictionaryExtensions
         TKey key,
         ValueProviderAsync<TKey, TValue> provider
     ) {
-        TValue value;
-        if (dictionary.TryGetValue(key, out value)) return value;
+        if (dictionary.TryGetValue(key, out var value)) return value;
 
         value = await provider(key);
         dictionary[key] = value;
