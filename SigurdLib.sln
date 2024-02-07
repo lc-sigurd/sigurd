@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Common", "SigurdL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuildTasks", "MSBuildTasks\MSBuildTasks.csproj", "{C26CC832-C210-4A65-95F7-554215A25D6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Common.Tests", "SigurdLib.Common.Tests\SigurdLib.Common.Tests.csproj", "{5E4870D9-2E31-4B2E-8F73-45C2810833FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,12 @@ Global
 		{C26CC832-C210-4A65-95F7-554215A25D6C}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
 		{C26CC832-C210-4A65-95F7-554215A25D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C26CC832-C210-4A65-95F7-554215A25D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
+		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
