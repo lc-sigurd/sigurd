@@ -36,11 +36,11 @@ internal class RawCommandSplitter
         public IEnumerable<string> Parse()
         {
             while (_position < _rawCommand.Length) {
-                if (InState(State.Escaped & State.WithinSingleQuotes)) {
+                if (InState(State.Escaped | State.WithinSingleQuotes)) {
                     throw new InvalidStateException("Characters cannot be escaped within single quotes.");
                 }
 
-                if (InState(State.Escaped & State.WithinDoubleQuotes)) {
+                if (InState(State.Escaped | State.WithinDoubleQuotes)) {
                     if (IsDoubleQuote(Current) | IsEscape(Current)) {
                         _tokenBuilder.Append(Current);
                         _currentState &= ~State.Escaped;
