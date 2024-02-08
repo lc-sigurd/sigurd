@@ -32,4 +32,6 @@ public interface ITag<TValue> : IReadOnlyCollection<TValue>
     /// <returns>
     /// <see langword="true" /> if <paramref name="value" /> is found in the <see cref="ITag{TValue}" />; otherwise, <see langword="false" />.</returns>
     bool Contains(TValue value);
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
