@@ -5,7 +5,7 @@ using Sigurd.Common.Collections.Generic;
 
 namespace Sigurd.Common.Collections.ObjectModel;
 
-internal static class SetExtensionMethods
+public static class SetExtensions
 {
     public static ReadOnlySet<T> AsReadOnly<T>(this ISet<T> set) => new ReadOnlySet<T>(set);
 }
