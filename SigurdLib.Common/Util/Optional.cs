@@ -39,7 +39,7 @@ public readonly struct Optional<T>
 
     public T? ValueUnsafe => IsSome ? _value : default;
 
-    [MemberNotNullWhen(true, "_value")]
+    [MemberNotNullWhen(true, nameof(_value), nameof(ValueUnsafe))]
     public bool IsSome => _isSome;
 
     public bool IsNone => !_isSome;
