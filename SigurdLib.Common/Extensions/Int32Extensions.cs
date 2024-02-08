@@ -1,9 +1,9 @@
 namespace Sigurd.Common.Extensions;
 
 /// <summary>
-/// Extension methods for instances of the <see cref="int"/> class.
+/// Extension methods for <see cref="int"/> instances.
 /// </summary>
-public static class Int32Extensions
+internal static class Int32Extensions
 {
     // https://stackoverflow.com/a/32725808
     /// <summary>
