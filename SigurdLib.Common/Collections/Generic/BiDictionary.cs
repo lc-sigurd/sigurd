@@ -211,11 +211,11 @@ public class BiDictionary<TKey, TValue> : IBiDictionary<TKey, TValue>
 
     /// <inheritdoc />
     [CollectionAccess(CollectionAccessType.Read)]
-    public bool TryGetValue(TKey key, [UnscopedRef] out TValue value) => _forward.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, [UnscopedRef] [MaybeNullWhen(false)] out TValue value) => _forward.TryGetValue(key, out value);
 
     /// <inheritdoc />
     [CollectionAccess(CollectionAccessType.Read)]
-    public bool TryGetKey(TValue value, [UnscopedRef]  out TKey key) => _backward.TryGetValue(value, out key);
+    public bool TryGetKey(TValue value, [UnscopedRef] [MaybeNullWhen(false)] out TKey key) => _backward.TryGetValue(value, out key);
 
     /// <inheritdoc />
     /// <exception cref="T:System.InvalidOperationException">The property is set and the value is already present, bound to a different key.</exception>
@@ -289,7 +289,7 @@ public class BiDictionary<TKey, TValue> : IBiDictionary<TKey, TValue>
 
         public bool Remove(TValue key) => _owner.RemoveValue(key);
 
-        public bool TryGetValue(TValue key, [UnscopedRef] out TKey value) => _owner.TryGetKey(key, out value);
+        public bool TryGetValue(TValue key, [UnscopedRef] [MaybeNullWhen(false)] out TKey value) => _owner.TryGetKey(key, out value);
 
         public TKey this[TValue valueKey] {
             [CollectionAccess(CollectionAccessType.Read)]
@@ -314,6 +314,6 @@ public class BiDictionary<TKey, TValue> : IBiDictionary<TKey, TValue>
 
         public bool RemoveValue(TKey value) => _owner.Remove(value);
 
-        public bool TryGetKey(TKey value, [UnscopedRef] out TValue key) => _owner.TryGetValue(value, out key);
+        public bool TryGetKey(TKey value, [UnscopedRef] [MaybeNullWhen(false)] out TValue key) => _owner.TryGetValue(value, out key);
     }
 }
