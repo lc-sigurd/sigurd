@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sigurd.Common.Util;
 
@@ -34,15 +35,16 @@ public readonly struct Optional<T>
     /// <returns><see cref="Optional{T}"/></returns>
     public static Optional<T> OfNullable(T? value) => value is null ? None : Some(value);
 
-    public static explicit operator T(Optional<T> maybe) => maybe._isSome ? maybe._value! : throw new InvalidCastException("Optional is not in a Some state");
+    public static explicit operator T(Optional<T> maybe) => maybe.IsSome ? maybe._value : throw new InvalidCastException("Optional is not in a Some state");
 
-    public T? ValueUnsafe => _isSome ? _value! : default;
+    public T? ValueUnsafe => IsSome ? _value : default;
 
+    [MemberNotNullWhen(true, "_value")]
     public bool IsSome => _isSome;
 
     public bool IsNone => !_isSome;
 
-    public T IfNone(Func<T> noneSupplier) => _isSome ? _value! : noneSupplier() ?? throw new ArgumentException("Supplier must not return null.");
+    public T IfNone(Func<T> noneSupplier) => IsSome ? _value : noneSupplier() ?? throw new ArgumentException("Supplier must not return null.");
 
     /// <summary>
     /// Project from one value to another.
@@ -50,7 +52,7 @@ public readonly struct Optional<T>
     /// <param name="projector">Projection function</param>
     /// <typeparam name="V">Resulting value type</typeparam>
     /// <returns>Mapped <see cref="Optional{T}"/></returns>
-    public Optional<V> Select<V>(Func<T, V> projector) => _isSome ? Optional.Some(projector(_value!)) : Optional<V>.None;
+    public Optional<V> Select<V>(Func<T, V> projector) => IsSome ? Optional.Some(projector(_value)) : Optional<V>.None;
 
     /// <summary>
     /// Apply a <see cref="Predicate{T}"/> to the bound value (if in a Some state).
@@ -60,7 +62,7 @@ public readonly struct Optional<T>
     /// <see langword="this"/> if in a Some state and <paramref name="filter"/>
     /// returns <see langword="true"/>; otherwise, <see cref="None"/>.
     /// </returns>
-    public Optional<T> Where(Predicate<T> filter) => _isSome && filter(_value) ? this : None;
+    public Optional<T> Where(Predicate<T> filter) => IsSome && filter(_value) ? this : None;
 
     /// <summary>
     /// Attempt to cast the bound value to <typeparamref name="V"/> (if in a Some state).
