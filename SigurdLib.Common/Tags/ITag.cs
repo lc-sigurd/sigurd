@@ -1,5 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using Sigurd.Common.Core;
+using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Tags;
 
@@ -7,10 +9,11 @@ namespace Sigurd.Common.Tags;
 /// <summary>
 /// A tag is a collection of elements with an identifying <see cref="ITagKey{TValue}"/>.
 /// Tags will always be empty until they are bound.
+/// <br/>
 /// A tag instance provided for a given <see cref="ITagKey{TValue}"/> from a given
-/// <see cref="ITagManager"/>
+/// <see cref="ITagManager{TValue}"/> will always return the same instance on future invocations.
 /// </summary>
-/// <typeparam name="TValue"></typeparam>
+/// <typeparam name="TValue">The type of value that is categorised</typeparam>
 public interface ITag<TValue> : IReadOnlyCollection<TValue>
     where TValue : class
 {
