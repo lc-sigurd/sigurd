@@ -15,9 +15,9 @@ public interface ITag<TValue> : IReadOnlyCollection<TValue>
     where TValue : class
 {
     /// <summary>
-    /// The <see cref="TagKey{TValue,TRegistry}"/> of this tag.
+    /// The <see cref="ITagKey{TValue}"/> of this tag.
     /// </summary>
-    TagKey<TValue> Key { get; }
+    ITagKey<TValue> Key { get; }
 
     /// <summary>
     /// Determine whether this tag was loaded with a value. If this is <see langword="false"/>, the tag is
