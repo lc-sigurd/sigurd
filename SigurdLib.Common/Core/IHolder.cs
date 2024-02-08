@@ -1,68 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LanguageExt;
 using Sigurd.Common.Resources;
 using Sigurd.Common.Tags;
-using Generic = System.Collections.Generic;
+using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core;
 
 public interface IHolder
 {
-    public enum Kind
-    {
-        Reference,
-        Direct,
-    }
-
-    public sealed record Direct<THeld>(THeld Value) : IHolder<THeld>
-        where THeld : class
-    {
-        /// <inheritdoc />
-        public IEnumerable<ITagKey<THeld>> Tags => Array.Empty<ITagKey<THeld>>();
-
-        /// <inheritdoc />
-        public bool IsBound => true;
-
-        /// <inheritdoc />
-        public bool Is(ResourceLocation location) => false;
-
-        /// <inheritdoc />
-        public bool Is(IResourceKey<THeld> resourceKey) => false;
-
-        /// <inheritdoc />
-        public bool Is(Predicate<IResourceKey<THeld>> predicate) => false;
-
-        /// <inheritdoc />
-        public bool Is(ITagKey<THeld> tagKey) => false;
-
-        /// <inheritdoc />
-        public Either<IResourceKey<THeld>, THeld> Unwrap() => Either<IResourceKey<THeld>, THeld>.Right(Value);
-
-        /// <inheritdoc />
-        public Option<IResourceKey<THeld>> UnwrapKey() => Option<IResourceKey<THeld>>.None;
-
-        /// <inheritdoc />
-        public Kind Kind => Kind.Direct;
-
-        /// <inheritdoc />
-        public bool CanSerializeIn(IHolderOwner<THeld> owner) => true;
-    }
-
     public sealed class Reference<THeld> : IHolder<THeld>
         where THeld : class
     {
         private readonly IHolderOwner<THeld> _owner;
-        private Generic.HashSet<ITagKey<THeld>> _tags = [];
+        private HashSet<ITagKey<THeld>> _tags = [];
         private IResourceKey<THeld>? _key;
         private THeld? _value;
 
-        public Reference(IHolderOwner<THeld> owner, IResourceKey<THeld>? key, THeld? value)
+        public Reference(IHolderOwner<THeld> owner, IResourceKey<THeld>? key)
         {
             _owner = owner;
             _key = key;
-            _value = value;
         }
 
         /// <inheritdoc />
@@ -91,7 +49,7 @@ public interface IHolder
         public bool IsBound => _key is not null && _value is not null;
 
         /// <inheritdoc />
-        public bool Is(ResourceLocation location) => Key.Location.Equals(location);
+        public bool Is(ResourceName name) => Key.Name.Equals(name);
 
         /// <inheritdoc />
         public bool Is(IResourceKey<THeld> resourceKey) => Key.Equals(resourceKey);
@@ -103,16 +61,10 @@ public interface IHolder
         public bool Is(ITagKey<THeld> tagKey) => _tags.Contains(tagKey);
 
         /// <inheritdoc />
-        public Either<IResourceKey<THeld>, THeld> Unwrap() => Either<IResourceKey<THeld>, THeld>.Left(Key);
+        public Optional<IResourceKey<THeld>> Unwrap() => Optional.Some(Key);
 
         /// <inheritdoc />
-        public Option<IResourceKey<THeld>> UnwrapKey() => Option<IResourceKey<THeld>>.Some(Key);
-
-        /// <inheritdoc />
-        public Kind Kind => Kind.Reference;
-
-        /// <inheritdoc />
-        public bool CanSerializeIn(IHolderOwner<THeld> owner) => _owner.canSerializeIn(owner);
+        public bool CanSerializeIn(IHolderOwner<THeld> owner) => _owner.CanSerializeIn(owner);
     }
 }
 
@@ -133,12 +85,7 @@ public interface IHolder<TValue> : IHolder, IReverseTag<TValue>
     /// <returns><see langword="true"/> if this holder was loaded with a value (even if that value was empty)</returns>
     bool IsBound { get; }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="location"></param>
-    /// <returns></returns>
-    bool Is(ResourceLocation location);
+    bool Is(ResourceName name);
 
     bool Is(IResourceKey<TValue> resourceKey);
 
@@ -146,11 +93,7 @@ public interface IHolder<TValue> : IHolder, IReverseTag<TValue>
 
     bool Is(ITagKey<TValue> tagKey);
 
-    Either<IResourceKey<TValue>, TValue> Unwrap();
-
-    Option<IResourceKey<TValue>> UnwrapKey();
-
-    Kind Kind { get; }
+    Optional<IResourceKey<TValue>> Unwrap();
 
     bool CanSerializeIn(IHolderOwner<TValue> owner);
 }

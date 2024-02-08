@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LanguageExt;
+using Sigurd.Common.Registries;
 using Sigurd.Common.Resources;
 using Sigurd.Common.Tags;
+using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core;
 
@@ -12,13 +13,13 @@ public interface IHolderLookup
     public interface IHolderDelegate<THeld>
         where THeld : class
     {
-        delegate Option<IHolder.Reference<THeld>> ResourceKeyGetter(IResourceKey<THeld> resourceKey);
+        delegate Optional<IHolder.Reference<THeld>> ResourceKeyGetter(IResourceKey<THeld> resourceKey);
         ResourceKeyGetter ResourceKeyGet { init; }
 
         delegate IEnumerable<IHolder.Reference<THeld>> ElementsGetter();
         ElementsGetter ElementsGet { init; }
 
-        delegate Option<IHolderSet.Named<THeld>> TagKeyGetter(ITagKey<THeld> tagKey);
+        delegate Optional<IHolderSet.Named<THeld>> TagKeyGetter(ITagKey<THeld> tagKey);
         TagKeyGetter TagKeyGet { init; }
 
         delegate IEnumerable<IHolderSet.Named<THeld>> TagsGetter();
@@ -43,7 +44,7 @@ public interface IHolderLookup
         public IHolderDelegate<THeld>.ResourceKeyGetter ResourceKeyGet { protected get; init; }
 
         /// <inheritdoc />
-        public Option<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey) => ResourceKeyGet(resourceKey);
+        public Optional<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey) => ResourceKeyGet(resourceKey);
 
         /// <inheritdoc />
         public IHolderDelegate<THeld>.ElementsGetter ElementsGet { protected get; init; }
@@ -55,7 +56,7 @@ public interface IHolderLookup
         public IHolderDelegate<THeld>.TagKeyGetter TagKeyGet { protected get; init; }
 
         /// <inheritdoc />
-        public Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey) => TagKeyGet(tagKey);
+        public Optional<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey) => TagKeyGet(tagKey);
 
         /// <inheritdoc />
         public IHolderDelegate<THeld>.TagsGetter TagsGet { protected get; init; }
@@ -66,27 +67,27 @@ public interface IHolderLookup
 
     public interface Provider
     {
-        Option<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<IRegistrar<THeld>> registryKey) where THeld : class;
+        Optional<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<ISigurdRegistrar<THeld>> registryKey) where THeld : class;
 
-        RegistryLookup<THeld> LookupOrThrow<THeld>(IResourceKey<IRegistrar<THeld>> registryKey) where THeld : class
-            => Lookup(registryKey).IfNone(() => throw new InvalidOperationException($"Registry {registryKey.Location} not found"));
+        RegistryLookup<THeld> LookupOrThrow<THeld>(IResourceKey<ISigurdRegistrar<THeld>> registryKey) where THeld : class
+            => Lookup(registryKey).IfNone(() => throw new InvalidOperationException($"Registry {registryKey.Name} not found"));
 
         private class ProviderImpl : Provider
         {
-            private readonly IReadOnlyDictionary<IResourceKey<IRegistrar<object>>, RegistryLookup<object>> _map;
+            private readonly IReadOnlyDictionary<IResourceKey<ISigurdRegistrar<object>>, RegistryLookup<object>> _map;
 
             public ProviderImpl(IEnumerable<RegistryLookup<object>> lookupEnumerable)
             {
                 _map = lookupEnumerable.ToDictionary(lookup => lookup.Key);
             }
 
-            public Option<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<IRegistrar<THeld>> registryKey) where THeld : class
+            public Optional<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<ISigurdRegistrar<THeld>> registryKey) where THeld : class
             {
                 var maybeRegistryLookup = _map[registryKey];
                 if (maybeRegistryLookup is not RegistryLookup<THeld> definiteRegistryLookup)
-                    return Option<RegistryLookup<THeld>>.None;
+                    return Optional<RegistryLookup<THeld>>.None;
 
-                return Option<RegistryLookup<THeld>>.Some(definiteRegistryLookup);
+                return Optional<RegistryLookup<THeld>>.Some(definiteRegistryLookup);
             }
         }
 
@@ -99,13 +100,13 @@ public interface IHolderLookup
             where THeld : class
         {
             /// <inheritdoc />
-            public required IResourceKey<IRegistrar<THeld>> Key { get; init; }
+            public required IResourceKey<ISigurdRegistrar<THeld>> Key { get; init; }
 
             /// <inheritdoc />
             public required IHolderDelegate<THeld>.ResourceKeyGetter ResourceKeyGet { protected get; init; }
 
             /// <inheritdoc />
-            public Option<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey) => ResourceKeyGet(resourceKey);
+            public Optional<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey) => ResourceKeyGet(resourceKey);
 
             /// <inheritdoc />
             public required IHolderDelegate<THeld>.ElementsGetter ElementsGet { protected get; init; }
@@ -117,7 +118,7 @@ public interface IHolderLookup
             public required IHolderDelegate<THeld>.TagKeyGetter TagKeyGet { protected get; init; }
 
             /// <inheritdoc />
-            public Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey) => TagKeyGet(tagKey);
+            public Optional<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey) => TagKeyGet(tagKey);
 
             /// <inheritdoc />
             public required IHolderDelegate<THeld>.TagsGetter TagsGet { protected get; init; }
@@ -130,7 +131,7 @@ public interface IHolderLookup
     public interface RegistryLookup<THeld> : IHolderLookup<THeld>, IHolderOwner<THeld>, RegistryLookup
         where THeld : class
     {
-        IResourceKey<IRegistrar<THeld>> Key { get; }
+        IResourceKey<ISigurdRegistrar<THeld>> Key { get; }
     }
 }
 
@@ -148,7 +149,7 @@ public interface IHolderLookup<THeld> : IHolderGetter<THeld>, IHolderLookup
     IHolderLookup<THeld> WithFilteredElements(Predicate<THeld> predicate)
     {
         return new Delegate<THeld>(this) {
-            ResourceKeyGet = key => Get(key).Filter(holderReference => predicate(holderReference.Value)),
+            ResourceKeyGet = key => Get(key).Where(holderReference => predicate(holderReference.Value)),
             ElementsGet = () => Elements.Where(holderReference => predicate(holderReference.Value)),
         };
     }

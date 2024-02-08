@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using JetBrains.Annotations;
-using Sigurd.Common.Core;
 using Sigurd.Common.Extensions;
+using Sigurd.Common.Registries;
 
 namespace Sigurd.Common.Resources;
 
@@ -10,59 +10,59 @@ public interface IResourceKey
 {
     private static readonly ConcurrentDictionary<InternKey, WeakReference> Values = new();
 
-    public static ResourceKey<TValue> Create<TValue>(IResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
+    public static IResourceKey<TValue> Create<TValue>(IResourceKey<ISigurdRegistrar<TValue>> registryKey, ResourceName name)
         where TValue : class
     {
-        return Create<TValue>(registryKey.Location, location);
+        return Create<TValue>(registryKey.Name, name);
     }
 
-    public static ResourceKey<IRegistry<TValue>> CreateRegistryKey<TValue>(ResourceLocation registryName)
+    public static IResourceKey<ISigurdRegistrar<TValue>> CreateRegistryKey<TValue>(ResourceName registryName)
          where TValue : class
     {
-        return Create<IRegistry<TValue>>(SigurdRegistries.RootRegistryName, registryName);
+        return Create<ISigurdRegistrar<TValue>>(SigurdRegistries.RootRegistryName, registryName);
     }
 
-    private static ResourceKey<TValue> Create<TValue>(ResourceLocation registryName, ResourceLocation location)
+    private static IResourceKey<TValue> Create<TValue>(ResourceName registryName, ResourceName name)
     {
-        var internKey = new InternKey(registryName, location);
+        var internKey = new InternKey(registryName, name);
         var possibleResourceKey = Values.ComputeIfAbsent(
             internKey,
             _ => new WeakReference(KeyFactory())
         ).Target;
 
-        if (possibleResourceKey is ResourceKey<TValue> definiteResourceKey) return definiteResourceKey;
+        if (possibleResourceKey is IResourceKey<TValue> definiteResourceKey) return definiteResourceKey;
 
         definiteResourceKey = KeyFactory();
         Values[internKey] = new WeakReference(definiteResourceKey);
         return definiteResourceKey;
 
-        ResourceKey<TValue> KeyFactory() => new ResourceKey<TValue>(registryName, location);
+        IResourceKey<TValue> KeyFactory() => new ResourceKey<TValue>(registryName, name);
     }
 
     /// <summary>
-    /// The <see cref="ResourceLocation"/> name of the <see cref="IRegistrar{TValue}"/> the
+    /// The <see cref="ResourceName"/> name of the <see cref="ISigurdRegistrar{TValue}"/> the
     /// <see cref="IResourceKey"/> belongs to.
     /// </summary>
-    public ResourceLocation RegistryName { get; }
+    public ResourceName RegistryName { get; }
 
     /// <summary>
-    /// The <see cref="ResourceLocation"/> that uniquely identifies the object within its registry.
+    /// The <see cref="ResourceName"/> that uniquely identifies the object within its registry.
     /// </summary>
-    public ResourceLocation Location { get; }
+    public ResourceName Name { get; }
 
     [UsedImplicitly]
-    private readonly record struct InternKey(ResourceLocation RegistryName, ResourceLocation Location);
+    private readonly record struct InternKey(ResourceName RegistryName, ResourceName Name);
 }
 
 /// <summary>
-/// Used to uniquely identify objects of a particular type, for example in an <see cref="IRegistry{TValue}"/>.
+/// Used to uniquely identify objects of a particular type, for example in an <see cref="ISigurdRegistry{TValue}"/>.
 /// </summary>
 /// <typeparam name="TValue">The type of object to be identified</typeparam>
 public interface IResourceKey<out TValue> : IResourceKey, IComparable<IResourceKey<object>>
 {
     public bool IsFor<TRegistry>(IResourceKey<TRegistry> registryKey)
-        where TRegistry : IRegistrar;
+        where TRegistry : ISigurdRegistrar<object>;
 
-    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<IRegistrar<TCasted>> registryKey)
+    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<ISigurdRegistrar<TCasted>> registryKey)
         where TCasted : class;
 }

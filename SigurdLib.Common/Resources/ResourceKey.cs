@@ -1,4 +1,5 @@
 using Sigurd.Common.Core;
+using Sigurd.Common.Registries;
 
 namespace Sigurd.Common.Resources;
 
@@ -6,15 +7,15 @@ namespace Sigurd.Common.Resources;
 public class ResourceKey<TValue> : IResourceKey<TValue>
 {
     /// <inheritdoc />
-    public ResourceLocation RegistryName { get; }
+    public ResourceName RegistryName { get; }
 
     /// <inheritdoc />
-    public ResourceLocation Location { get; }
+    public ResourceName Name { get; }
 
-    internal ResourceKey(ResourceLocation registryName, ResourceLocation location)
+    internal ResourceKey(ResourceName registryName, ResourceName name)
     {
         RegistryName = registryName;
-        Location = location;
+        Name = name;
     }
 
     /// <inheritdoc />
@@ -24,21 +25,21 @@ public class ResourceKey<TValue> : IResourceKey<TValue>
         if (ReferenceEquals(null, other)) return 1;
         var registryComparison = RegistryName.CompareTo(other.RegistryName);
         if (registryComparison != 0) return registryComparison;
-        return Location.CompareTo(other.Location);
+        return Name.CompareTo(other.Name);
     }
 
     /// <inheritdoc />
-    public override string ToString() => "ResourceKey[" + RegistryName + " / " + Location + "]";
+    public override string ToString() => "ResourceKey[" + RegistryName + " / " + Name + "]";
 
     /// <inheritdoc />
     public bool IsFor<TRegistry>(IResourceKey<TRegistry> registryKey)
-        where TRegistry : IRegistrar
+        where TRegistry : ISigurdRegistrar<object>
     {
-        return RegistryName.Equals(registryKey.Location);
+        return RegistryName.Equals(registryKey.Name);
     }
 
     /// <inheritdoc />
-    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<IRegistrar<TCasted>> registryKey)
+    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<ISigurdRegistrar<TCasted>> registryKey)
         where TCasted : class
     {
         return IsFor(registryKey) ? this as ResourceKey<TCasted> : null;

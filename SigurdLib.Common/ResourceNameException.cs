@@ -4,24 +4,24 @@ using Sigurd.Common.Resources;
 namespace Sigurd.Common;
 
 /// <summary>
-/// Represents <see cref="ResourceLocation"/> errors that occur during application execution.
+/// Represents <see cref="ResourceName"/> errors that occur during application execution.
 /// </summary>
-public class ResourceLocationException : Exception
+public class ResourceNameException : Exception
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ResourceLocationException"/> class.
+    /// Initializes a new instance of the <see cref="ResourceNameException"/> class.
     /// </summary>
-    public ResourceLocationException() { }
+    public ResourceNameException() { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ResourceLocationException"/> class with a
+    /// Initializes a new instance of the <see cref="ResourceNameException"/> class with a
     /// specified error message.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    public ResourceLocationException(string message) : base(message) { }
+    public ResourceNameException(string message) : base(message) { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ResourceLocationException"/> class with a
+    /// Initializes a new instance of the <see cref="ResourceNameException"/> class with a
     /// specified error message and a reference to the inner exception that is the cause of
     /// this exception.
     /// </summary>
@@ -30,5 +30,5 @@ public class ResourceLocationException : Exception
     /// The exception that is the cause of the current exception, or a null reference
     /// (Nothing in Visual Basic) if no inner exception is specified.
     /// </param>
-    public ResourceLocationException(string message, Exception inner) : base(message, inner) { }
+    public ResourceNameException(string message, Exception inner) : base(message, inner) { }
 }

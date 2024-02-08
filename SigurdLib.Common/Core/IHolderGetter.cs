@@ -1,7 +1,8 @@
 using System;
-using LanguageExt;
+using Sigurd.Common.Registries;
 using Sigurd.Common.Resources;
 using Sigurd.Common.Tags;
+using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core;
 
@@ -9,25 +10,25 @@ public interface IHolderGetter
 {
     public interface Provider
     {
-        Option<IHolderGetter<THeld>> Lookup<THeld>(IResourceKey<IRegistrar<THeld>> resourceKey)
+        Optional<IHolderGetter<THeld>> Lookup<THeld>(IResourceKey<ISigurdRegistrar<THeld>> resourceKey)
             where THeld : class;
 
-        IHolderGetter<THeld> LookupOrThrow<THeld>(IResourceKey<IRegistrar<THeld>> resourceKey)
+        IHolderGetter<THeld> LookupOrThrow<THeld>(IResourceKey<ISigurdRegistrar<THeld>> resourceKey)
             where THeld : class
             => Lookup(resourceKey)
-                .IfNone(() => throw new InvalidOperationException($"Registry {resourceKey.Location} not found"));
+                .IfNone(() => throw new InvalidOperationException($"Registry {resourceKey.Name} not found"));
     }
 }
 
 public interface IHolderGetter<THeld> : IHolderGetter
     where THeld : class
 {
-    Option<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey);
+    Optional<IHolder.Reference<THeld>> Get(IResourceKey<THeld> resourceKey);
 
     IHolder.Reference<THeld> GetOrThrow(IResourceKey<THeld> resourceKey) => Get(resourceKey)
         .IfNone(() => throw new InvalidOperationException($"Missing element {resourceKey}"));
 
-    Option<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey);
+    Optional<IHolderSet.Named<THeld>> Get(ITagKey<THeld> tagKey);
 
     IHolderSet.Named<THeld> GetOrThrow(ITagKey<THeld> tagKey) => Get(tagKey)
         .IfNone(() => throw new InvalidOperationException($"Missing tag {tagKey}"));

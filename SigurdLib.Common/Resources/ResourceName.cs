@@ -6,10 +6,10 @@ namespace Sigurd.Common.Resources;
 /// <summary>
 /// Used to uniquely identify objects, for example in an <see cref="IRegistry{TValue}"/>.
 /// </summary>
-public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<ResourceLocation>
+public class ResourceName: IEquatable<ResourceName>, IComparable<ResourceName>
 {
     /// <summary>
-    /// The delimiter used to separate the namespace from the path in <see cref="ResourceLocation"/>
+    /// The delimiter used to separate the namespace from the path in <see cref="ResourceName"/>
     /// string representations.
     /// </summary>
     public const string NamespaceSeparator = ":";
@@ -24,11 +24,11 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
     private static void AssertValidNamespace(string @namespace, string path)
     {
         if (IsValidNamespace(@namespace)) return;
-        throw new ResourceLocationException($"Non [a-z0-9_.-] character in namespace of location: {Render(@namespace, path)}");
+        throw new ResourceNameException($"Non [a-z0-9_.-] character in namespace of name: {Render(@namespace, path)}");
     }
 
     /// <summary>
-    /// Determines whether or not a resource location namespace <see langword="string"/> is valid.
+    /// Determines whether or not a resource name namespace <see langword="string"/> is valid.
     /// </summary>
     /// <param name="namespace">The namespace <see langword="string"/> to validate.</param>
     /// <returns><see langword="true"/> if the namespace is valid.</returns>
@@ -40,11 +40,11 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
     private static void AssertValidPath(string @namespace, string path)
     {
         if (IsValidPath(path)) return;
-        throw new ResourceLocationException($"Non [a-z0-9/._-] character in path of location: {Render(@namespace, path)}");
+        throw new ResourceNameException($"Non [a-z0-9/._-] character in path of name: {Render(@namespace, path)}");
     }
 
     /// <summary>
-    /// Determines whether or not a resource location path <see langword="string"/> is valid.
+    /// Determines whether or not a resource name path <see langword="string"/> is valid.
     /// </summary>
     /// <param name="path">The path <see langword="string"/> to validate.</param>
     /// <returns><see langword="true"/> if the path is valid.</returns>
@@ -54,39 +54,57 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
     }
 
     /// <summary>
-    /// Decompose a resource location string into its namespace and path.
-    /// <see cref="ResourceLocation.DefaultNamespace"/> will be used
-    /// if the location does not contain a namespace.
+    /// Decompose a resource name string into its namespace and path.
+    /// <see cref="ResourceName.DefaultNamespace"/> will be used
+    /// if the name does not contain a namespace.
     /// </summary>
-    /// <param name="location">The resource location <see langword="string"/> to decompose.</param>
+    /// <param name="name">The resource name <see langword="string"/> to decompose.</param>
     /// <returns><see cref="ValueTuple"/> of namespace, path</returns>
-    protected static ValueTuple<string, string> Decompose(string location)
+    /// <exception cref="NullReferenceException"><paramref name="name"/> is null.</exception>
+    protected static ValueTuple<string, string> Decompose(string? name)
     {
-        ValueTuple<string, string> parts = ValueTuple.Create(DefaultNamespace, location);
-        int separatorIndex = location.IndexOf(NamespaceSeparator, StringComparison.InvariantCultureIgnoreCase);
+        return Decompose(name, DefaultNamespace);
+    }
+
+    /// <summary>
+    /// Decompose a resource name string into its namespace and path.
+    /// <paramref name="defaultNamespace"/> will be used
+    /// if the name does not contain a namespace.
+    /// </summary>
+    /// <param name="name">The resource name <see langword="string"/> to decompose.</param>
+    /// <param name="defaultNamespace">The namespace to default to if <paramref name="name"/> is missing one.</param>
+    /// <returns><see cref="ValueTuple"/> of namespace, path</returns>
+    /// <exception cref="NullReferenceException"><paramref name="name"/> is null.</exception>
+    public static ValueTuple<string, string> Decompose(string? name, string defaultNamespace)
+    {
+        if (name is null)
+            throw new ArgumentException("Can't decompose a `null` resource name.");
+
+        ValueTuple<string, string> parts = ValueTuple.Create(defaultNamespace, name);
+        int separatorIndex = name.IndexOf(NamespaceSeparator, StringComparison.InvariantCultureIgnoreCase);
         if (separatorIndex < 0) return parts;
-        parts.Item2 = location.Substring(separatorIndex + 1);
+        parts.Item2 = name.Substring(separatorIndex + 1);
         if (separatorIndex == 0) return parts;
-        parts.Item1 = location.Substring(0, separatorIndex);
+        parts.Item1 = name.Substring(0, separatorIndex);
         return parts;
     }
 
     /// <summary>
-    /// The domain (Mod GUID) of this resource location.
+    /// The domain (Mod GUID) of this resource name.
     /// </summary>
     public string Namespace { get; }
 
     /// <summary>
-    /// The path of this resource location.
+    /// The path of this resource name.
     /// </summary>
     public string Path { get; }
 
     /// <summary>
-    /// Create a new ResourceLocation.
+    /// Create a new ResourceName.
     /// </summary>
     /// <param name="namespace">The resource domain identifier to use, usually a mod GUID.</param>
     /// <param name="path">The resource path to use, this should be unique amongst content of a particular type.</param>
-    public ResourceLocation(string @namespace, string path)
+    public ResourceName(string @namespace, string path)
     {
         AssertValidNamespace(@namespace, path);
         AssertValidPath(@namespace, path);
@@ -95,21 +113,22 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
     }
 
     /// <summary>
-    ///
+    /// Create a new ResourceName.
+    /// Will use the <see cref="DefaultNamespace"/> if one is not provided.
     /// </summary>
-    /// <param name="path"></param>
-    public ResourceLocation(string path)
+    /// <param name="name">The full string representation of the resource name, including namespace, separator, and path.</param>
+    public ResourceName(string name)
     {
-        var parts = Decompose(path);
+        var parts = Decompose(name);
         (Namespace, Path) = parts;
     }
 
     /// <summary>
-    /// Determines whether the resource location is equal to another resource location.
+    /// Determines whether the resource name is equal to another resource name.
     /// </summary>
-    /// <param name="other">the <see cref="ResourceLocation"/> to compare against</param>
+    /// <param name="other">the <see cref="ResourceName"/> to compare against</param>
     /// <returns><see langword="true"/> when equal to <c>other</c>.</returns>
-    public bool Equals(ResourceLocation? other)
+    public bool Equals(ResourceName? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -117,7 +136,7 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
     }
 
     /// <summary>
-    /// Determines whether the resource location is equal to an object.
+    /// Determines whether the resource name is equal to an object.
     /// </summary>
     /// <param name="obj">the <see cref="object"/> to compare against</param>
     /// <returns><see langword="true"/> when equal to <c>obj</c>.</returns>
@@ -126,10 +145,10 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((ResourceLocation)obj);
+        return Equals((ResourceName)obj);
     }
 
-    public int CompareTo(ResourceLocation? other)
+    public int CompareTo(ResourceName? other)
     {
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
@@ -139,9 +158,9 @@ public class ResourceLocation: IEquatable<ResourceLocation>, IComparable<Resourc
     }
 
     /// <summary>
-    /// Gets a hash code for this <see cref="ResourceLocation"/>.
+    /// Gets a hash code for this <see cref="ResourceName"/>.
     /// </summary>
-    /// <returns>An <see cref="int"/> that contains the hash code for the <see cref="ResourceLocation"/>.</returns>
+    /// <returns>An <see cref="int"/> that contains the hash code for the <see cref="ResourceName"/>.</returns>
     public override int GetHashCode()
     {
 #if NETSTANDARD

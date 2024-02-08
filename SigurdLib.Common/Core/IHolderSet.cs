@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using LanguageExt;
 using Sigurd.Common.Tags;
-using Generic = System.Collections.Generic;
+using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core;
 
@@ -24,10 +23,10 @@ public interface IHolderSet
         public int Count => _contents.Count;
 
         /// <inheritdoc />
-        public Option<IHolder<THeld>> GetRandomElement(Random randomSource)
+        public Optional<IHolder<THeld>> GetRandomElement(Random randomSource)
         {
-            if (_contents.Count == 0) return Option<IHolder<THeld>>.None;
-            return Option<IHolder<THeld>>.Some(_contents[randomSource.Next(Count)]);
+            if (_contents.Count == 0) return Optional<IHolder<THeld>>.None;
+            return Optional<IHolder<THeld>>.Some(_contents[randomSource.Next(Count)]);
         }
 
         /// <inheritdoc />
@@ -42,49 +41,7 @@ public interface IHolderSet
         public abstract bool Contains(IHolder<THeld> holder);
 
         /// <inheritdoc />
-        public abstract Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap();
-
-        /// <inheritdoc />
-        public abstract Option<ITagKey<THeld>> UnwrapKey();
-    }
-
-    public sealed class Direct<THeld> : ListBacked<THeld>
-        where THeld : class
-    {
-        private readonly List<IHolder<THeld>> _contents;
-        private Generic.HashSet<IHolder<THeld>>? _contentsSet;
-
-        public Direct(IEnumerable<IHolder<THeld>> contents)
-        {
-            _contents = contents.ToList();
-        }
-
-        /// <inheritdoc />
-        public override IEnumerable<IHolder<THeld>> Contents {
-            protected get => _contents;
-            set { }
-        }
-
-        /// <inheritdoc />
-        public override Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap()
-            => Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>>.Right(_contents);
-
-        /// <inheritdoc />
-        public override Option<ITagKey<THeld>> UnwrapKey()
-            => Option<ITagKey<THeld>>.None;
-
-        /// <inheritdoc />
-        public override bool Contains(IHolder<THeld> holder)
-        {
-            if (_contentsSet is null) {
-                _contentsSet = _contents.ToHashSet();
-            }
-
-            return _contentsSet.Contains(holder);
-        }
-
-        /// <inheritdoc />
-        public override string ToString() => $"DirectSet[{String.Join(", ", _contents)}]";
+        public abstract Optional<ITagKey<THeld>> Unwrap();
     }
 
     public sealed class Named<THeld> : ListBacked<THeld>
@@ -94,25 +51,21 @@ public interface IHolderSet
 
         public ITagKey<THeld> Key { get; }
 
-        public Named(IHolderOwner<THeld> owner, TagKey<THeld> key)
+        public Named(IHolderOwner<THeld> owner, ITagKey<THeld> key)
         {
             _owner = owner;
             Key = key;
         }
 
         /// <inheritdoc />
-        public override Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap()
-            => Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>>.Left(Key);
-
-        /// <inheritdoc />
-        public override Option<ITagKey<THeld>> UnwrapKey()
-            => Option<ITagKey<THeld>>.Some(Key);
+        public override Optional<ITagKey<THeld>> Unwrap()
+            => Optional<ITagKey<THeld>>.Some(Key);
 
         /// <inheritdoc />
         public override bool Contains(IHolder<THeld> holder) => holder.Is(Key);
 
         /// <inheritdoc />
-        public override bool CanSerializeIn(IHolderOwner<THeld> owner) => _owner.canSerializeIn(owner);
+        public override bool CanSerializeIn(IHolderOwner<THeld> owner) => _owner.CanSerializeIn(owner);
 
         /// <inheritdoc />
         public override string ToString() => $"NamedSet({Key})[{String.Join(", ", Contents)}]";
@@ -126,9 +79,7 @@ public interface IHolderSet<THeld> : IHolderSet, IReadOnlyCollection<IHolder<THe
 
     bool CanSerializeIn(IHolderOwner<THeld> owner);
 
-    Option<IHolder<THeld>> GetRandomElement(Random randomSource);
+    Optional<IHolder<THeld>> GetRandomElement(Random randomSource);
 
-    Either<ITagKey<THeld>, IEnumerable<IHolder<THeld>>> Unwrap();
-
-    Option<ITagKey<THeld>> UnwrapKey();
+    Optional<ITagKey<THeld>> Unwrap();
 }
