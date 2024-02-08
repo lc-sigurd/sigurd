@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using LanguageExt;
 using Sigurd.Common.Resources;
 using Sigurd.Common.Tags;
 
@@ -8,7 +7,7 @@ namespace Sigurd.Common.Core;
 
 public interface IRegistrar
 {
-    public static TValue Register<TValue>(IRegistrar<TValue> registry, ResourceLocation name, TValue value)
+    public static TValue Register<TValue>(IRegistrar<TValue> registry, ResourceName name, TValue value)
         where TValue : class
         => Register(registry, IResourceKey.Create(registry.Key, name), value);
 
@@ -19,7 +18,7 @@ public interface IRegistrar
         throw new NotImplementedException();
     }
 
-    public static IHolder.Reference<THeld> RegisterForHolder<THeld>(IRegistrar<THeld> registry, ResourceLocation name, THeld value)
+    public static IHolder.Reference<THeld> RegisterForHolder<THeld>(IRegistrar<THeld> registry, ResourceName name, THeld value)
         where THeld : class
         => RegisterForHolder(registry, IResourceKey.Create(registry.Key, name), value);
 
@@ -29,9 +28,9 @@ public interface IRegistrar
         throw new NotImplementedException();
     }
 
-    ISet<ResourceLocation> NameSet { get; }
+    ISet<ResourceName> NameSet { get; }
 
-    bool ContainsName(ResourceLocation name);
+    bool ContainsName(ResourceName name);
 }
 
 public interface IKeyed<out T>
@@ -41,18 +40,18 @@ public interface IKeyed<out T>
 
 public interface IRegistrar<out TValue> : IRegistrar, IKeyed<IRegistrar<TValue>> where TValue : class
 {
-    TValue? Get(ResourceLocation? name);
+    TValue? Get(ResourceName? name);
 }
 
 public interface IRegistry<TValue> : IRegistrar<TValue> where TValue : class
 {
-    ResourceLocation? GetName(TValue? value);
+    ResourceName? GetName(TValue? value);
 
-    Option<IResourceKey<TValue>> GetKey(TValue? value);
+    Optional<IResourceKey<TValue>> GetKey(TValue? value);
 
     TValue? Get(IResourceKey<TValue>? key);
 
-    Option<IHolder.Reference<TValue>> GetHolder(IResourceKey<TValue> key);
+    Optional<IHolder.Reference<TValue>> GetHolder(IResourceKey<TValue> key);
 
     IHolder.Reference<TValue> GetHolderOrThrow(IResourceKey<TValue> key) => GetHolder(key)
         .IfNone(() => throw new InvalidOperationException($"Missing key in {Key}: {key}"));
@@ -71,7 +70,7 @@ public interface IRegistry<TValue> : IRegistrar<TValue> where TValue : class
 
     IEnumerable<ITagKey<TValue>> TagKeys { get; }
 
-    Option<IHolderSet.Named<TValue>> GetTag(ITagKey<TValue> tagKey);
+    Optional<IHolderSet.Named<TValue>> GetTag(ITagKey<TValue> tagKey);
 
     void ResetTags();
 

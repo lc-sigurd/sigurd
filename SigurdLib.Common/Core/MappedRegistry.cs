@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using BepInEx.Logging;
-using LanguageExt;
 using Sigurd.Common.Extensions;
 using Sigurd.Common.Resources;
 using Sigurd.Common.Tags;
@@ -19,19 +18,19 @@ public interface IWithPluginLogger
 
 public interface MappedRegistry
 {
-    protected static readonly Generic.HashSet<ResourceLocation> KnownRegistriesBacker = new();
+    protected static readonly Generic.HashSet<ResourceName> KnownRegistriesBacker = new();
 
-    public static IImmutableSet<ResourceLocation> KnownRegistries => KnownRegistriesBacker.ToImmutableHashSet();
+    public static IImmutableSet<ResourceName> KnownRegistries => KnownRegistriesBacker.ToImmutableHashSet();
 }
 
-public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogger, MappedRegistry, IReadOnlyCollection<TValue>
+public class MappedRegistry<TValue>
     where TValue : class
 {
     private readonly List<IHolder.Reference<TValue>> _byId = new(256);
 
     private readonly Dictionary<TValue, int> _toId = new(new IdentityEqualityComparer<TValue>());
 
-    private readonly Dictionary<ResourceLocation, IHolder.Reference<TValue>> _byLocation = new();
+    private readonly Dictionary<ResourceName, IHolder.Reference<TValue>> _byLocation = new();
 
     private readonly Dictionary<IResourceKey<TValue>, IHolder.Reference<TValue>> _byKey = new();
 
@@ -77,7 +76,7 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
 
     protected virtual void ValidateWrite(ResourceKey<TValue> key) { }
 
-    protected void MarkKnown() => MappedRegistry.KnownRegistriesBacker.Add(Key.Location);
+    protected void MarkKnown() => MappedRegistry.KnownRegistriesBacker.Add(Key.Name);
 
     /// <inheritdoc />
     public IHolder.Reference<TValue> Register(ResourceKey<TValue>? key, TValue? value)
@@ -86,11 +85,11 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
         ValidateWrite();
 
         if (key is null)
-            throw new NullReferenceException("Tried to register a mapping with 'null' key");
+            throw new ArgumentException("Tried to register a mapping with 'null' key");
         if (value is null)
-            throw new NullReferenceException("Tried to register a mapping with 'null' value");
+            throw new ArgumentException("Tried to register a mapping with 'null' value");
 
-        if (_byLocation.ContainsKey(key.Location))
+        if (_byLocation.ContainsKey(key.Name))
             throw new InvalidOperationException($"Cannot add duplicate key '{key}' to registry");
         if (_byValue.ContainsKey(value))
             throw new InvalidOperationException($"Cannot add duplicate value '{value}' to registry");
@@ -99,7 +98,7 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
         reference.Value = value;
 
         _byKey[key] = reference;
-        _byLocation[key.Location] = reference;
+        _byLocation[key.Name] = reference;
         _byValue[value] = reference;
         _toId[value] = _byId.Count;
         _byId.Add(reference);
@@ -109,19 +108,19 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
     }
 
     /// <inheritdoc />
-    public ResourceLocation? GetName(TValue? value)
+    public ResourceName? GetName(TValue? value)
     {
         if (value is null) return null;
-        return _byValue[value]?.Key.Location;
+        return _byValue[value]?.Key.Name;
     }
 
     /// <inheritdoc />
-    public Option<IResourceKey<TValue>> GetKey(TValue? value)
+    public Optional<IResourceKey<TValue>> GetKey(TValue? value)
     {
-        if (value is null) return Option<IResourceKey<TValue>>.None;
+        if (value is null) return Optional<IResourceKey<TValue>>.None;
         var maybeKey = _byValue[value];
-        if (maybeKey is null) return Option<IResourceKey<TValue>>.None;
-        return Option<IResourceKey<TValue>>.Some(maybeKey.Key);
+        if (maybeKey is null) return Optional<IResourceKey<TValue>>.None;
+        return Optional<IResourceKey<TValue>>.Some(maybeKey.Key);
     }
 
     protected int GetId(TValue? value)
@@ -131,7 +130,7 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
     }
 
     /// <inheritdoc />
-    public TValue? Get(ResourceLocation? name)
+    public TValue? Get(ResourceName? name)
     {
         if (name is null) return null;
         return _byLocation[name]?.Value;
@@ -151,26 +150,26 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
     }
 
     /// <inheritdoc />
-    public bool ContainsName(ResourceLocation name) => _byLocation.ContainsKey(name);
+    public bool ContainsName(ResourceName name) => _byLocation.ContainsKey(name);
 
     /// <inheritdoc />
     public bool ContainsKey(IResourceKey<TValue> key) => _byKey.ContainsKey(key);
 
-    protected Option<IHolder.Reference<TValue>> GetHolder(int id)
+    protected Optional<IHolder.Reference<TValue>> GetHolder(int id)
     {
-        if (id < 0 || id >= _byId.Count) return Option<IHolder.Reference<TValue>>.None;
+        if (id < 0 || id >= _byId.Count) return Optional<IHolder.Reference<TValue>>.None;
         var maybeHolder = _byId[id];
-        if (maybeHolder is null) return Option<IHolder.Reference<TValue>>.None;
-        return Option<IHolder.Reference<TValue>>.Some(maybeHolder);
+        if (maybeHolder is null) return Optional<IHolder.Reference<TValue>>.None;
+        return Optional<IHolder.Reference<TValue>>.Some(maybeHolder);
     }
 
     /// <inheritdoc />
-    public Option<IHolder.Reference<TValue>> GetHolder(IResourceKey<TValue> key)
+    public Optional<IHolder.Reference<TValue>> GetHolder(IResourceKey<TValue> key)
     {
         if (_byKey.TryGetValue(key, out var holder))
-            return Option<IHolder.Reference<TValue>>.Some(holder);
+            return Optional<IHolder.Reference<TValue>>.Some(holder);
 
-        return Option<IHolder.Reference<TValue>>.None;
+        return Optional<IHolder.Reference<TValue>>.None;
     }
 
     /// <inheritdoc />
@@ -191,7 +190,7 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
     IEnumerator IEnumerable.GetEnumerator() => (this as IEnumerable<TValue>).GetEnumerator();
 
     /// <inheritdoc />
-    public ISet<ResourceLocation> NameSet => _byLocation.Keys.ToImmutableHashSet();
+    public ISet<ResourceName> NameSet => _byLocation.Keys.ToImmutableHashSet();
 
     /// <inheritdoc />
     public ISet<IResourceKey<TValue>> KeySet => _byKey.Keys.ToImmutableHashSet();
@@ -210,11 +209,11 @@ public class MappedRegistry<TValue> : IWritableRegistry<TValue>, IWithPluginLogg
     public IEnumerable<ITagKey<TValue>> TagKeys => _tags.Keys;
 
     /// <inheritdoc />
-    public Option<IHolderSet.Named<TValue>> GetTag(ITagKey<TValue> tagKey)
+    public Optional<IHolderSet.Named<TValue>> GetTag(ITagKey<TValue> tagKey)
     {
         var maybeTag = _tags[tagKey];
-        if (maybeTag is null) return Option<IHolderSet.Named<TValue>>.None;
-        return Option<IHolderSet.Named<TValue>>.Some(maybeTag);
+        if (maybeTag is null) return Optional<IHolderSet.Named<TValue>>.None;
+        return Optional<IHolderSet.Named<TValue>>.Some(maybeTag);
     }
 
     /// <inheritdoc />
