@@ -1,6 +1,6 @@
 using Sigurd.Common.Resources;
 
-namespace Sigurd.Common.Core;
+namespace Sigurd.Common.Registries;
 
 /// <summary>
 /// Interface for a modifiable <see cref="ISigurdRegistry{TValue}"/>.
@@ -15,11 +15,11 @@ public interface ISigurdRegistryModifiable<TValue> : ISigurdRegistry<TValue> whe
     void Clear();
 
     /// <summary>
-    /// Remove a specific value from the <see cref="ISigurdRegistryModifiable{TValue}"/>.
+    /// RemoveValue a specific value from the <see cref="ISigurdRegistryModifiable{TValue}"/>.
     /// </summary>
-    /// <param name="key">The <see cref="ResourceLocation"/> key of the value to remove.</param>
+    /// <param name="key">The <see cref="ResourceName"/> key of the value to remove.</param>
     /// <returns></returns>
-    TValue? Remove(ResourceLocation key);
+    TValue? Remove(ResourceName key);
 
     /// <summary>
     /// Determines whether the <see cref="ISigurdRegistryModifiable{TValue}"/> is locked, i.e. whether it is

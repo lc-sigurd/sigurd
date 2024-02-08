@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using LanguageExt;
+using Sigurd.Common.Core;
 using Sigurd.Common.Resources;
+using Sigurd.Common.Tags;
+using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Core;
+namespace Sigurd.Common.Registries;
 
 /// <summary>
 /// Covariant interface for <see cref="ISigurdRegistry{TValue}"/>.
@@ -19,7 +22,7 @@ public interface ISigurdRegistrar<out TValue> : IEnumerable<TValue>
     /// <summary>
     /// The registry's uniquely identifying name.
     /// </summary>
-    ResourceLocation RegistryName { get; }
+    ResourceName RegistryName { get; }
 }
 
 /// <summary>
@@ -30,15 +33,28 @@ public interface ISigurdRegistry
     /// <summary>
     /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnAdd"/>.
     /// </summary>
-    class AddEventArgs<TValue> : EventArgs
+    class AddEventArgs<TValue> : EventArgs where TValue : class
     {
+        /// <summary>
+        /// The <see cref="int"/> ID associated with the new entry.
+        /// </summary>
+        public required int Id { get; init; }
 
+        /// <summary>
+        /// The <see cref="IResourceKey{TValue}"/> associated with the new entry.
+        /// </summary>
+        public required IResourceKey<TValue> Key { get; init; }
+
+        /// <summary>
+        /// The value associated with the new entry.
+        /// </summary>
+        public required TValue Value { get; init; }
     }
 
     /// <summary>
     /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnClear"/>.
     /// </summary>
-    class ClearEventArgs<TValue> : EventArgs
+    class ClearEventArgs<TValue> : EventArgs where TValue : class
     {
 
     }
@@ -46,7 +62,7 @@ public interface ISigurdRegistry
     /// <summary>
     /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnCreate"/>.
     /// </summary>
-    class CreateEventArgs<TValue> : EventArgs
+    class CreateEventArgs<TValue> : EventArgs where TValue : class
     {
 
     }
@@ -54,15 +70,28 @@ public interface ISigurdRegistry
     /// <summary>
     /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnValidate"/>.
     /// </summary>
-    class ValidateEventArgs<TValue> : EventArgs
+    class ValidateEventArgs<TValue> : EventArgs where TValue : class
     {
+        /// <summary>
+        /// The <see cref="int"/> ID associated with the entry being validated.
+        /// </summary>
+        public required int Id { get; init; }
 
+        /// <summary>
+        /// The <see cref="ResourceName"/> associated with the entry being validated.
+        /// </summary>
+        public required ResourceName Name { get; init; }
+
+        /// <summary>
+        /// The value associated with the entry being validated.
+        /// </summary>
+        public required TValue Value { get; init; }
     }
 
     /// <summary>
     /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnBake"/>.
     /// </summary>
-    class BakeEventArgs<TValue> : EventArgs
+    class BakeEventArgs<TValue> : EventArgs where TValue : class
     {
 
     }
@@ -80,27 +109,27 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     /// <summary>
     /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
     /// </summary>
-    /// <param name="key"><see cref="string"/> path used in <see cref="ResourceLocation"/> key for the new entry.</param>
+    /// <param name="key"><see cref="string"/> path used in <see cref="ResourceName"/> key for the new entry.</param>
     /// <param name="value">Value for the new entry.</param>
     void Register(string key, TValue value);
 
     /// <summary>
     /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
     /// </summary>
-    /// <param name="key"><see cref="ResourceLocation"/> key for the new entry.</param>
+    /// <param name="key"><see cref="ResourceName"/> key for the new entry.</param>
     /// <param name="value">Value for the new entry.</param>
-    void Register(ResourceLocation key, TValue value);
+    void Register(ResourceName key, TValue value);
 
     #endregion
 
     #region Content Queries
 
     /// <summary>
-    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific <see cref="ResourceLocation"/> key.
+    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific <see cref="ResourceName"/> key.
     /// </summary>
-    /// <param name="key">The <see cref="ResourceLocation"/> to locate in the <see cref="ISigurdRegistry{TValue}" />.</param>
+    /// <param name="key">The <see cref="ResourceName"/> to locate in the <see cref="ISigurdRegistry{TValue}" />.</param>
     /// <returns><see langword="true"/> if the <paramref name="key"/> is found in the <see cref="ISigurdRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
-    bool ContainsKey(ResourceLocation key);
+    bool ContainsKey(ResourceName key);
 
     /// <summary>
     /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific value.
@@ -120,42 +149,42 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     #region Content Retrieval
 
     /// <summary>
-    /// Retrieve the value associated with a <see cref="ResourceLocation"/>.
+    /// Retrieve the value associated with a <see cref="ResourceName"/>.
     /// </summary>
-    /// <param name="key"><see cref="ResourceLocation"/> to retrieve a value for.</param>
+    /// <param name="key"><see cref="ResourceName"/> to retrieve a value for.</param>
     /// <returns>
     /// The value associated with the provided <paramref name="key"/>,
     /// or <see langword="null"/> if the key is not recognised.
     /// </returns>
-    TValue? GetValue(ResourceLocation key);
+    TValue? GetValue(ResourceName key);
 
     /// <summary>
-    /// Retrieve the <see cref="ResourceLocation"/> key associated with a value.
+    /// Retrieve the <see cref="ResourceName"/> key associated with a value.
     /// </summary>
-    /// <param name="value">Value to retrieve a <see cref="ResourceLocation"/> key for.</param>
+    /// <param name="value">Value to retrieve a <see cref="ResourceName"/> key for.</param>
     /// <returns>
-    /// The <see cref="ResourceLocation"/> key associated with the provided value,
+    /// The <see cref="ResourceName"/> key associated with the provided value,
     /// or <see langword="null"/> if the value is not recognised.
     /// </returns>
-    ResourceLocation? GetKey(TValue value);
+    ResourceName? GetKey(TValue value);
 
     /// <summary>
     /// Retrieve the <see cref="IResourceKey{TValue}"/> key associated with a value.
     /// </summary>
     /// <param name="value">Value to retrieve a <see cref="IResourceKey{TValue}"/> key for.</param>
     /// <returns>
-    /// The <see cref="IResourceKey{TValue}"/> key associated with the provided value, wrapped by <see cref="Option{T}"/>.
+    /// The <see cref="IResourceKey{TValue}"/> key associated with the provided value, wrapped by <see cref="Optional{T}"/>.
     /// </returns>
-    Option<IResourceKey<TValue>> GetResourceKey(TValue value);
+    Optional<IResourceKey<TValue>> GetResourceKey(TValue value);
 
     #endregion
 
     #region Enumeration
 
     /// <summary>
-    /// <see cref="ISet{T}"/> of all registered <see cref="ResourceLocation"/> keys.
+    /// <see cref="ICollection{T}"/> of all registered <see cref="ResourceName"/> keys.
     /// </summary>
-    ISet<ResourceLocation> Keys { get; }
+    ICollection<ResourceName> Keys { get; }
 
     /// <summary>
     /// <see cref="ICollection{T}"/> of all registered values.
@@ -163,16 +192,17 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     ICollection<TValue> Values { get; }
 
     /// <summary>
-    /// <see cref="ISet{T}"/> of all registered entries.
+    /// <see cref="ICollection{T}"/> of all registered entries.
     /// </summary>
-    ISet<KeyValuePair<IResourceKey<TValue>, TValue>> Entries { get; }
+    ICollection<KeyValuePair<IResourceKey<TValue>, TValue>> Entries { get; }
+
+    IEnumerator IEnumerable.GetEnumerator() => (this as IEnumerable<TValue>).GetEnumerator();
 
     #endregion
 
     #region Tags
 
-    // TODO
-    // ITagManager<TValue>? Tags { get; }
+    ITagManager<TValue>? Tags { get; }
 
     #endregion
 
@@ -183,8 +213,8 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     /// if it exists.
     /// </summary>
     /// <param name="key"><see cref="IResourceKey{TValue}"/> to retrieve a delegate for.</param>
-    /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided key, wrapped by <see cref="Option{T}"/>.</returns>
-    Option<IHolder.Reference<TValue>> GetDelegate(ResourceKey<TValue> key);
+    /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided key, wrapped by <see cref="Optional{T}"/>.</returns>
+    Optional<IHolder.Reference<TValue>> GetDelegate(IResourceKey<TValue> key);
 
     /// <summary>
     /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <see cref="IResourceKey{TValue}"/>,
@@ -193,32 +223,32 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     /// <param name="key"><see cref="IResourceKey{TValue}"/> to retrieve a delegate for.</param>
     /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided key.</returns>
     /// <exception cref="ArgumentException">No delegate exists for <paramref name="key"/>.</exception>
-    IHolder.Reference<TValue> GetDelegateOrThrow(ResourceKey<TValue> key)
+    IHolder.Reference<TValue> GetDelegateOrThrow(IResourceKey<TValue> key)
         => GetDelegate(key).IfNone(() => throw new ArgumentException($"No delegate exists for key {key}"));
 
     /// <summary>
-    /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <see cref="ResourceLocation"/>, if it exists.
+    /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <see cref="ResourceName"/>, if it exists.
     /// </summary>
-    /// <param name="key"><see cref="ResourceLocation"/> to retrieve a delegate for.</param>
-    /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided key, wrapped by <see cref="Option{T}"/>.</returns>
-    Option<IHolder.Reference<TValue>> GetDelegate(ResourceLocation key);
+    /// <param name="key"><see cref="ResourceName"/> to retrieve a delegate for.</param>
+    /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided key, wrapped by <see cref="Optional{T}"/>.</returns>
+    Optional<IHolder.Reference<TValue>> GetDelegate(ResourceName key);
 
     /// <summary>
-    /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <see cref="ResourceLocation"/>,
+    /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <see cref="ResourceName"/>,
     /// throwing an error if the delegate could not be found.
     /// </summary>
-    /// <param name="key"><see cref="ResourceLocation"/> to retrieve a delegate for.</param>
+    /// <param name="key"><see cref="ResourceName"/> to retrieve a delegate for.</param>
     /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided key</returns>
     /// <exception cref="ArgumentException">No delegate exists for <paramref name="key"/>.</exception>
-    IHolder.Reference<TValue> GetDelegateOrThrow(ResourceLocation key)
+    IHolder.Reference<TValue> GetDelegateOrThrow(ResourceName key)
         => GetDelegate(key).IfNone(() => throw new ArgumentException($"No delegate exists for key {key}"));
 
     /// <summary>
     /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <typeparamref name="TValue"/>, if it exists.
     /// </summary>
     /// <param name="value"><typeparamref name="TValue"/> to retrieve a delegate for.</param>
-    /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided value, wrapped by <see cref="Option{T}"/>.</returns>
-    Option<IHolder.Reference<TValue>> GetDelegate(TValue value);
+    /// <returns>The <see cref="IHolder.Reference{THeld}"/> delegate for the provided value, wrapped by <see cref="Optional{T}"/>.</returns>
+    Optional<IHolder.Reference<TValue>> GetDelegate(TValue value);
 
     /// <summary>
     /// Retrieve a delegate <see cref="IHolder.Reference{THeld}"/> for a <typeparamref name="TValue"/>, throwing an error if the
