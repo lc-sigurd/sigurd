@@ -1,37 +1,31 @@
-using Sigurd.Common.Core;
+using Sigurd.Common.Registries;
 using Sigurd.Common.Resources;
 
 namespace Sigurd.Common.Tags;
 
 /// <inheritdoc />
-public class TagKey<TValue> : ITagKey<TValue>
+internal record TagKey<TValue> : ITagKey<TValue>
     where TValue : class
 {
     /// <inheritdoc />
-    public IResourceKey<IRegistrar<TValue>> RegistryKey { get; }
+    public required IResourceKey<ISigurdRegistrar<TValue>> RegistryKey { get; init; }
 
     /// <inheritdoc />
-    public ResourceLocation Location { get; }
-
-    internal TagKey(IResourceKey<IRegistrar<TValue>> registryKey, ResourceLocation location)
-    {
-        RegistryKey = registryKey;
-        Location = location;
-    }
+    public required ResourceName Name { get; init; }
 
     /// <inheritdoc />
-    public override string ToString() => "TagKey[" + RegistryKey.Location + " / " + Location + "]";
-
-    /// <inheritdoc />
-    public bool IsFor<TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey) where TOtherRegistry : IRegistrar
+    public bool IsFor<TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey) where TOtherRegistry : ISigurdRegistrar<object>
     {
         return RegistryKey.Equals(registryKey);
     }
 
     /// <inheritdoc />
-    public ITagKey<TCasted>? Cast<TCasted>(ResourceKey<IRegistrar<TCasted>> registryKey)
+    public ITagKey<TCasted>? Cast<TCasted>(ResourceKey<ISigurdRegistrar<TCasted>> registryKey)
         where TCasted : class
     {
         return IsFor(registryKey) ? this as TagKey<TCasted> : null;
     }
+
+    /// <inheritdoc />
+    public override string ToString() => "TagKey[" + RegistryKey.Name + " / " + Name + "]";
 }
