@@ -34,4 +34,14 @@ public interface ITag<TValue> : IReadOnlyCollection<TValue>
     bool Contains(TValue value);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    /// <summary>
+    /// Get a random element from this <see cref="ITag{TValue}"/>'s members.
+    /// </summary>
+    /// <param name="randomSource"><see cref="Random"/> source</param>
+    /// <returns>
+    /// An <see cref="Optional{TValue}"/> containing the randomly selected value, if
+    /// this tag has members; otherwise, <see cref="Optional{TValue}.None"/>.
+    /// </returns>
+    Optional<TValue> GetRandomElement(Random randomSource);
 }
