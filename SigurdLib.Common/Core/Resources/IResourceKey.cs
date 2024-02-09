@@ -10,16 +10,16 @@ public interface IResourceKey
 {
     private static readonly ConcurrentDictionary<InternKey, WeakReference> Values = new();
 
-    public static IResourceKey<TValue> Create<TValue>(IResourceKey<ISigurdRegistrar<TValue>> registryKey, ResourceName name)
+    public static IResourceKey<TValue> Create<TValue>(IResourceKey<IRegistrar<TValue>> registryKey, ResourceName name)
         where TValue : class
     {
         return Create<TValue>(registryKey.Name, name);
     }
 
-    public static IResourceKey<ISigurdRegistrar<TValue>> CreateRegistryKey<TValue>(ResourceName registryName)
+    public static IResourceKey<IRegistrar<TValue>> CreateRegistryKey<TValue>(ResourceName registryName)
          where TValue : class
     {
-        return Create<ISigurdRegistrar<TValue>>(SigurdRegistries.RootRegistryName, registryName);
+        return Create<IRegistrar<TValue>>(SigurdRegistries.RootRegistryName, registryName);
     }
 
     private static IResourceKey<TValue> Create<TValue>(ResourceName registryName, ResourceName name)
@@ -40,7 +40,7 @@ public interface IResourceKey
     }
 
     /// <summary>
-    /// The <see cref="ResourceName"/> name of the <see cref="ISigurdRegistrar{TValue}"/> the
+    /// The <see cref="ResourceName"/> name of the <see cref="IRegistrar{TValue}"/> the
     /// <see cref="IResourceKey"/> belongs to.
     /// </summary>
     public ResourceName RegistryName { get; }
@@ -61,8 +61,8 @@ public interface IResourceKey
 public interface IResourceKey<out TValue> : IResourceKey, IComparable<IResourceKey<object>>
 {
     public bool IsFor<TRegistry>(IResourceKey<TRegistry> registryKey)
-        where TRegistry : ISigurdRegistrar<object>;
+        where TRegistry : IRegistrar<object>;
 
-    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<ISigurdRegistrar<TCasted>> registryKey)
+    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class;
 }

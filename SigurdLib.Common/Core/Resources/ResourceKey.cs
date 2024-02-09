@@ -32,13 +32,13 @@ public class ResourceKey<TValue> : IResourceKey<TValue>
 
     /// <inheritdoc />
     public bool IsFor<TRegistry>(IResourceKey<TRegistry> registryKey)
-        where TRegistry : ISigurdRegistrar<object>
+        where TRegistry : IRegistrar<object>
     {
         return RegistryName.Equals(registryKey.Name);
     }
 
     /// <inheritdoc />
-    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<ISigurdRegistrar<TCasted>> registryKey)
+    public IResourceKey<TCasted>? Cast<TCasted>(IResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class
     {
         return IsFor(registryKey) ? this as ResourceKey<TCasted> : null;

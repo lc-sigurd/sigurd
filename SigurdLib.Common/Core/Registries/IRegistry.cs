@@ -11,12 +11,12 @@ namespace Sigurd.Common.Core.Registries;
 /// Covariant interface for <see cref="IRegistry{TValue}"/>.
 /// </summary>
 /// <typeparam name="TValue">The registered value type.</typeparam>
-public interface ISigurdRegistrar<out TValue> : IEnumerable<TValue>
+public interface IRegistrar<out TValue> : IEnumerable<TValue>
 {
     /// <summary>
     /// The registry's uniquely identifying key, which wraps <see cref="RegistryName"/>.
     /// </summary>
-    IResourceKey<ISigurdRegistrar<TValue>> RegistryKey { get; }
+    IResourceKey<IRegistrar<TValue>> RegistryKey { get; }
 
     /// <summary>
     /// The registry's uniquely identifying name.
@@ -92,7 +92,7 @@ public interface IRegistry
 /// Main interface for the registry system. Use this to query the registry system.
 /// </summary>
 /// <typeparam name="TValue">The type registered by the <see cref="IRegistry{TValue}"/>.</typeparam>
-public interface IRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCollection<TValue>, IRegistry
+public interface IRegistry<TValue> : IRegistrar<TValue>, IReadOnlyCollection<TValue>, IRegistry
     where TValue : class
 {
     #region Registration

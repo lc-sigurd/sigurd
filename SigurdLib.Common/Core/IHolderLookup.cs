@@ -67,21 +67,21 @@ public interface IHolderLookup
 
     public interface Provider
     {
-        Optional<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<ISigurdRegistrar<THeld>> registryKey) where THeld : class;
+        Optional<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<IRegistrar<THeld>> registryKey) where THeld : class;
 
-        RegistryLookup<THeld> LookupOrThrow<THeld>(IResourceKey<ISigurdRegistrar<THeld>> registryKey) where THeld : class
+        RegistryLookup<THeld> LookupOrThrow<THeld>(IResourceKey<IRegistrar<THeld>> registryKey) where THeld : class
             => Lookup(registryKey).IfNone(() => throw new InvalidOperationException($"Registry {registryKey.Name} not found"));
 
         private class ProviderImpl : Provider
         {
-            private readonly IReadOnlyDictionary<IResourceKey<ISigurdRegistrar<object>>, RegistryLookup<object>> _map;
+            private readonly IReadOnlyDictionary<IResourceKey<IRegistrar<object>>, RegistryLookup<object>> _map;
 
             public ProviderImpl(IEnumerable<RegistryLookup<object>> lookupEnumerable)
             {
                 _map = lookupEnumerable.ToDictionary(lookup => lookup.Key);
             }
 
-            public Optional<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<ISigurdRegistrar<THeld>> registryKey) where THeld : class
+            public Optional<RegistryLookup<THeld>> Lookup<THeld>(IResourceKey<IRegistrar<THeld>> registryKey) where THeld : class
             {
                 var maybeRegistryLookup = _map[registryKey];
                 if (maybeRegistryLookup is not RegistryLookup<THeld> definiteRegistryLookup)
@@ -100,7 +100,7 @@ public interface IHolderLookup
             where THeld : class
         {
             /// <inheritdoc />
-            public required IResourceKey<ISigurdRegistrar<THeld>> Key { get; init; }
+            public required IResourceKey<IRegistrar<THeld>> Key { get; init; }
 
             /// <inheritdoc />
             public required IHolderDelegate<THeld>.ResourceKeyGetter ResourceKeyGet { protected get; init; }
@@ -131,7 +131,7 @@ public interface IHolderLookup
     public interface RegistryLookup<THeld> : IHolderLookup<THeld>, IHolderOwner<THeld>, RegistryLookup
         where THeld : class
     {
-        IResourceKey<ISigurdRegistrar<THeld>> Key { get; }
+        IResourceKey<IRegistrar<THeld>> Key { get; }
     }
 }
 

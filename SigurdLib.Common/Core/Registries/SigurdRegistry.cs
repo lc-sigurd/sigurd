@@ -16,7 +16,7 @@ using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core.Registries;
 
-internal class SigurdRegistry
+internal abstract class SigurdRegistry
 {
     protected static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource($"{Plugin.Guid}/Registries");
 }
@@ -74,7 +74,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
 
     public ResourceName RegistryName { get; }
 
-    public IResourceKey<ISigurdRegistrar<TValue>> RegistryKey { get; }
+    public IResourceKey<IRegistrar<TValue>> RegistryKey { get; }
 
     public SigurdRegistry(ResourceName name, RegistryConfiguration<TValue> configuration)
     {
@@ -483,7 +483,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
 
         public RegistryLookupImpl(SigurdRegistry<TValue> registry) => _registry = registry;
 
-        public IResourceKey<ISigurdRegistrar<TValue>> Key => _registry.RegistryKey;
+        public IResourceKey<IRegistrar<TValue>> Key => _registry.RegistryKey;
 
         public Optional<IHolder.Reference<TValue>> Get(IResourceKey<TValue> resourceKey) => _registry.GetDelegate(resourceKey);
 

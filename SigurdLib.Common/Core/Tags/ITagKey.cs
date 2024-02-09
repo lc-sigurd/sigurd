@@ -21,7 +21,7 @@ public interface ITagKey
     /// <param name="name">The <see cref="ResourceName"/> used to identify the tag.</param>
     /// <typeparam name="TValue">The type of object contained by the target registry.</typeparam>
     /// <returns>The newly created <see cref="TagKey{TValue}"/>.</returns>
-    public static ITagKey<TValue> Create<TValue>(IResourceKey<ISigurdRegistrar<TValue>> registryKey, ResourceName name)
+    public static ITagKey<TValue> Create<TValue>(IResourceKey<IRegistrar<TValue>> registryKey, ResourceName name)
         where TValue : class
     {
         var internKey = new InternKey(registryKey.Name, name);
@@ -57,7 +57,7 @@ public interface ITagKey<out TValue> : ITagKey where TValue : class
     /// <summary>
     /// The <see cref="IResourceKey{TValue}"/> of the registry the <see cref="ITagKey{TValue}"/> targets.
     /// </summary>
-    public IResourceKey<ISigurdRegistrar<TValue>> RegistryKey { get; }
+    public IResourceKey<IRegistrar<TValue>> RegistryKey { get; }
 
     /// <summary>
     /// Check whether this <see cref="ITagKey{TValue}"/> is for a particular registry.
@@ -66,7 +66,7 @@ public interface ITagKey<out TValue> : ITagKey where TValue : class
     /// <typeparam name="TOtherRegistry">Type of the test registry.</typeparam>
     /// <returns><see langword="true"/> when compatible with the provided registry; Otherwise, <see langword="false"/>.</returns>
     public bool IsFor<TOtherRegistry>(ResourceKey<TOtherRegistry> registryKey)
-        where TOtherRegistry : ISigurdRegistrar<object>;
+        where TOtherRegistry : IRegistrar<object>;
 
     /// <summary>
     /// Cast this <see cref="ITagKey{TValue}"/> to be compatible with a particular registry.
@@ -74,6 +74,6 @@ public interface ITagKey<out TValue> : ITagKey where TValue : class
     /// <param name="registryKey">Registry to cast for.</param>
     /// <typeparam name="TCasted">Value contained by the target registry.</typeparam>
     /// <returns>The casted <see cref="ITagKey{TValue}"/>, or <see langword="null"/> if the cast was invalid.</returns>
-    public ITagKey<TCasted>? Cast<TCasted>(ResourceKey<ISigurdRegistrar<TCasted>> registryKey)
+    public ITagKey<TCasted>? Cast<TCasted>(ResourceKey<IRegistrar<TCasted>> registryKey)
         where TCasted : class;
 }

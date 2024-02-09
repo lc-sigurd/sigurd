@@ -10,10 +10,10 @@ public interface IHolderGetter
 {
     public interface Provider
     {
-        Optional<IHolderGetter<THeld>> Lookup<THeld>(IResourceKey<ISigurdRegistrar<THeld>> resourceKey)
+        Optional<IHolderGetter<THeld>> Lookup<THeld>(IResourceKey<IRegistrar<THeld>> resourceKey)
             where THeld : class;
 
-        IHolderGetter<THeld> LookupOrThrow<THeld>(IResourceKey<ISigurdRegistrar<THeld>> resourceKey)
+        IHolderGetter<THeld> LookupOrThrow<THeld>(IResourceKey<IRegistrar<THeld>> resourceKey)
             where THeld : class
             => Lookup(resourceKey)
                 .IfNone(() => throw new InvalidOperationException($"Registry {resourceKey.Name} not found"));
