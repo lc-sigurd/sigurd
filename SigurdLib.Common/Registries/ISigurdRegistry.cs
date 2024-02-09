@@ -52,14 +52,6 @@ public interface ISigurdRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnClear"/>.
-    /// </summary>
-    class ClearEventArgs<TValue> : EventArgs where TValue : class
-    {
-
-    }
-
-    /// <summary>
     /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnCreate"/>.
     /// </summary>
     class CreateEventArgs<TValue> : EventArgs where TValue : class
@@ -101,7 +93,7 @@ public interface ISigurdRegistry
 /// Main interface for the registry system. Use this to query the registry system.
 /// </summary>
 /// <typeparam name="TValue">The type registered by the <see cref="ISigurdRegistry{TValue}"/>.</typeparam>
-public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCollection<TValue>
+public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCollection<TValue>, ISigurdRegistry
     where TValue : class
 {
     #region Registration
@@ -268,28 +260,22 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     /// Event invoked when contents are added to the registry. This will be invoked when the registry
     /// is rebuilt on the client side due to a server-side synchronization.
     /// </summary>
-    event EventHandler<ISigurdRegistry.AddEventArgs<TValue>> OnAdd;
-
-    /// <summary>
-    /// Event invoked when the registry's contents are cleared. This will be invoked before a registry
-    /// is rebuilt.
-    /// </summary>
-    event EventHandler<ISigurdRegistry.ClearEventArgs<TValue>> OnClear;
+    event EventHandler<AddEventArgs<TValue>> OnAdd;
 
     /// <summary>
     /// Event invoked when a registry instance is initially created.
     /// </summary>
-    event EventHandler<ISigurdRegistry.CreateEventArgs<TValue>> OnCreate;
+    event EventHandler<CreateEventArgs<TValue>> OnCreate;
 
     /// <summary>
     /// Event invoked when the registry's contents are validated.
     /// </summary>
-    event EventHandler<ISigurdRegistry.ValidateEventArgs<TValue>> OnValidate;
+    event EventHandler<ValidateEventArgs<TValue>> OnValidate;
 
     /// <summary>
     /// Event invoked when the registry has finished processing.
     /// </summary>
-    event EventHandler<ISigurdRegistry.BakeEventArgs<TValue>> OnBake;
+    event EventHandler<BakeEventArgs<TValue>> OnBake;
 
     #endregion
 }

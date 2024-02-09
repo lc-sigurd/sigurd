@@ -23,7 +23,7 @@ public record RegistryConfiguration<TValue> where TValue : class
     /// Event invoked when the registry's contents are cleared. This will be invoked before a registry
     /// is rebuilt.
     /// </summary>
-    public EventHandler<ISigurdRegistry.ClearEventArgs<TValue>>? ClearCallback;
+    public EventHandler<ISigurdRegistryModifiable.ClearEventArgs<TValue>>? ClearCallback;
 
     /// <summary>
     /// Event invoked when a registry instance is initially created.
