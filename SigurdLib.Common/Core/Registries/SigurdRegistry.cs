@@ -1,21 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using BepInEx.Logging;
 using JetBrains.Annotations;
 using Sigurd.Common.Collections.Generic;
 using Sigurd.Common.Collections.ObjectModel;
-using Sigurd.Common.Core;
+using Sigurd.Common.Core.Resources;
+using Sigurd.Common.Core.Tags;
 using Sigurd.Common.Extensions;
 using Sigurd.Common.PluginLoader;
-using Sigurd.Common.Resources;
-using Sigurd.Common.Tags;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 internal class SigurdRegistry
 {

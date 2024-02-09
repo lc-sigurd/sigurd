@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using Sigurd.Common.Core;
-using Sigurd.Common.Resources;
-using Sigurd.Common.Tags;
+using Sigurd.Common.Core.Resources;
+using Sigurd.Common.Core.Tags;
 using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 /// <summary>
 /// Interface for internal <see cref="SigurdRegistry{TValue}"/> members.

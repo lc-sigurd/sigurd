@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sigurd.Common.Resources;
-using Sigurd.Common.Tags;
+using Sigurd.Common.Core.Resources;
+using Sigurd.Common.Core.Tags;
 using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core;

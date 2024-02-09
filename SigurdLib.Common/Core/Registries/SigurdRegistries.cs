@@ -1,6 +1,6 @@
-using Sigurd.Common.Resources;
+using Sigurd.Common.Core.Resources;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 /// <summary>
 /// Exposes static references to all Sigurd registries.

@@ -3,12 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sigurd.Common.Collections.ObjectModel;
-using Sigurd.Common.Core;
-using Sigurd.Common.Resources;
-using Sigurd.Common.Tags;
+using Sigurd.Common.Core.Resources;
+using Sigurd.Common.Core.Tags;
 using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 /// <inheritdoc />
 internal class SigurdRegistryTagManager<TValue> : ITagManager<TValue> where TValue : class

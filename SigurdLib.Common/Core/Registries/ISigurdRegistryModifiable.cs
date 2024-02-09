@@ -1,7 +1,7 @@
 using System;
-using Sigurd.Common.Resources;
+using Sigurd.Common.Core.Resources;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 /// <summary>
 /// Defines <see langword="delegate"/> types and other <see langword="static"/> members for <see cref="ISigurdRegistryModifiable{TValue}"/>.

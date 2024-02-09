@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using BepInEx;
-using Sigurd.Common.Resources;
+using Sigurd.Common.Core.Resources;
 
 namespace Sigurd.Common.PluginLoader;
 

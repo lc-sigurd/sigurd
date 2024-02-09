@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sigurd.Common.Core;
-using Sigurd.Common.Registries;
-using Sigurd.Common.Resources;
+using Sigurd.Common.Core.Registries;
+using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Tags;
+namespace Sigurd.Common.Core.Tags;
 
 /// <summary>
 /// A tag manager holds information about all tags currently bound to a registry.
@@ -64,10 +63,10 @@ public interface ITagManager<TValue> : IEnumerable<ITag<TValue>> where TValue : 
     IEnumerable<ITagKey<TValue>> TagKeys { get; }
 
     /// <summary>
-    /// Creates a new <see cref="ITagKey{TValue}"/> for the <see cref="ISigurdRegistry{TValue}"/>
-    /// associated with this <see cref="ITagManager{TValue}"/>.
+    /// Creates a new <see cref="ITagKey{TValue}"/> for the <see cref="ITagManager{TValue}"/>
+    /// associated with this <see cref="name"/>.
     /// </summary>
-    /// <param name="name"><see cref="ResourceName"/> to use for the name of the new <see cref="ITagKey{TValue}"/>.</param>
+    /// <param name="name"><see cref="ITagKey{TValue}"/> to use for the name of the new <see cref="ISigurdRegistry{TValue}"/>.</param>
     /// <returns></returns>
     ITagKey<TValue> CreateTagKey(ResourceName name);
 }

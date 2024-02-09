@@ -1,7 +1,7 @@
-using Sigurd.Common.Registries;
-using Sigurd.Common.Resources;
+using Sigurd.Common.Core.Registries;
+using Sigurd.Common.Core.Resources;
 
-namespace Sigurd.Common.Tags;
+namespace Sigurd.Common.Core.Tags;
 
 /// <inheritdoc />
 internal record TagKey<TValue> : ITagKey<TValue>

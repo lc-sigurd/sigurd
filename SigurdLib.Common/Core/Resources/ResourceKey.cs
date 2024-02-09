@@ -1,7 +1,6 @@
-using Sigurd.Common.Core;
-using Sigurd.Common.Registries;
+using Sigurd.Common.Core.Registries;
 
-namespace Sigurd.Common.Resources;
+namespace Sigurd.Common.Core.Resources;
 
 /// <inheritdoc />
 public class ResourceKey<TValue> : IResourceKey<TValue>

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 public record RegistryConfiguration<TValue> where TValue : class
 {

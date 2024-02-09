@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sigurd.Common.Core;
+using Sigurd.Common.Core.Tags;
 using Sigurd.Common.Extensions;
-using Sigurd.Common.Tags;
 using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Registries;
+namespace Sigurd.Common.Core.Registries;
 
 internal class SigurdRegistryTag<TValue> : ITag<TValue> where TValue : class
 {

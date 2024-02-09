@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using JetBrains.Annotations;
+using Sigurd.Common.Core.Registries;
+using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Extensions;
-using Sigurd.Common.Registries;
-using Sigurd.Common.Resources;
 
-namespace Sigurd.Common.Tags;
+namespace Sigurd.Common.Core.Tags;
 
 /// <summary>
 /// An <see cref="ITagKey{TValue}"/> is used to uniquely identify an <see cref="ITag{TValue}"/>.

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Sigurd.Common.Core;
 
-namespace Sigurd.Common.Tags;
+namespace Sigurd.Common.Core.Tags;
 
 /// <summary>
 /// A reverse tag is an object aware of what tags it is contained by.

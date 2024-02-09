@@ -1,5 +1,5 @@
 using System;
-using Sigurd.Common.Resources;
+using Sigurd.Common.Core.Resources;
 
 namespace Sigurd.Common;
 

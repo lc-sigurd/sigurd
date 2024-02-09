@@ -1,7 +1,6 @@
 using System;
-using Sigurd.Common.Core;
 
-namespace Sigurd.Common.Resources;
+namespace Sigurd.Common.Core.Resources;
 
 /// <summary>
 /// Used to uniquely identify objects, for example in an <see cref="IRegistry{TValue}"/>.

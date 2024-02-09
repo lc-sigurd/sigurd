@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using JetBrains.Annotations;
+using Sigurd.Common.Core.Registries;
 using Sigurd.Common.Extensions;
-using Sigurd.Common.Registries;
 
-namespace Sigurd.Common.Resources;
+namespace Sigurd.Common.Core.Resources;
 
 public interface IResourceKey
 {
