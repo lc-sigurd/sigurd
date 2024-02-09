@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 namespace Sigurd.Common.Collections.Generic;
 
 // https://stackoverflow.com/a/8946825
-// Copyright (c) 2012 Jon Skeet
 internal sealed class IdentityEqualityComparer<T> : IEqualityComparer<T>
     where T : class
 {
