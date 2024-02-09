@@ -1,7 +1,7 @@
 using System;
 using Unity.Netcode;
 
-namespace Sigurd.Common;
+namespace Sigurd.Common.Util;
 
 /// <summary>
 /// Extension methods providing functionality for <see cref="Side"/>.
