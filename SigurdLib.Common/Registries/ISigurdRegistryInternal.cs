@@ -49,5 +49,5 @@ internal interface ISigurdRegistryInternal<TValue> : ISigurdRegistry<TValue> whe
 
     Optional<IHolder.Reference<TValue>>  GetDelegate(int id);
 
-    void BindTags(IDictionary<TagKey<TValue>, IEnumerable<IHolder<TValue>>> tags);
+    void BindTags(IDictionary<ITagKey<TValue>, IHolderSet.Named<TValue>> tags);
 }
