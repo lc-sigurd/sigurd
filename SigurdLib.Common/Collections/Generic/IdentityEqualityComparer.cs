@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Sigurd.Common;
+namespace Sigurd.Common.Collections.Generic;
 
 // https://stackoverflow.com/a/8946825
 // Copyright (c) 2012 Jon Skeet

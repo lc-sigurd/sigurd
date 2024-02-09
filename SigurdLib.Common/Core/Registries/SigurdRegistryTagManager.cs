@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sigurd.Common.Collections.Generic;
 using Sigurd.Common.Collections.ObjectModel;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
