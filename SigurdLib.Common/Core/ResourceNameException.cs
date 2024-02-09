@@ -1,7 +1,7 @@
 using System;
 using Sigurd.Common.Core.Resources;
 
-namespace Sigurd.Common;
+namespace Sigurd.Common.Core;
 
 /// <summary>
 /// Represents <see cref="ResourceName"/> errors that occur during application execution.
