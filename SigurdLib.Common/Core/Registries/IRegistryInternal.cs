@@ -8,11 +8,11 @@ namespace Sigurd.Common.Core.Registries;
 /// <summary>
 /// Interface for internal <see cref="SigurdRegistry{TValue}"/> members.
 /// </summary>
-/// <typeparam name="TValue">The type registered by the <see cref="ISigurdRegistry{TValue}"/>.</typeparam>
-internal interface ISigurdRegistryInternal<TValue> : ISigurdRegistry<TValue> where TValue : class
+/// <typeparam name="TValue">The type registered by the <see cref="IRegistry{TValue}"/>.</typeparam>
+internal interface IRegistryInternal<TValue> : IRegistry<TValue> where TValue : class
 {
     /// <summary>
-    /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
+    /// Add a new entry to the <see cref="IRegistry{TValue}"/>.
     /// </summary>
     /// <param name="id"><see cref="int"/> ID for the new entry.</param>
     /// <param name="key"><see cref="ResourceName"/> key for the new entry.</param>

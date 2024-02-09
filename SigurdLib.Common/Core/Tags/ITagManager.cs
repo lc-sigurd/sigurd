@@ -66,7 +66,7 @@ public interface ITagManager<TValue> : IEnumerable<ITag<TValue>> where TValue : 
     /// Creates a new <see cref="ITagKey{TValue}"/> for the <see cref="ITagManager{TValue}"/>
     /// associated with this <see cref="name"/>.
     /// </summary>
-    /// <param name="name"><see cref="ITagKey{TValue}"/> to use for the name of the new <see cref="ISigurdRegistry{TValue}"/>.</param>
+    /// <param name="name"><see cref="ITagKey{TValue}"/> to use for the name of the new <see cref="IRegistry{TValue}"/>.</param>
     /// <returns></returns>
     ITagKey<TValue> CreateTagKey(ResourceName name);
 }

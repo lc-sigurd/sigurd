@@ -8,7 +8,7 @@ using Sigurd.Common.Util;
 namespace Sigurd.Common.Core.Registries;
 
 /// <summary>
-/// Covariant interface for <see cref="ISigurdRegistry{TValue}"/>.
+/// Covariant interface for <see cref="IRegistry{TValue}"/>.
 /// </summary>
 /// <typeparam name="TValue">The registered value type.</typeparam>
 public interface ISigurdRegistrar<out TValue> : IEnumerable<TValue>
@@ -25,12 +25,12 @@ public interface ISigurdRegistrar<out TValue> : IEnumerable<TValue>
 }
 
 /// <summary>
-/// Defines <see langword="delegate"/> types and other <see langword="static"/> members for <see cref="ISigurdRegistry{TValue}"/>.
+/// Defines <see langword="delegate"/> types and other <see langword="static"/> members for <see cref="IRegistry{TValue}"/>.
 /// </summary>
-public interface ISigurdRegistry
+public interface IRegistry
 {
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnAdd"/>.
+    /// <see cref="EventArgs"/> for <see cref="IRegistry{TValue}.OnAdd"/>.
     /// </summary>
     class AddEventArgs<TValue> : EventArgs where TValue : class
     {
@@ -51,7 +51,7 @@ public interface ISigurdRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnCreate"/>.
+    /// <see cref="EventArgs"/> for <see cref="IRegistry{TValue}.OnCreate"/>.
     /// </summary>
     class CreateEventArgs<TValue> : EventArgs where TValue : class
     {
@@ -59,7 +59,7 @@ public interface ISigurdRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnValidate"/>.
+    /// <see cref="EventArgs"/> for <see cref="IRegistry{TValue}.OnValidate"/>.
     /// </summary>
     class ValidateEventArgs<TValue> : EventArgs where TValue : class
     {
@@ -80,7 +80,7 @@ public interface ISigurdRegistry
     }
 
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="ISigurdRegistry{TValue}.OnBake"/>.
+    /// <see cref="EventArgs"/> for <see cref="IRegistry{TValue}.OnBake"/>.
     /// </summary>
     class BakeEventArgs<TValue> : EventArgs where TValue : class
     {
@@ -91,21 +91,21 @@ public interface ISigurdRegistry
 /// <summary>
 /// Main interface for the registry system. Use this to query the registry system.
 /// </summary>
-/// <typeparam name="TValue">The type registered by the <see cref="ISigurdRegistry{TValue}"/>.</typeparam>
-public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCollection<TValue>, ISigurdRegistry
+/// <typeparam name="TValue">The type registered by the <see cref="IRegistry{TValue}"/>.</typeparam>
+public interface IRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCollection<TValue>, IRegistry
     where TValue : class
 {
     #region Registration
 
     /// <summary>
-    /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
+    /// Add a new entry to the <see cref="IRegistry{TValue}"/>.
     /// </summary>
     /// <param name="key"><see cref="string"/> path used in <see cref="ResourceName"/> key for the new entry.</param>
     /// <param name="value">Value for the new entry.</param>
     void Register(string key, TValue value);
 
     /// <summary>
-    /// Add a new entry to the <see cref="ISigurdRegistry{TValue}"/>.
+    /// Add a new entry to the <see cref="IRegistry{TValue}"/>.
     /// </summary>
     /// <param name="key"><see cref="ResourceName"/> key for the new entry.</param>
     /// <param name="value">Value for the new entry.</param>
@@ -116,23 +116,23 @@ public interface ISigurdRegistry<TValue> : ISigurdRegistrar<TValue>, IReadOnlyCo
     #region Content Queries
 
     /// <summary>
-    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific <see cref="ResourceName"/> key.
+    /// Determines whether the <see cref="IRegistry{TValue}"/> contains a specific <see cref="ResourceName"/> key.
     /// </summary>
-    /// <param name="key">The <see cref="ResourceName"/> to locate in the <see cref="ISigurdRegistry{TValue}" />.</param>
-    /// <returns><see langword="true"/> if the <paramref name="key"/> is found in the <see cref="ISigurdRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
+    /// <param name="key">The <see cref="ResourceName"/> to locate in the <see cref="IRegistry{TValue}" />.</param>
+    /// <returns><see langword="true"/> if the <paramref name="key"/> is found in the <see cref="IRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
     bool ContainsKey(ResourceName key);
 
     /// <summary>
-    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> contains a specific value.
+    /// Determines whether the <see cref="IRegistry{TValue}"/> contains a specific value.
     /// </summary>
-    /// <param name="value">The value to locate in the <see cref="ISigurdRegistry{TValue}" />.</param>
-    /// <returns><see langword="true"/> if the <paramref name="value"/> is found in the <see cref="ISigurdRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
+    /// <param name="value">The value to locate in the <see cref="IRegistry{TValue}" />.</param>
+    /// <returns><see langword="true"/> if the <paramref name="value"/> is found in the <see cref="IRegistry{TValue}"/>; Otherwise, <see langword="false"/>.</returns>
     bool ContainsValue(TValue value);
 
     /// <summary>
-    /// Determines whether the <see cref="ISigurdRegistry{TValue}"/> is empty.
+    /// Determines whether the <see cref="IRegistry{TValue}"/> is empty.
     /// </summary>
-    /// <returns><see langword="true"/> if the <see cref="ISigurdRegistry{TValue}"/> contains no entries; Otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if the <see cref="IRegistry{TValue}"/> contains no entries; Otherwise, <see langword="false"/>.</returns>
     bool IsEmpty() => Count == 0;
 
     #endregion

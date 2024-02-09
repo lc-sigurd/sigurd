@@ -17,7 +17,7 @@ public record RegistryConfiguration<TValue> where TValue : class
     /// Event invoked when contents are added to the registry. This will be invoked when the registry
     /// is rebuilt on the client side due to a server-side synchronization.
     /// </summary>
-    public EventHandler<ISigurdRegistry.AddEventArgs<TValue>>? AddCallback;
+    public EventHandler<IRegistry.AddEventArgs<TValue>>? AddCallback;
 
     /// <summary>
     /// Event invoked when the registry's contents are cleared. This will be invoked before a registry
@@ -28,15 +28,15 @@ public record RegistryConfiguration<TValue> where TValue : class
     /// <summary>
     /// Event invoked when a registry instance is initially created.
     /// </summary>
-    public EventHandler<ISigurdRegistry.CreateEventArgs<TValue>>? CreateCallback;
+    public EventHandler<IRegistry.CreateEventArgs<TValue>>? CreateCallback;
 
     /// <summary>
     /// Event invoked when the registry's contents are validated.
     /// </summary>
-    public EventHandler<ISigurdRegistry.ValidateEventArgs<TValue>>? ValidateCallback;
+    public EventHandler<IRegistry.ValidateEventArgs<TValue>>? ValidateCallback;
 
     /// <summary>
     /// Event invoked when the registry has finished processing.
     /// </summary>
-    public EventHandler<ISigurdRegistry.BakeEventArgs<TValue>>? BakeCallback;
+    public EventHandler<IRegistry.BakeEventArgs<TValue>>? BakeCallback;
 }

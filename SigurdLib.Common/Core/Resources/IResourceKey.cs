@@ -55,7 +55,7 @@ public interface IResourceKey
 }
 
 /// <summary>
-/// Used to uniquely identify objects of a particular type, for example in an <see cref="ISigurdRegistry{TValue}"/>.
+/// Used to uniquely identify objects of a particular type, for example in an <see cref="IRegistry{TValue}"/>.
 /// </summary>
 /// <typeparam name="TValue">The type of object to be identified</typeparam>
 public interface IResourceKey<out TValue> : IResourceKey, IComparable<IResourceKey<object>>

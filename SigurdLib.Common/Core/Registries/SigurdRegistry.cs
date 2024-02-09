@@ -21,7 +21,7 @@ internal class SigurdRegistry
     protected static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource($"{Plugin.Guid}/Registries");
 }
 
-internal class SigurdRegistry<TValue> : SigurdRegistry, ISigurdRegistryInternal<TValue>, ISigurdRegistryModifiable<TValue>
+internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue>, IRegistryModifiable<TValue>
     where TValue : class
 {
     private static readonly IEqualityComparer<TValue> ByReferenceValueComparer = new IdentityEqualityComparer<TValue>();
@@ -42,15 +42,15 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, ISigurdRegistryInternal<
 
     private ICollection<KeyValuePair<IResourceKey<TValue>, TValue>>? _readonlyEntryCollection;
 
-    public event EventHandler<ISigurdRegistry.AddEventArgs<TValue>>? OnAdd;
+    public event EventHandler<IRegistry.AddEventArgs<TValue>>? OnAdd;
 
     public event EventHandler<ISigurdRegistryModifiable.ClearEventArgs<TValue>>? OnClear;
 
-    public event EventHandler<ISigurdRegistry.CreateEventArgs<TValue>>? OnCreate;
+    public event EventHandler<IRegistry.CreateEventArgs<TValue>>? OnCreate;
 
-    public event EventHandler<ISigurdRegistry.ValidateEventArgs<TValue>>? OnValidate;
+    public event EventHandler<IRegistry.ValidateEventArgs<TValue>>? OnValidate;
 
-    public event EventHandler<ISigurdRegistry.BakeEventArgs<TValue>>? OnBake;
+    public event EventHandler<IRegistry.BakeEventArgs<TValue>>? OnBake;
 
     private readonly BitArray _availabilityMap;
 
@@ -95,7 +95,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, ISigurdRegistryInternal<
         IsTaggable = configuration.Taggable;
         _tagManager = configuration.Taggable ? new SigurdRegistryTagManager<TValue>(this) : null;
 
-        OnCreate?.Invoke(this, new ISigurdRegistry.CreateEventArgs<TValue>());
+        OnCreate?.Invoke(this, new IRegistry.CreateEventArgs<TValue>());
     }
 
     #region Utility/Helpers
@@ -187,7 +187,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, ISigurdRegistryInternal<
 
         if (IsTaggable) BindDelegate(resourceKey, value);
 
-        OnAdd?.Invoke(this, new ISigurdRegistry.AddEventArgs<TValue> {
+        OnAdd?.Invoke(this, new IRegistry.AddEventArgs<TValue> {
             Id = selectedId,
             Key = resourceKey,
             Value = value,
@@ -460,7 +460,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, ISigurdRegistryInternal<
                 throw new InvalidOperationException($"Entry for ID {id} is associated with name {name}, but that name is associated with ID {otherId}.");
         }
 
-        OnValidate?.Invoke(this, new ISigurdRegistry.ValidateEventArgs<TValue> {
+        OnValidate?.Invoke(this, new IRegistry.ValidateEventArgs<TValue> {
             Id = id,
             Name = name,
             Value = value,
@@ -469,7 +469,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, ISigurdRegistryInternal<
 
     void Bake()
     {
-        OnBake?.Invoke(this, new ISigurdRegistry.BakeEventArgs<TValue>());
+        OnBake?.Invoke(this, new IRegistry.BakeEventArgs<TValue>());
     }
 
     #endregion
