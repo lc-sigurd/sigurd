@@ -8,10 +8,10 @@ using BepInEx.Logging;
 using JetBrains.Annotations;
 using Sigurd.Common.Collections.Generic;
 using Sigurd.Common.Collections.ObjectModel;
+using Sigurd.Common.Core.PluginLoader;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
 using Sigurd.Common.Extensions;
-using Sigurd.Common.PluginLoader;
 using Sigurd.Common.Util;
 
 namespace Sigurd.Common.Core.Registries;

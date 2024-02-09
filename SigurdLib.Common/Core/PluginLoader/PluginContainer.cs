@@ -1,6 +1,6 @@
 using BepInEx;
 
-namespace Sigurd.Common.PluginLoader;
+namespace Sigurd.Common.Core.PluginLoader;
 
 public class PluginContainer
 {

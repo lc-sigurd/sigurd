@@ -5,7 +5,7 @@ using System.Linq;
 using BepInEx.Bootstrap;
 using Sigurd.Common.Util;
 
-namespace Sigurd.Common.PluginLoader;
+namespace Sigurd.Common.Core.PluginLoader;
 
 public class PluginList
 {

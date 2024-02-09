@@ -5,7 +5,7 @@ using System.Threading;
 using BepInEx;
 using Sigurd.Common.Core.Resources;
 
-namespace Sigurd.Common.PluginLoader;
+namespace Sigurd.Common.Core.PluginLoader;
 
 public class PluginLoadingContext
 {
