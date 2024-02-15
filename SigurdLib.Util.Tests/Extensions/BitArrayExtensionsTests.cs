@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using SigurdLib.Util.Extensions;
 
-namespace SigurdLib.Common.Tests.Extensions;
+namespace SigurdLib.Util.Tests.Extensions;
 
 public class BitArrayExtensionsTests
 {

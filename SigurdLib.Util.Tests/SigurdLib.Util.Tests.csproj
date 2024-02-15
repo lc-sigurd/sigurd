@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <AssemblyName>com.sigurd.sigurd.common.tests</AssemblyName>
-        <RootNamespace>SigurdLib.Common.Tests</RootNamespace>
+        <AssemblyName>com.sigurd.sigurd.util.tests</AssemblyName>
+        <RootNamespace>SigurdLib.Util.Tests</RootNamespace>
     </PropertyGroup>
 </Project>

@@ -1,4 +1,4 @@
-namespace SigurdLib.Common.Tests.Collections.Generic;
+namespace SigurdLib.Util.Tests.Collections.Generic;
 
 public class BiDictionaryTests
 {
