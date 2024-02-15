@@ -29,7 +29,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Terminal", "Sigur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Terminal.Tests", "SigurdLib.Terminal.Tests\SigurdLib.Terminal.Tests.csproj", "{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Common.Tests", "SigurdLib.Common.Tests\SigurdLib.Common.Tests.csproj", "{5E4870D9-2E31-4B2E-8F73-45C2810833FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Util.Tests", "SigurdLib.Util.Tests\SigurdLib.Util.Tests.csproj", "{5E4870D9-2E31-4B2E-8F73-45C2810833FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Patcher", "SigurdLib.Patcher\SigurdLib.Patcher.csproj", "{6C2361E5-ACC9-414D-B0A6-1452A1DB362D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.PluginLoader", "SigurdLib.PluginLoader\SigurdLib.PluginLoader.csproj", "{C29DDC93-8AFD-4196-864F-A0AA272A8F05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Util", "SigurdLib.Util\SigurdLib.Util.csproj", "{0C7981F2-311A-4354-9906-7AAB6C5BC76E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,19 +98,31 @@ Global
 		{A43DA28B-F528-4622-AA4C-255104D60EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A43DA28B-F528-4622-AA4C-255104D60EB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A43DA28B-F528-4622-AA4C-255104D60EB9}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
-		{A43DA28B-F528-4622-AA4C-255104D60EB9}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
 		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
-		{7FAB58DF-E522-444E-B4D5-63FA4FB1C818}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
 		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
-		{5E4870D9-2E31-4B2E-8F73-45C2810833FE}.BuildTasks|Any CPU.Build.0 = BuildTasks|Any CPU
+		{6C2361E5-ACC9-414D-B0A6-1452A1DB362D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C2361E5-ACC9-414D-B0A6-1452A1DB362D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C2361E5-ACC9-414D-B0A6-1452A1DB362D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C2361E5-ACC9-414D-B0A6-1452A1DB362D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C2361E5-ACC9-414D-B0A6-1452A1DB362D}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
+		{C29DDC93-8AFD-4196-864F-A0AA272A8F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C29DDC93-8AFD-4196-864F-A0AA272A8F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C29DDC93-8AFD-4196-864F-A0AA272A8F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C29DDC93-8AFD-4196-864F-A0AA272A8F05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C29DDC93-8AFD-4196-864F-A0AA272A8F05}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
+		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7981F2-311A-4354-9906-7AAB6C5BC76E}.BuildTasks|Any CPU.ActiveCfg = BuildTasks|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
