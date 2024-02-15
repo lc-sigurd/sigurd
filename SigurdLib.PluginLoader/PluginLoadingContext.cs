@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using BepInEx;
-using Sigurd.Common.Core.Resources;
+using SigurdLib.Util.Resources;
 
-namespace Sigurd.Common.Core.PluginLoader;
+namespace SigurdLib.PluginLoader;
 
 public class PluginLoadingContext
 {

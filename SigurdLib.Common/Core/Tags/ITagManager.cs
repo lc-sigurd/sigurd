@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Sigurd.Common.Core.Registries;
 using Sigurd.Common.Core.Resources;
-using Sigurd.Common.Util;
+using SigurdLib.Util;
+using SigurdLib.Util.Resources;
 
 namespace Sigurd.Common.Core.Tags;
 
@@ -29,7 +30,7 @@ public interface ITagManager<TValue> : IEnumerable<ITag<TValue>> where TValue : 
     /// </summary>
     /// <param name="value">The value to query an <see cref="IReverseTag{TValue}"/> for.</param>
     /// <returns>
-    /// An <see cref="Optional{A}"/> containing a <see cref="IReverseTag{TValue}"/> for the given value,
+    /// An <see cref="Optional"/> containing a <see cref="IReverseTag{TValue}"/> for the given value,
     /// if found; otherwise, <see cref="Optional{A}.None"/>.
     /// </returns>
     Optional<IReverseTag<TValue>> GetReverseTag(TValue value);

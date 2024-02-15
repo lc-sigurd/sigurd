@@ -1,4 +1,5 @@
 using Sigurd.Common.Core.Resources;
+using SigurdLib.Util.Resources;
 
 namespace Sigurd.Common.Core.Registries;
 

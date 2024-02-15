@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Sigurd.Common.Collections.ObjectModel;
+namespace SigurdLib.Util.Collections.ObjectModel;
 
 public static class CollectionExtensions
 {

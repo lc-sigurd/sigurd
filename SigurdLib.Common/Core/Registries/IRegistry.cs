@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
-using Sigurd.Common.Util;
+using SigurdLib.Util;
+using SigurdLib.Util.Resources;
 
 namespace Sigurd.Common.Core.Registries;
 
@@ -164,7 +165,7 @@ public interface IRegistry<TValue> : IRegistrar<TValue>, IReadOnlyCollection<TVa
     /// </summary>
     /// <param name="value">Value to retrieve a <see cref="IResourceKey{TValue}"/> key for.</param>
     /// <returns>
-    /// The <see cref="IResourceKey{TValue}"/> key associated with the provided value, wrapped by <see cref="Optional{T}"/>.
+    /// The <see cref="IResourceKey{TValue}"/> key associated with the provided value, wrapped by <see cref="Optional"/>.
     /// </returns>
     Optional<IResourceKey<TValue>> GetResourceKey(TValue value);
 

@@ -2,11 +2,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Sigurd.Common.Collections.Generic;
-using Sigurd.Common.Collections.ObjectModel;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
-using Sigurd.Common.Util;
+using SigurdLib.Util;
+using SigurdLib.Util.Collections.Generic;
+using SigurdLib.Util.Collections.ObjectModel;
+using SigurdLib.Util.Resources;
 
 namespace Sigurd.Common.Core.Registries;
 

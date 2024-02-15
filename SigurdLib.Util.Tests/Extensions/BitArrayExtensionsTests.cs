@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Sigurd.Common.Extensions;
+using SigurdLib.Util.Extensions;
 
 namespace SigurdLib.Common.Tests.Extensions;
 

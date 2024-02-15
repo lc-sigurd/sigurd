@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sigurd.Common.Collections.Generic;
+using SigurdLib.Util.Collections.Generic;
 
-namespace Sigurd.Common.Collections.ObjectModel;
+namespace SigurdLib.Util.Collections.ObjectModel;
 
 public static class SetExtensions
 {

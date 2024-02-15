@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Sigurd.Common.Extensions;
+namespace SigurdLib.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="string"/> instances.
 /// </summary>
-internal static class StringExtensions
+public static class StringExtensions
 {
     // Thanks Elias https://stackoverflow.com/a/11105164
     /// <summary>

@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Bootstrap;
-using Sigurd.Common.Util;
+using SigurdLib.Util;
 
-namespace Sigurd.Common.Core.PluginLoader;
+namespace SigurdLib.PluginLoader;
 
 public class PluginList
 {

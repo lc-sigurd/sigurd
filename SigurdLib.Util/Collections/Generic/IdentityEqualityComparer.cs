@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Sigurd.Common.Collections.Generic;
+namespace SigurdLib.Util.Collections.Generic;
 
 // https://stackoverflow.com/a/8946825
-internal sealed class IdentityEqualityComparer<T> : IEqualityComparer<T>
+public sealed class IdentityEqualityComparer<T> : IEqualityComparer<T>
     where T : class
 {
     public int GetHashCode(T value) => RuntimeHelpers.GetHashCode(value);

@@ -1,9 +1,9 @@
 using System;
 
-namespace Sigurd.Common.Core.Resources;
+namespace SigurdLib.Util.Resources;
 
 /// <summary>
-/// Used to uniquely identify objects, for example in an <see cref="IRegistry{TValue}"/>.
+/// Used to uniquely identify objects, for example in a registry.
 /// </summary>
 public class ResourceName: IEquatable<ResourceName>, IComparable<ResourceName>
 {

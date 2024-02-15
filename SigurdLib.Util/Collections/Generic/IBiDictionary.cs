@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
-namespace Sigurd.Common.Collections.Generic;
+namespace SigurdLib.Util.Collections.Generic;
 
 /// <summary>
 /// Represents a generic collection of key/value pairs that supports inverse mapping operations.

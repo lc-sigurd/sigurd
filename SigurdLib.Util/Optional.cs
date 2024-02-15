@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Sigurd.Common.Util;
+namespace SigurdLib.Util;
 
 public static class Optional
 {
@@ -25,7 +25,7 @@ public readonly struct Optional<T>
     /// <summary>Construct an <see cref="Optional{T}"/> in a Some state</summary>
     /// <param name="value">Value to bind, must be non-null</param>
     /// <returns><see cref="Optional{T}"/></returns>
-    public static Optional<T> Some(T value) => new(value);
+    public static Optional<T> Some(T value) => value is not null ? new(value) : throw new ArgumentException("Cannot bind Optional.Some to `null`");
 
     /// <summary>
     /// Construct an <see cref="Optional{T}"/> whose state is dependent on whether
@@ -42,6 +42,7 @@ public readonly struct Optional<T>
     [MemberNotNullWhen(true, nameof(_value), nameof(ValueUnsafe))]
     public bool IsSome => _isSome;
 
+    [MemberNotNullWhen(false, nameof(_value), nameof(ValueUnsafe))]
     public bool IsNone => !_isSome;
 
     public T IfNone(Func<T> noneSupplier) => IsSome ? _value : noneSupplier() ?? throw new ArgumentException("Supplier must not return null.");
@@ -53,6 +54,14 @@ public readonly struct Optional<T>
     /// <typeparam name="V">Resulting value type</typeparam>
     /// <returns>Mapped <see cref="Optional{T}"/></returns>
     public Optional<V> Select<V>(Func<T, V> projector) => IsSome ? Optional.Some(projector(_value)) : Optional<V>.None;
+
+    /// <summary>
+    /// Project from one value to another.
+    /// </summary>
+    /// <param name="projector">Projection function</param>
+    /// <typeparam name="V">Resulting value type</typeparam>
+    /// <returns>Mapped <see cref="Optional{T}"/></returns>
+    public Optional<V> Select<V>(Func<T, Optional<V>> projector) => IsSome ? projector(_value) : Optional<V>.None;
 
     /// <summary>
     /// Apply a <see cref="Predicate{T}"/> to the bound value (if in a Some state).

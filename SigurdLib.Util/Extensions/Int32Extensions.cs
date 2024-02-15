@@ -1,9 +1,9 @@
-namespace Sigurd.Common.Extensions;
+namespace SigurdLib.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="int"/> instances.
 /// </summary>
-internal static class Int32Extensions
+public static class Int32Extensions
 {
     // https://stackoverflow.com/a/32725808
     /// <summary>

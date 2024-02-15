@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sigurd.Common.Util;
 
-namespace Sigurd.Common.Extensions;
+namespace SigurdLib.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="IList{T}"/> instances.
 /// </summary>
-internal static class ListExtensions
+public static class ListExtensions
 {
     /// <summary>
     /// Retrieve a random element from this <see cref="IList{T}"/>.

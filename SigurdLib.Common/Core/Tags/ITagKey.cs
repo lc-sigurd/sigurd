@@ -3,7 +3,8 @@ using System.Collections.Concurrent;
 using JetBrains.Annotations;
 using Sigurd.Common.Core.Registries;
 using Sigurd.Common.Core.Resources;
-using Sigurd.Common.Extensions;
+using SigurdLib.Util.Extensions;
+using SigurdLib.Util.Resources;
 
 namespace Sigurd.Common.Core.Tags;
 

@@ -2,14 +2,14 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace Sigurd.Common.Extensions;
+namespace SigurdLib.Util.Extensions;
 
 /// <summary>
 /// Extension methods for instances of the <see cref="BitArray"/> class.
 /// </summary>
 public static class BitArrayExtensions
 {
-    private static FieldInfo BitArrayWordsFieldInfo = typeof(BitArray)
+    private static readonly FieldInfo BitArrayWordsFieldInfo = typeof(BitArray)
         .GetField("m_array", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     private static int[] GetWords(this BitArray bitArray)

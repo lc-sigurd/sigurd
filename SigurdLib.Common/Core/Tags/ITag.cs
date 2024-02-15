@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sigurd.Common.Util;
+using SigurdLib.Util;
 
 namespace Sigurd.Common.Core.Tags;
 
@@ -43,7 +43,7 @@ public interface ITag<TValue> : IReadOnlyCollection<TValue>
     /// </summary>
     /// <param name="randomSource"><see cref="Random"/> source</param>
     /// <returns>
-    /// An <see cref="Optional{TValue}"/> containing the randomly selected value, if
+    /// An <see cref="Optional"/> containing the randomly selected value, if
     /// this tag has members; otherwise, <see cref="Optional{TValue}.None"/>.
     /// </returns>
     Optional<TValue> GetRandomElement(Random randomSource);

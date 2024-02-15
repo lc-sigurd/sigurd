@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sigurd.Common.Extensions;
+namespace SigurdLib.Util.Extensions;
 
-internal static class DictionaryExtensions
+public static class DictionaryExtensions
 {
     public delegate TValue ValueProvider<TKey, TValue>(TKey key);
 
