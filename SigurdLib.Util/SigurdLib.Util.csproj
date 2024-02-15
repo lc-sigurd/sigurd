@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>com.sigurd.sigurd.util</AssemblyName>
+
+        <Id>SigurdLib.Util</Id>
+        <Product>SigurdLib.Util</Product>
+
+        <PackageId>SigurdLib.Util</PackageId>
+        <Description>Sigurd's miscellaneous utilities.</Description>
+
+        <ThunderstoreName>Sigurd_Util</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's miscellaneous utilities</ThunderstoreDescription>
+        <HasBepInPlugin>false</HasBepInPlugin>
+
+        <IsPackable>true</IsPackable>
+        <IsThunderstorePackable>true</IsThunderstorePackable>
+
+        <RootNamespace>SigurdLib.Util</RootNamespace>
+    </PropertyGroup>
+
+    <!-- Thunderstore metadata -->
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Remove="$(TargetPath)"/>
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
+    </ItemGroup>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+        <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Runtime assembly references -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
+    </ItemGroup>
+
+
+</Project>

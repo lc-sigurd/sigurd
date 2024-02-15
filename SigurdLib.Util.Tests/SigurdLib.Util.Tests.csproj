@@ -2,5 +2,6 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <AssemblyName>com.sigurd.sigurd.common.tests</AssemblyName>
+        <RootNamespace>SigurdLib.Common.Tests</RootNamespace>
     </PropertyGroup>
 </Project>
