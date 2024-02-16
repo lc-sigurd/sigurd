@@ -82,11 +82,16 @@ internal static class MyPluginInfo
         />
     </Target>
 
+    <PropertyGroup>
+        <ShouldThunderstorePackThisBuild>false</ShouldThunderstorePackThisBuild>
+        <ShouldThunderstorePackThisBuild Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'">true</ShouldThunderstorePackThisBuild>
+    </PropertyGroup>
+
     <Target
         Name="ThunderstorePack"
         DependsOnTargets="NetcodePatch;SetPluginVersion;PatchThunderstoreMetadata"
         AfterTargets="PostBuildEvent"
-        Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'"
+        Condition="$(ShouldThunderstorePackThisBuild)"
     >
         <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
         <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml.user --package-version $(PlainVersion)"/>
