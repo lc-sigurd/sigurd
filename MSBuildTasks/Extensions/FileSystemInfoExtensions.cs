@@ -11,4 +11,10 @@ public static class FileSystemInfoExtensions
 {
     public static bool HasAttributes(this FileSystemInfo info, FileAttributes attributes)
         => (info.Attributes & attributes) == attributes;
+
+    public static string GetFullNameRelativeToFile(this FileSystemInfo info, string file)
+        => info.GetFullNameRelativeTo(Path.GetDirectoryName(file)!);
+
+    public static string GetFullNameRelativeTo(this FileSystemInfo info, string dir)
+        => Path.GetRelativePath(dir, info.FullName);
 }
