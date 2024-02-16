@@ -120,6 +120,7 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
                 .ToDictionary()
         };
 
+        Directory.CreateDirectory(Path.GetDirectoryName(ConfigurationFileOutputPath)!);
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
         return true;
     }
