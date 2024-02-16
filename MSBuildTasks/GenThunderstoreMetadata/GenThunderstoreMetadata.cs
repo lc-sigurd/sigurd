@@ -66,7 +66,7 @@ public sealed class GenThunderstoreMetadata : Microsoft.Build.Utilities.Task
             .WriteTo.TaskLoggingHelper(Log)
             .CreateLogger();
 
-        Serilog.Log.Information("Plugin meta-manifest patcher started.");
+        Serilog.Log.Information("Generating Thunderstore package meta-manifest...");
 
         var project = new ThunderstoreProject {
             Config = new ThunderstoreProject.ConfigData {
