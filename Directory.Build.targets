@@ -8,7 +8,7 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="SetPluginVersion" DependsOnTargets="MinVer">
+    <Target Name="SetPluginVersion" AfterTargets="MinVer" DependsOnTargets="MinVer">
         <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
         <PropertyGroup>
             <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
