@@ -12,7 +12,6 @@
         <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
         <PropertyGroup>
             <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
-            <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
         </PropertyGroup>
     </Target>
 
@@ -27,18 +26,15 @@
         Outputs="$(IntermediateOutputPath)MyPluginInfo.cs"
     >
         <PropertyGroup>
-            <BepInExPluginGuid Condition="'$(BepInExPluginGuid)' == ''">$(AssemblyName)</BepInExPluginGuid>
-            <BepInExPluginName Condition="'$(BepInExPluginName)' == ''">$(Product)</BepInExPluginName>
-            <BepInExPluginVersion Condition="'$(BepInExPluginVersion)' == ''">$(Version)</BepInExPluginVersion>
             <GeneratedText><![CDATA[
 namespace $(RootNamespace)%3B
 
 #pragma warning disable 1591
 internal static class MyPluginInfo
 {
-    public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
-    public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
-    public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
+    public const string PLUGIN_GUID = "$(AssemblyName)"%3B
+    public const string PLUGIN_NAME = "$(Product)"%3B
+    public const string PLUGIN_VERSION = "$(PlainVersion)"%3B
 }
 #pragma warning restore 1591
 
