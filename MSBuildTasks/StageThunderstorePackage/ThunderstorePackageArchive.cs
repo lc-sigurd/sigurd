@@ -55,10 +55,11 @@ public class ThunderstorePackageArchive
 
         if (!(manifestObject["namespace"] is JsonValue namespaceValue && namespaceValue.TryGetValue<string>(out var @namespace)))
             throw new InvalidOperationException("Manifest 'namespace' string is missing or of invalid type.");
-        PackageNamespace = @namespace;
 
         if (!(manifestObject["name"] is JsonValue nameValue && nameValue.TryGetValue<string>(out var name)))
             throw new InvalidOperationException("Manifest 'name' string is missing or of invalid type.");
+
+        PackageNamespace = @namespace;
         PackageName = name;
     }
 
