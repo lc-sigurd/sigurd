@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
+using MSBuildTasks.Extensions;
 using MSBuildTasks.Lib;
 using Serilog;
 using ThunderstoreCLI.Models;
@@ -86,9 +87,12 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
                     ),
             },
             Build = new ThunderstoreProject.BuildData {
-                Readme = BuildReadmePath,
-                Icon = BuildIconPath,
-                OutDir = BuildOutDir,
+                Readme = new FileInfo(BuildReadmePath)
+                    .GetFullNameRelativeToFile(ConfigurationFileOutputPath),
+                Icon = new FileInfo(BuildIconPath)
+                    .GetFullNameRelativeToFile(ConfigurationFileOutputPath),
+                OutDir = new DirectoryInfo(BuildOutDir)
+                    .GetFullNameRelativeToFile(ConfigurationFileOutputPath),
                 CopyPaths = BuildCopyPaths
                     .Select(ThunderstoreProject.BuildData.CopyPath.FromTaskItem)
                     .Select(item => item.MakeRelativeToFile(ConfigurationFileOutputPath))

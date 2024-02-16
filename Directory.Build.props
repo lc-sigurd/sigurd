@@ -55,9 +55,9 @@
         <IsThunderstorePackable>false</IsThunderstorePackable>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
-        <ThunderstoreReadmePath>../../README.md</ThunderstoreReadmePath>
-        <ThunderstoreIconPath>icons/in-deep.png</ThunderstoreIconPath>
-        <ThunderstoreOutDir>../dist</ThunderstoreOutDir>
+        <ThunderstoreReadmePath>$(ProjectDir)../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>$(ProjectDir)assets/icons/in-deep.png</ThunderstoreIconPath>
+        <ThunderstoreOutDir>$(OutDir)dist</ThunderstoreOutDir>
     </PropertyGroup>
 
     <ItemGroup>
