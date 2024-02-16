@@ -1,11 +1,17 @@
+/*
+ * https://github.com/Cryptoc1/lc-plugin-sdk/blob/cc85330eb6f219ec1944fcf11620fc8c6d54e414/src/Internal/ThunderDependency.cs
+ * LethalCompany.Plugin.SDK Copyright 2023 Samuel Steele.
+ * Samuel Steele licenses this file to the Sigurd Team under the MIT license.
+ * The Sigurd Team licenses this file to Lordfirespeed under the LGPL-3.0-OR-LATER license.
+ * Lordfirespeed licenses this file to you under the LGPL-3.0-OR-LATER license.
+ */
+
 using System;
 using Microsoft.Build.Framework;
 using Semver;
 
 namespace MSBuildTasks.PatchThunderstoreMetadata;
 
-// https://github.com/Cryptoc1/lc-plugin-sdk/blob/cc85330eb6f219ec1944fcf11620fc8c6d54e414/src/Internal/ThunderDependency.cs
-// LethalCompany.Plugin.SDK Copyright 2023 Samuel Steele
 internal sealed record ThunderstorePackageMoniker(string Name, string Namespace, SemVersion Version) : IEquatable<string>
 {
     public readonly string FullName = $"{Namespace}-{Name}";

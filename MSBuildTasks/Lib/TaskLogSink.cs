@@ -1,3 +1,11 @@
+/*
+ * https://github.com/EvaisaDev/UnityNetcodePatcher/blob/c64eb86e74e85e1badc442adc0bf270bab0df6b6/NetcodePatcher.MSBuild/TaskLogSink.cs
+ * UnityNetcodePatcher Copyright (c) 2023 EvaisaDev.
+ * EvaisaDev licenses this file to the Sigurd Team under the MIT license.
+ * The Sigurd Team licenses this file to Lordfirespeed under the LGPL-3.0-OR-LATER license.
+ * Lordfirespeed licenses this file to you under the LGPL-3.0-OR-LATER license.
+ */
+
 using System;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -8,8 +16,6 @@ using Serilog.Events;
 
 namespace NetcodePatcher.MSBuild;
 
-// https://github.com/EvaisaDev/UnityNetcodePatcher/blob/c64eb86e74e85e1badc442adc0bf270bab0df6b6/NetcodePatcher.MSBuild/TaskLogSink.cs
-// UnityNetcodePatcher Copyright (c) 2023 Evaisa, Lordfirespeed
 public class TaskLogSink : ILogEventSink
 {
     private readonly IFormatProvider? _formatProvider = null;
