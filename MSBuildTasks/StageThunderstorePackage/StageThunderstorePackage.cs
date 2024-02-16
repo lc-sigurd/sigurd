@@ -69,7 +69,7 @@ public class StageThunderstorePackage : TaskBase
     public override bool Execute()
     {
         Serilog.Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Verbose()
             .WriteTo.TaskLoggingHelper(Log)
             .CreateLogger();
 
