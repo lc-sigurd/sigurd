@@ -60,6 +60,7 @@ internal static class MyPluginInfo
         Name="PatchThunderstoreMetadata"
         DependsOnTargets="SetPluginVersion"
         Condition="$(IsThunderstorePackable)"
+        Outputs="$(_ConfigurationFileOutputPath)"
     >
         <PropertyGroup>
             <_ConfigurationFileOutputPath>$(ProjectDir)assets/thunderstore.toml.user</_ConfigurationFileOutputPath>
