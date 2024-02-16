@@ -142,6 +142,22 @@ public class ThunderstoreProject : BaseToml<ThunderstoreProject>
     [TomlProperty("publish")]
     public PublishData? Publish { get; set; }
 
+    [TomlDoNotInlineObject]
+    public class InstallData
+    {
+        [TomlDoNotInlineObject]
+        public class InstallerDeclaration
+        {
+            [TomlProperty("identifier")]
+            public string? Identifier { get; set; }
+        }
+
+        [TomlProperty("installers")]
+        public InstallerDeclaration[] InstallerDeclarations { get; set; } = Array.Empty<InstallerDeclaration>();
+    }
+    [TomlProperty("install")]
+    public InstallData? Install { get; set; }
+
     public ThunderstoreProject() { }
 
     public ThunderstoreProject(bool initialize)
@@ -152,5 +168,6 @@ public class ThunderstoreProject : BaseToml<ThunderstoreProject>
         Package = new PackageData();
         Build = new BuildData();
         Publish = new PublishData();
+        Install = new InstallData();
     }
 }
