@@ -19,7 +19,7 @@
 
         <RootNamespace>SigurdLib.Patcher</RootNamespace>
     </PropertyGroup>
-    
+
     <!-- Thunderstore metadata -->
     <ItemGroup>
         <ThunderstoreBuildCopyPath Remove="$(TargetPath)"/>
@@ -36,10 +36,11 @@
     <!-- Runtime assembly references -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
-        <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+        <Reference Include="BepInEx.Preloader" Publicize="true">
+            <HintPath>$(ProjectDir)../libs/bepinex-preloader/BepInEx.Preloader.dll</HintPath>
+        </Reference>
     </ItemGroup>
-    
+
     <!-- Project references -->
     <ItemGroup>
         <ProjectReference Include="$(ProjectDir)../SigurdLib.PluginLoader/SigurdLib.PluginLoader.csproj" />
