@@ -84,7 +84,7 @@ internal static class MyPluginInfo
 
     <PropertyGroup>
         <ShouldThunderstorePackThisBuild>false</ShouldThunderstorePackThisBuild>
-        <ShouldThunderstorePackThisBuild Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable)  and $(Configuration) == 'Release'">true</ShouldThunderstorePackThisBuild>
+        <ShouldThunderstorePackThisBuild Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable)">true</ShouldThunderstorePackThisBuild>
     </PropertyGroup>
 
     <Target
