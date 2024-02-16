@@ -29,11 +29,13 @@ public class StageThunderstorePackage : TaskBase
     [MemberNotNull(nameof(Packages), nameof(StagingProfilePath))]
     private void ValidateInputs()
     {
+        Serilog.Log.Verbose("Validating inputs");
+
         if (Packages is not [_, ..])
-            throw new ArgumentException("At least one package must be specified for staging.");
+            throw new ArgumentException("At least one package must be specified for staging");
 
         if (String.IsNullOrWhiteSpace(StagingProfilePath))
-            throw new ArgumentException("Stage profile path cannot be null, empty, or whitespace.");
+            throw new ArgumentException("Stage profile path cannot be null, empty, or whitespace");
     }
 
     [MemberNotNullWhen(true, nameof(_parsedStagingProfilePath))]
@@ -43,38 +45,49 @@ public class StageThunderstorePackage : TaskBase
     private void EnsureValidParsedStageProfilePath()
     {
         if (ParsedStagingProfilePathIsValid) return;
-        throw new ArgumentException("Staging profile path does not exist or is not a directory.");
+        throw new ArgumentException("Staging profile path does not exist or is not a directory");
     }
 
     [MemberNotNull(nameof(_parsedPackages), nameof(_parsedStagingProfilePath))]
     private void ParseInputs()
     {
         ValidateInputs();
+        Serilog.Log.Verbose("Parsing inputs");
 
         _parsedStagingProfilePath = new DirectoryInfo(StagingProfilePath);
         EnsureValidParsedStageProfilePath();
+        Serilog.Log.Debug("Parsed profile directory is {ProfileDir}", _parsedStagingProfilePath);
 
         _parsedPackages = Packages
             .Select(item => item.ItemSpec)
             .Select(path => new FileInfo(path))
             .Select(fileInfo => new ThunderstorePackageArchive(fileInfo))
             .ToArray();
+        Serilog.Log.Debug("Parsed package array is {Packages}", _parsedPackages);
     }
 
     public override bool Execute()
     {
         Serilog.Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
+            .MinimumLevel.Debug()
             .WriteTo.TaskLoggingHelper(Log)
             .CreateLogger();
 
-        Serilog.Log.Information("Plugin staging started.");
+        try {
+            ParseInputs();
 
-        ParseInputs();
-        foreach (var packageArchive in _parsedPackages) {
-            packageArchive.StageToProfile(_parsedStagingProfilePath);
+            Serilog.Log.Information("Staging packages from {ProjectName} to test profile at {TestProfile}", ProjectName, _parsedStagingProfilePath);
+
+            foreach (var packageArchive in _parsedPackages) {
+                packageArchive.StageToProfile(_parsedStagingProfilePath);
+            }
+
+            Serilog.Log.Information("Successfully staged {ProjectName} to {TestProfile}", ProjectName, _parsedStagingProfilePath);
+        }
+        catch (Exception exc) when (exc is InvalidOperationException or ArgumentException) {
+            Serilog.Log.Error(exc, "Failed to stage {ProjectName}", ProjectName);
         }
 
-        return true;
+        return !Log.HasLoggedErrors;
     }
 }

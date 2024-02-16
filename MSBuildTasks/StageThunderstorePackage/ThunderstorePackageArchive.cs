@@ -41,6 +41,7 @@ public class ThunderstorePackageArchive
 
     private void ReadMetadata()
     {
+        Serilog.Log.Debug("Attempting to read {ArchivePath}", ArchivePath);
         EnsureValidArchive();
         using var archiveHandle = ZipFile.OpenRead(ArchivePath.FullName);
 
@@ -61,22 +62,28 @@ public class ThunderstorePackageArchive
 
         PackageNamespace = @namespace;
         PackageName = name;
+
+        Serilog.Log.Debug("Read namespace {Namespace}, name {Name} from package manifest", PackageNamespace, PackageName);
     }
 
     public void StageToProfile(DirectoryInfo profilePath)
     {
+        Serilog.Log.Verbose("Now staging {Package} to {Profile}", this, profilePath);
         EnsureValidArchive();
 
         DirectoryInfo defaultLocation = profilePath.CreateSubdirectory(Rules.DefaultLocationRule.GetEffectiveRoute(this));
         using var archiveHandle = ZipFile.OpenRead(ArchivePath.FullName);
 
+        Serilog.Log.Debug("Extracting package");
+        Serilog.Log.Debug("------------------");
         foreach (var archiveEntry in archiveHandle.Entries) {
             ExtractWithInstallRules(archiveEntry);
         }
+        Serilog.Log.Debug(String.Empty);
 
         void ExtractWithInstallRules(ZipArchiveEntry entry)
         {
-            Serilog.Log.Debug("Now considering {Entry}", entry);
+            Serilog.Log.Debug("Now considering {Entry} of {Archive}", entry, this);
             if (TryMatchAndApplyRouteRule(entry)) return;
             if (TryMatchAndApplyImplicitRule(entry)) return;
             FlattenIntoDefaultLocation(entry);
@@ -87,13 +94,12 @@ public class ThunderstorePackageArchive
             var ruleMatch = Rules.MatchRouteRule(entry);
             if (ruleMatch is null) return false;
 
-            Serilog.Log.Debug("Matched rule by path: {Rule}", ruleMatch);
+            Serilog.Log.Debug("{Entry} matched rule by path: {Rule}", entry, ruleMatch);
 
             var relativeExtractFilePath = Path.Join(ruleMatch.GetEffectiveRoute(this), entry.FullName.Substring(ruleMatch.Route.Length));
             var extractDirectoryPath = profilePath.CreateSubdirectory(Path.GetDirectoryName(relativeExtractFilePath)!);
             var extractFilePath = Path.Join(extractDirectoryPath.FullName, entry.Name);
-            entry.ExtractToFile(extractFilePath, true);
-            Serilog.Log.Debug("Wrote to {extractFilePath}", extractFilePath);
+            ExtractEntry(entry, extractFilePath);
             return true;
         }
 
@@ -102,19 +108,24 @@ public class ThunderstorePackageArchive
             var ruleMatch = Rules.MatchImplicitRule(entry);
             if (ruleMatch is null) return false;
 
-            Serilog.Log.Debug("Matched rule by file extension: {Rule}", ruleMatch);
+            Serilog.Log.Debug("{Entry} matched rule by file extension: {Rule}", entry, ruleMatch);
 
             var extractDirectoryPath = profilePath.CreateSubdirectory(ruleMatch.GetEffectiveRoute(this));
             var extractFilePath = Path.Join(extractDirectoryPath.FullName, entry.Name);
-            entry.ExtractToFile(extractFilePath, true);
-            Serilog.Log.Debug("Wrote to {extractFilePath}", extractFilePath);
+            ExtractEntry(entry, extractFilePath);
             return true;
         }
 
         void FlattenIntoDefaultLocation(ZipArchiveEntry entry)
         {
-            Serilog.Log.Debug("No rule matched. Flattening into {DefaultLocation}", defaultLocation);
-            entry.ExtractToFile(Path.Join(defaultLocation.FullName, entry.Name), true);
+            Serilog.Log.Debug("No rule matched {Entry}. Flattening into {DefaultLocation}", entry, defaultLocation);
+            ExtractEntry(entry, Path.Join(defaultLocation.FullName, entry.Name));
+        }
+
+        void ExtractEntry(ZipArchiveEntry entry, string path)
+        {
+            entry.ExtractToFile(path, true);
+            Serilog.Log.Debug("{Entry} extracted to {Path}", entry, path);
         }
     }
 
