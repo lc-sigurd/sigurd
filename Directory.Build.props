@@ -12,6 +12,9 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1701;1702;0436</NoWarn>
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
         <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
     </PropertyGroup>
 
@@ -88,9 +91,6 @@
 
     <!-- Release optimisations -->
     <PropertyGroup Condition="$(Configuration) == 'Release'">
-        <DebugType>embedded</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <IncludeSymbols>true</IncludeSymbols>
         <Optimize>true</Optimize>
     </PropertyGroup>
 
