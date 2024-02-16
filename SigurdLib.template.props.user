@@ -11,11 +11,9 @@
         AfterTargets="ThunderstorePack"
         Condition="false and $(ShouldThunderstorePackThisBuild)"
     >
-        <Message Importance="high" Text="Staging $(ProjectName) to test profile..." />
         <ItemGroup>
             <StageThunderstorePackageList Include="$(ThunderstoreOutDir)*-$(MinVerVersion).zip" />
         </ItemGroup>
-        <StageThunderstorePackage Packages="@(StageThunderstorePackageList)" StageProfilePath="$(TestProfileDir)" />
-        <Message Importance="high" Text="$(ProjectName) staged successfully." />
+        <StageThunderstorePackage Packages="@(StageThunderstorePackageList)" StagingProfilePath="$(TestProfileDir)" />
     </Target>
 </Project>

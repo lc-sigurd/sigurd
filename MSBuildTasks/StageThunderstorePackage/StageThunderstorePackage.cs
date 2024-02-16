@@ -20,38 +20,38 @@ public class StageThunderstorePackage : TaskBase
     public ITaskItem[]? Packages { get; set; }
 
     [Required]
-    public string? StageProfilePath { get; set; }
+    public string? StagingProfilePath { get; set; }
 
     private ThunderstorePackageArchive[]? _parsedPackages;
 
-    private DirectoryInfo? _parsedStageProfilePath;
+    private DirectoryInfo? _parsedStagingProfilePath;
 
-    [MemberNotNull(nameof(Packages), nameof(StageProfilePath))]
+    [MemberNotNull(nameof(Packages), nameof(StagingProfilePath))]
     private void ValidateInputs()
     {
         if (Packages is not [_, ..])
             throw new ArgumentException("At least one package must be specified for staging.");
 
-        if (String.IsNullOrWhiteSpace(StageProfilePath))
+        if (String.IsNullOrWhiteSpace(StagingProfilePath))
             throw new ArgumentException("Stage profile path cannot be null, empty, or whitespace.");
     }
 
-    [MemberNotNullWhen(true, nameof(_parsedStageProfilePath))]
-    public bool ParsedStageProfilePathIsValid => _parsedStageProfilePath is { Exists: true } && _parsedStageProfilePath.HasAttributes(FileAttributes.Directory);
+    [MemberNotNullWhen(true, nameof(_parsedStagingProfilePath))]
+    public bool ParsedStagingProfilePathIsValid => _parsedStagingProfilePath is { Exists: true } && _parsedStagingProfilePath.HasAttributes(FileAttributes.Directory);
 
-    [MemberNotNull(nameof(_parsedStageProfilePath))]
+    [MemberNotNull(nameof(_parsedStagingProfilePath))]
     private void EnsureValidParsedStageProfilePath()
     {
-        if (ParsedStageProfilePathIsValid) return;
-        throw new ArgumentException("Stage profile path does not exist or is not a directory.");
+        if (ParsedStagingProfilePathIsValid) return;
+        throw new ArgumentException("Staging profile path does not exist or is not a directory.");
     }
 
-    [MemberNotNull(nameof(_parsedPackages), nameof(_parsedStageProfilePath))]
+    [MemberNotNull(nameof(_parsedPackages), nameof(_parsedStagingProfilePath))]
     private void ParseInputs()
     {
         ValidateInputs();
 
-        _parsedStageProfilePath = new DirectoryInfo(StageProfilePath);
+        _parsedStagingProfilePath = new DirectoryInfo(StagingProfilePath);
         EnsureValidParsedStageProfilePath();
 
         _parsedPackages = Packages
@@ -72,7 +72,7 @@ public class StageThunderstorePackage : TaskBase
 
         ParseInputs();
         foreach (var packageArchive in _parsedPackages) {
-            packageArchive.StageToProfile(_parsedStageProfilePath);
+            packageArchive.StageToProfile(_parsedStagingProfilePath);
         }
 
         return true;
