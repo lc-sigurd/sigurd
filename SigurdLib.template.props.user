@@ -13,7 +13,7 @@
     >
         <Message Importance="high" Text="Staging $(ProjectName) to test profile..." />
         <ItemGroup>
-            <StageThunderstorePackageList Include="$(ProjectDir)dist/*-$(MinVerVersion).zip" />
+            <StageThunderstorePackageList Include="$(ThunderstoreOutDir)*-$(MinVerVersion).zip" />
         </ItemGroup>
         <StageThunderstorePackage Packages="@(StageThunderstorePackageList)" StageProfilePath="$(TestProfileDir)" />
         <Message Importance="high" Text="$(ProjectName) staged successfully." />
