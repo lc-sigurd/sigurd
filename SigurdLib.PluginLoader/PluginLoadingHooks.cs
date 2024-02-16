@@ -65,40 +65,5 @@ public static class PluginLoadingHooks
                 .Emit(OpCodes.Ldloc_S, (byte)23)
                 .Emit(OpCodes.Call, AccessTools.Method(typeof(PluginLoadingHooks), nameof(InvokePost)));
         }
-
-#if false
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> TranspileChainloaderStart(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        {
-            var matcher = new CodeMatcher(instructions, generator);
-
-            Logger.LogDebugInstructionsFrom(matcher);
-
-            matcher
-                .MatchForward(
-                    false,
-                    new CodeMatch(OpCodes.Ldloc_S, (byte)23),
-                    new CodeMatch(OpCodes.Call, AccessTools.PropertyGetter(typeof(Chainloader), nameof(Chainloader.ManagerObject))),
-                    new CodeMatch(OpCodes.Ldloc_S, (byte)31),
-                    new CodeMatch(OpCodes.Ldloc_S, (byte)23),
-                    new CodeMatch(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(PluginInfo), "TypeName")),
-                    new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(Assembly), nameof(Assembly.GetType), [typeof(string)])),
-                    new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(GameObject), nameof(GameObject.AddComponent), [typeof(Type)]))
-                )
-                .InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldloc_S, (byte)23),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PluginLoadingHooks), nameof(InvokePre)))
-                )
-                .Advance(7)
-                .InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldloc_S, (byte)23),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PluginLoadingHooks), nameof(InvokePost)))
-                );
-
-            Logger.LogDebugInstructionsFrom(matcher);
-
-            return matcher.InstructionEnumeration();
-        }
-#endif
     }
 }
