@@ -14,7 +14,7 @@ using ThunderstoreCLI.Models;
 
 namespace MSBuildTasks.GenThunderstoreMetadata;
 
-public sealed class GenThunderstoreMetadata : Microsoft.Build.Utilities.Task
+public sealed class GenThunderstoreMetadata : TaskBase
 {
     public string ConfigurationFileSchemaVersion { get; set; } = "0.0.1";
 

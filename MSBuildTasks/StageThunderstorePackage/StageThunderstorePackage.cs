@@ -8,14 +8,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using MSBuildTasks.Extensions;
 using MSBuildTasks.Lib;
 using Serilog;
 
 namespace MSBuildTasks.StageThunderstorePackage;
 
-public class StageThunderstorePackage : Task
+public class StageThunderstorePackage : TaskBase
 {
     [Required]
     public ITaskItem[]? Packages { get; set; }
