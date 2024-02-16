@@ -1,4 +1,4 @@
-<Project>
+<Project InitialTargets="InitializeProps">
     <!-- Build configurations -->
     <PropertyGroup>
         <Configurations>Debug;Release;BuildTasks</Configurations>
@@ -54,13 +54,18 @@
         </ThunderstorePublishCommunity>
     </ItemDefinitionGroup>
 
+    <Target Name="SetThunderstoreOutDir" BeforeTargets="InitializeProps" Condition="$(IsThunderstorePackable)">
+        <PropertyGroup>
+            <ThunderstoreOutDir>$(TargetDir)dist/</ThunderstoreOutDir>
+        </PropertyGroup>
+    </Target>
+
     <PropertyGroup>
         <IsThunderstorePackable>false</IsThunderstorePackable>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
-        <ThunderstoreReadmePath>$(ProjectDir)../README.md</ThunderstoreReadmePath>
-        <ThunderstoreIconPath>$(ProjectDir)assets/icons/in-deep.png</ThunderstoreIconPath>
-        <ThunderstoreOutDir>$(OutDir)dist</ThunderstoreOutDir>
+        <ThunderstoreReadmePath>$(MSBuildProjectDirectory)/../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>$(MSBuildProjectDirectory)/assets/icons/in-deep.png</ThunderstoreIconPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -96,4 +101,7 @@
 
     <!-- Import local user props -->
     <Import Project="$(SolutionDir)SigurdLib.props.user" Condition="$(CI) != 'true'"/>
+
+    <!-- Dummy target to execute 'initially' -->
+    <Target Name="InitializeProps" />
 </Project>
