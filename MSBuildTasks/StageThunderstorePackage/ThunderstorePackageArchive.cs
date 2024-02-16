@@ -116,4 +116,6 @@ public class ThunderstorePackageArchive
             entry.ExtractToFile(Path.Join(defaultLocation.FullName, entry.Name), true);
         }
     }
+
+    public override string ToString() => $"ThunderstorePackageArchive[{PackageIdentifier}] @ {ArchivePath}";
 }
