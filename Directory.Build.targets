@@ -59,7 +59,7 @@ internal static class MyPluginInfo
     <Target
         Name="PatchThunderstoreMetadata"
         DependsOnTargets="SetPluginVersion"
-        Condition="$(IsThunderstorePackable) == 'true'"
+        Condition="$(IsThunderstorePackable)"
     >
         <PropertyGroup>
             <_ConfigurationFileOutputPath>$(ProjectDir)assets/thunderstore.toml.user</_ConfigurationFileOutputPath>
@@ -84,7 +84,7 @@ internal static class MyPluginInfo
 
     <PropertyGroup>
         <ShouldThunderstorePackThisBuild>false</ShouldThunderstorePackThisBuild>
-        <ShouldThunderstorePackThisBuild Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'">true</ShouldThunderstorePackThisBuild>
+        <ShouldThunderstorePackThisBuild Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable)  and $(Configuration) == 'Release'">true</ShouldThunderstorePackThisBuild>
     </PropertyGroup>
 
     <Target
@@ -101,7 +101,7 @@ internal static class MyPluginInfo
         <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))"/>
     </Target>
 
-    <Target Name="ThunderstorePublish" DependsOnTargets="SetPluginVersion" Condition="$(IsThunderstorePackable) == 'true'">
         <Exec Command="dotnet tcli publish --config-path $(ProjectDir)assets/thunderstore.toml.user --file $(ProjectDir)dist/*-$(MinVerVersion).zip"/>
+    <Target Name="ThunderstorePublish" DependsOnTargets="SetPluginVersion" Condition="$(IsThunderstorePackable)">
     </Target>
 </Project>
