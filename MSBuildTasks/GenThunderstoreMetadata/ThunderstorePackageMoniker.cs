@@ -9,7 +9,7 @@ using System;
 using Microsoft.Build.Framework;
 using Semver;
 
-namespace MSBuildTasks.PatchThunderstoreMetadata;
+namespace MSBuildTasks.GenThunderstoreMetadata;
 
 internal sealed record ThunderstorePackageMoniker(string Name, string Namespace, SemVersion Version) : IEquatable<string>
 {

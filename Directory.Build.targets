@@ -57,7 +57,7 @@ internal static class MyPluginInfo
     </Target>
 
     <Target
-        Name="PatchThunderstoreMetadata"
+        Name="GenThunderstoreMetadata"
         DependsOnTargets="SetPluginVersion"
         Condition="$(IsThunderstorePackable)"
         Outputs="$(_ConfigurationFileOutputPath)"
@@ -66,7 +66,7 @@ internal static class MyPluginInfo
             <_ConfigurationFileOutputPath>$(ProjectDir)assets/thunderstore.toml.user</_ConfigurationFileOutputPath>
         </PropertyGroup>
 
-        <PatchThunderstoreMetadata
+        <GenThunderstoreMetadata
             ConfigurationFileOutputPath="$(_ConfigurationFileOutputPath)"
             PackageNamespace="$(ThunderstoreNamespace)"
             PackageName="$(ThunderstoreName)"
@@ -90,7 +90,7 @@ internal static class MyPluginInfo
 
     <Target
         Name="ThunderstorePack"
-        DependsOnTargets="NetcodePatch;SetPluginVersion;PatchThunderstoreMetadata"
+        DependsOnTargets="NetcodePatch;SetPluginVersion;GenThunderstoreMetadata"
         AfterTargets="PostBuildEvent"
         Condition="$(ShouldThunderstorePackThisBuild)"
     >

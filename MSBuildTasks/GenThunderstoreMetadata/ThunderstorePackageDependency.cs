@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using Microsoft.Build.Framework;
 
-namespace MSBuildTasks.PatchThunderstoreMetadata;
+namespace MSBuildTasks.GenThunderstoreMetadata;
 
 internal sealed record ThunderstorePackageDependency(ThunderstorePackageMoniker Moniker) : IEquatable<string>
 {

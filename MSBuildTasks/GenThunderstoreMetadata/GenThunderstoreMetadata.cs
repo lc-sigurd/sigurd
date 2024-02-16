@@ -12,9 +12,9 @@ using MSBuildTasks.Lib;
 using Serilog;
 using ThunderstoreCLI.Models;
 
-namespace MSBuildTasks.PatchThunderstoreMetadata;
+namespace MSBuildTasks.GenThunderstoreMetadata;
 
-public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
+public sealed class GenThunderstoreMetadata : Microsoft.Build.Utilities.Task
 {
     public string ConfigurationFileSchemaVersion { get; set; } = "0.0.1";
 
