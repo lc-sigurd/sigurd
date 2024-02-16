@@ -6,15 +6,16 @@
     </PropertyGroup>
 
     <!-- Enable by removing the 'false and' part of the condition -->
-    <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="false and $(IsThunderstorePackable)">
-        <PropertyGroup>
-            <TestProfilePluginDir>$(TestProfileDir)BepInEx/plugins/$(ThunderstoreNamespace)-$(ThunderstoreName)/$(ThunderstoreName)/</TestProfilePluginDir>
-        </PropertyGroup>
-        <MakeDir Directories="$(TestProfilePluginDir)" Condition="!Exists('$(TestProfilePluginDir)')"/>
+    <Target
+        Name="CopyToTestProfile"
+        AfterTargets="ThunderstorePack"
+        Condition="false and $(ShouldThunderstorePackThisBuild)"
+    >
+        <Message Importance="high" Text="Staging $(ProjectName) to test profile..." />
         <ItemGroup>
-            <TestProfileStageFiles Include="$(TargetPath)" DestinationFolder="$(TestProfilePluginDir)"/>
-            <TestProfileStageFiles Include="$(ProjectDir)assets/bundles/*" DestinationFolder="$(TestProfilePluginDir)bundles/"/>
+            <StageThunderstorePackageList Include="$(ProjectDir)dist/*-$(MinVerVersion).zip" />
         </ItemGroup>
-        <Copy SourceFiles="@(TestProfileStageFiles->'%(Identity)')" DestinationFolder="%(DestinationFolder)" />
+        <StageThunderstorePackage Packages="@(StageThunderstorePackageList)" StageProfilePath="$(TestProfileDir)" />
+        <Message Importance="high" Text="$(ProjectName) staged successfully." />
     </Target>
 </Project>
