@@ -13,6 +13,7 @@ The Sigurd Team licenses this file to you under the LGPL-3.0-OR-LATER license.
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.*"/>
+        <PackageReference Include="Microsoft.Build" Version="17.*"/>
         <PackageReference Include="Samboy063.Tomlet" Version="5.3.0"/>
         <PackageReference Include="Semver" Version="2.3.0"/>
         <PackageReference Include="Serilog" Version="3.1.1"/>
