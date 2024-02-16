@@ -47,4 +47,36 @@
         <ProjectReference Include="$(ProjectDir)../SigurdLib.Patcher/SigurdLib.Patcher.csproj" />
     </ItemGroup>
 
+    <!-- https://github.com/BepInEx/BepInEx.Templates/blob/9d628c67de0a84337f38f755eeb6646696ae8423/BepInEx.PluginInfoProps/BepInEx.PluginInfoProps.props -->
+    <!-- BepInEx.PluginInfoProps Copyright (c) 2021 BepInEx -->
+    <Target
+        Name="GeneratePluginLoaderInfo"
+        DependsOnTargets="SetPluginVersion"
+        BeforeTargets="BeforeCompile;CoreCompile"
+        Inputs="$(MSBuildAllProjects)"
+        Outputs="$(IntermediateOutputPath)PluginLoaderInfo.cs"
+    >
+        <PropertyGroup>
+            <GeneratedText><![CDATA[
+namespace $(RootNamespace)%3B
+
+#pragma warning disable 1591
+internal static class PluginLoaderInfo
+{
+    public const string PRODUCT_GUID = "$(AssemblyName)"%3B
+    public const string PRODUCT_NAME = "$(Product)"%3B
+    public const string PRODUCT_VERSION = "$(PlainVersion)"%3B
+}
+#pragma warning restore 1591
+
+      ]]></GeneratedText>
+            <GeneratedFilePath>$(IntermediateOutputPath)PluginLoaderInfo.cs</GeneratedFilePath>
+        </PropertyGroup>
+        <ItemGroup>
+            <Compile Include="$(GeneratedFilePath)" />
+            <FileWrites Include="$(GeneratedFilePath)" />
+        </ItemGroup>
+        <WriteLinesToFile Lines="$(GeneratedText)" File="$(GeneratedFilePath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    </Target>
+
 </Project>
