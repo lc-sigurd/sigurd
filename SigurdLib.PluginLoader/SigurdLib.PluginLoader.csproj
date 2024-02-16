@@ -24,6 +24,10 @@
     <ItemGroup>
         <ThunderstoreBuildCopyPath Remove="$(TargetPath)"/>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
+        <ThunderstoreBuildCopyPath 
+            Include="$(ProjectDir)../SigurdLib.Patcher/bin/Release/netstandard2.1/com.sigurd.sigurd.patcher.dll" 
+            Destination="BepInEx/patchers/SigurdLib.Patcher/"
+        />
     </ItemGroup>
 
     <!-- Development dependencies -->
