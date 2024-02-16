@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
-using NetcodePatcher.MSBuild;
+using MSBuildTasks.Lib;
 using Serilog;
 using ThunderstoreCLI.Models;
 

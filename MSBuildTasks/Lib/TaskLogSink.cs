@@ -14,7 +14,7 @@ using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace NetcodePatcher.MSBuild;
+namespace MSBuildTasks.Lib;
 
 public class TaskLogSink : ILogEventSink
 {

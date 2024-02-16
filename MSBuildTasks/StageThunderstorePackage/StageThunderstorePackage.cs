@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using MSBuildTasks.Extensions;
-using NetcodePatcher.MSBuild;
+using MSBuildTasks.Lib;
 using Serilog;
 
 namespace MSBuildTasks.StageThunderstorePackage;
