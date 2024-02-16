@@ -66,7 +66,7 @@ public sealed class GenThunderstoreMetadata : TaskBase
             .WriteTo.TaskLoggingHelper(Log)
             .CreateLogger();
 
-        Serilog.Log.Information("Generating Thunderstore package meta-manifest...");
+        Serilog.Log.Information("Generating {ProjectName:l} Thunderstore package meta-manifest...", ProjectName);
 
         var project = new ThunderstoreProject {
             Config = new ThunderstoreProject.ConfigData {
@@ -131,6 +131,7 @@ public sealed class GenThunderstoreMetadata : TaskBase
 
         Directory.CreateDirectory(Path.GetDirectoryName(ConfigurationFileOutputPath)!);
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
+        Serilog.Log.Information("Successfully generated {ConfigurationFileName:l} for {ProjectName:l}", Path.GetFileName(ConfigurationFileOutputPath), ProjectName);
         return true;
     }
 }
