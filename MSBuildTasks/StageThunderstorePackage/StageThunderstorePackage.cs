@@ -29,7 +29,7 @@ public class StageThunderstorePackage : TaskBase
     [MemberNotNull(nameof(Packages), nameof(StagingProfilePath))]
     private void ValidateInputs()
     {
-        Serilog.Log.Verbose("Validating inputs");
+        Serilog.Log.Debug("Validating inputs");
 
         if (Packages is not [_, ..])
             throw new ArgumentException("At least one package must be specified for staging");
@@ -52,18 +52,18 @@ public class StageThunderstorePackage : TaskBase
     private void ParseInputs()
     {
         ValidateInputs();
-        Serilog.Log.Verbose("Parsing inputs");
+        Serilog.Log.Debug("Parsing inputs");
 
         _parsedStagingProfilePath = new DirectoryInfo(StagingProfilePath);
         EnsureValidParsedStageProfilePath();
-        Serilog.Log.Debug("Parsed profile directory is {ProfileDir}", _parsedStagingProfilePath);
+        Serilog.Log.Verbose("Parsed profile directory is {ProfileDir}", _parsedStagingProfilePath);
 
         _parsedPackages = Packages
             .Select(item => item.ItemSpec)
             .Select(path => new FileInfo(path))
             .Select(fileInfo => new ThunderstorePackageArchive(fileInfo))
             .ToArray();
-        Serilog.Log.Debug("Parsed package array is {Packages}", _parsedPackages);
+        Serilog.Log.Verbose("Parsed package array is {Packages}", _parsedPackages);
     }
 
     public override bool Execute()
