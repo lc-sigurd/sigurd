@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using MSBuildTasks.Extensions;
-using MSBuildTasks.Lib;
 using Serilog;
 using ThunderstoreCLI.Models;
 
@@ -63,7 +62,7 @@ public sealed class GenThunderstoreMetadata : TaskBase
     {
         Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .WriteTo.TaskLoggingHelper(Log)
+            .WriteTo.MSBuildTask(this)
             .CreateLogger();
 
         Serilog.Log.Information("Generating {ProjectName:l} Thunderstore package meta-manifest...", ProjectName);
