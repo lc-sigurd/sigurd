@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using MSBuildTasks.Extensions;
-using Serilog;
 
 namespace MSBuildTasks.StageThunderstorePackage;
 
@@ -67,10 +66,7 @@ public class StageThunderstorePackage : TaskBase
 
     public override bool Execute()
     {
-        Serilog.Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose()
-            .WriteTo.MSBuildTask(this)
-            .CreateLogger();
+        InitializeSerilog();
 
         try {
             ParseInputs();

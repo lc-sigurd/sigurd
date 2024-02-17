@@ -5,6 +5,7 @@
 
 using Microsoft.Build.Execution;
 using MSBuildTasks.Extensions;
+using Serilog;
 
 namespace MSBuildTasks;
 
@@ -14,4 +15,12 @@ public abstract class TaskBase : Microsoft.Build.Utilities.Task
     protected ProjectInstance Project => _project ??= BuildEngine.GetProjectInstance();
 
     protected string ProjectName => Project.GetPropertyValue("ProjectName");
+
+    protected void InitializeSerilog()
+    {
+        Serilog.Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.MSBuildTask(this)
+            .CreateLogger();
+    }
 }
