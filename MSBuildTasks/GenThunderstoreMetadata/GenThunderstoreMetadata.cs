@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using MSBuildTasks.Extensions;
+using Serilog.Sinks.MSBuild.Themes;
 using ThunderstoreCLI.Models;
 
 namespace MSBuildTasks.GenThunderstoreMetadata;
@@ -126,7 +127,10 @@ public sealed class GenThunderstoreMetadata : TaskBase
 
         Directory.CreateDirectory(Path.GetDirectoryName(ConfigurationFileOutputPath)!);
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
-        Serilog.Log.Information("Successfully generated {ConfigurationFileName:l} for {ProjectName:l}", Path.GetFileName(ConfigurationFileOutputPath), ProjectName);
-        return true;
+        Serilog.Log
+            .ForContext(MessageClass.Success)
+            .Information("Successfully generated {ConfigurationFileName:l} for {ProjectName:l}", Path.GetFileName(ConfigurationFileOutputPath), ProjectName);
+
+        return !Log.HasLoggedErrors;
     }
 }

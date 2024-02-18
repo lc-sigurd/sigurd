@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using MSBuildTasks.Extensions;
+using Serilog.Sinks.MSBuild.Themes;
 
 namespace MSBuildTasks.StageThunderstorePackage;
 
@@ -77,10 +78,14 @@ public class StageThunderstorePackage : TaskBase
                 packageArchive.StageToProfile(_parsedStagingProfilePath);
             }
 
-            Serilog.Log.Information("Successfully staged {ProjectName} to {TestProfile}", ProjectName, _parsedStagingProfilePath);
+            Serilog.Log
+                .ForContext(MessageClass.Success)
+                .Information("Successfully staged {ProjectName} to {TestProfile}", ProjectName, _parsedStagingProfilePath);
         }
-        catch (Exception exc) when (exc is InvalidOperationException or ArgumentException) {
-            Serilog.Log.Error(exc, "Failed to stage {ProjectName}", ProjectName);
+        catch (Exception exc) {
+            Serilog.Log
+                .ForContext(MessageClass.Danger)
+                .Error(exc, "Failed to stage {ProjectName}", ProjectName);
         }
 
         return !Log.HasLoggedErrors;
