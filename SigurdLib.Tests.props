@@ -1,0 +1,29 @@
+<Project>
+    <PropertyGroup>
+        <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="xunit" Version="2.6.6"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="6.0.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <TestsForProjectName>$(MSBuildProjectName.Substring(0, $([MSBuild]::Subtract($(MSBuildProjectName.Length), 6)) ))</TestsForProjectName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../$(TestsForProjectName)/$(TestsForProjectName).csproj" />
+    </ItemGroup>
+</Project>
