@@ -18,10 +18,12 @@
         <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
     </PropertyGroup>
 
-    <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(ProjectName), '^SigurdLib.(.*)(?&lt;!Tests)$'))">
-        <InternalsVisibleTo Include="$(ProjectName).Tests" />
-        <InternalsVisibleTo Include="SigurdLib" />
+    <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^SigurdLib\..*(?&lt;!\.Tests)$'))">
+        <InternalsVisibleTo Include="$(AssemblyName).tests" />
+        <InternalsVisibleTo Include="com.sigurd.sigurd" />
     </ItemGroup>
+
+    <Import Project="SigurdLib.Tests.props" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^.*Tests$'))" />
 
     <!-- NuGet metadata -->
     <PropertyGroup>
