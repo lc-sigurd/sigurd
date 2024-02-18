@@ -1,14 +1,19 @@
+/*
+ * Copyright (c) 2024 Sigurd Team
+ * The Sigurd Team licenses this file to you under the LGPL-3.0-OR-LATER license.
+ */
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
-using NetcodePatcher.MSBuild;
-using Serilog;
+using MSBuildTasks.Extensions;
+using Serilog.Sinks.MSBuild.Themes;
 using ThunderstoreCLI.Models;
 
-namespace MSBuildTasks.PatchThunderstoreMetadata;
+namespace MSBuildTasks.GenThunderstoreMetadata;
 
-public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
+public sealed class GenThunderstoreMetadata : TaskBase
 {
     public string ConfigurationFileSchemaVersion { get; set; } = "0.0.1";
 
@@ -55,12 +60,9 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
 
     public override bool Execute()
     {
-        Serilog.Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .WriteTo.TaskLoggingHelper(Log)
-            .CreateLogger();
+        InitializeSerilog();
 
-        Serilog.Log.Information("Plugin meta-manifest patcher started.");
+        Serilog.Log.Information("Generating {ProjectName:l} Thunderstore package meta-manifest...", ProjectName);
 
         var project = new ThunderstoreProject {
             Config = new ThunderstoreProject.ConfigData {
@@ -81,9 +83,12 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
                     ),
             },
             Build = new ThunderstoreProject.BuildData {
-                Readme = BuildReadmePath,
-                Icon = BuildIconPath,
-                OutDir = BuildOutDir,
+                Readme = new FileInfo(BuildReadmePath)
+                    .GetFullNameRelativeToFile(ConfigurationFileOutputPath),
+                Icon = new FileInfo(BuildIconPath)
+                    .GetFullNameRelativeToFile(ConfigurationFileOutputPath),
+                OutDir = new DirectoryInfo(BuildOutDir)
+                    .GetFullNameRelativeToFile(ConfigurationFileOutputPath),
                 CopyPaths = BuildCopyPaths
                     .Select(ThunderstoreProject.BuildData.CopyPath.FromTaskItem)
                     .Select(item => item.MakeRelativeToFile(ConfigurationFileOutputPath))
@@ -120,7 +125,12 @@ public sealed class PatchThunderstoreMetadata : Microsoft.Build.Utilities.Task
                 .ToDictionary()
         };
 
+        Directory.CreateDirectory(Path.GetDirectoryName(ConfigurationFileOutputPath)!);
         File.WriteAllText(ConfigurationFileOutputPath, project.Serialize());
-        return true;
+        Serilog.Log
+            .ForContext(MessageClass.Success)
+            .Information("Successfully generated {ConfigurationFileName:l} for {ProjectName:l}", Path.GetFileName(ConfigurationFileOutputPath), ProjectName);
+
+        return !Log.HasLoggedErrors;
     }
 }

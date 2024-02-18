@@ -1,0 +1,49 @@
+﻿<!--
+Copyright (c) 2024 Sigurd Team
+The Sigurd Team licenses this file to you under the LGPL-3.0-OR-LATER license.
+-->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>com.sigurd.sigurd.patcher</AssemblyName>
+
+        <Id>SigurdLib.Patcher</Id>
+        <Product>SigurdLib.Patcher</Product>
+
+        <PackageId>SigurdLib.Patcher</PackageId>
+        <Description>Sigurd's preloader patcher.</Description>
+
+        <ThunderstoreName>Sigurd_Patcher</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's preloader patcher</ThunderstoreDescription>
+        <HasBepInPlugin>false</HasBepInPlugin>
+
+        <IsPackable>false</IsPackable>
+        <IsThunderstorePackable>false</IsThunderstorePackable>
+
+        <RootNamespace>SigurdLib.Patcher</RootNamespace>
+    </PropertyGroup>
+
+    <!-- Thunderstore metadata -->
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Remove="$(TargetPath)"/>
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/patchers/$(ProjectName)/"/>
+    </ItemGroup>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+        <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Runtime assembly references -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+        <Reference Include="BepInEx.Preloader" Publicize="true">
+            <HintPath>$(ProjectDir)../libs/bepinex-preloader/BepInEx.Preloader.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-<Project>
+<Project InitialTargets="InitializeProps">
     <!-- Build configurations -->
     <PropertyGroup>
         <Configurations>Debug;Release;BuildTasks</Configurations>
@@ -12,8 +12,16 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1701;1702;0436</NoWarn>
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
         <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
     </PropertyGroup>
+
+    <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(ProjectName), '^SigurdLib.(.*)(?&lt;!Tests)$'))">
+        <InternalsVisibleTo Include="$(ProjectName).Tests" />
+        <InternalsVisibleTo Include="SigurdLib" />
+    </ItemGroup>
 
     <!-- NuGet metadata -->
     <PropertyGroup>
@@ -46,25 +54,32 @@
         </ThunderstorePublishCommunity>
     </ItemDefinitionGroup>
 
+    <Target Name="SetThunderstoreOutDir" BeforeTargets="InitializeProps" Condition="$(IsThunderstorePackable)">
+        <PropertyGroup>
+            <ThunderstoreOutDir>$(TargetDir)dist/</ThunderstoreOutDir>
+        </PropertyGroup>
+    </Target>
+
     <PropertyGroup>
+        <IsThunderstorePackable>false</IsThunderstorePackable>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
-        <ThunderstoreReadmePath>../../README.md</ThunderstoreReadmePath>
-        <ThunderstoreIconPath>icons/in-deep.png</ThunderstoreIconPath>
-        <ThunderstoreOutDir>../dist</ThunderstoreOutDir>
+        <ThunderstoreReadmePath>$(MSBuildProjectDirectory)/../README.md</ThunderstoreReadmePath>
+        <ThunderstoreIconPath>$(MSBuildProjectDirectory)/assets/icons/in-deep.png</ThunderstoreIconPath>
     </PropertyGroup>
 
     <ItemGroup>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
-        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../CHANGELOG.md" Destination="/"/>
-        <ThunderstoreBuildCopyPath Include="$(MSBuildProjectDirectory)/../LICENSE" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../LICENSE" Destination="/"/>
         <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="libraries"/>
+        <ThunderstoreDependency Include="BepInEx-BepInExPack" Version="5.4.2100" Reference="false" />
     </ItemGroup>
 
     <!-- .NET Framework (.NET 4) reference assemblies  -->
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all"/>
     </ItemGroup>
 
     <!-- MinVer -->
@@ -81,12 +96,12 @@
 
     <!-- Release optimisations -->
     <PropertyGroup Condition="$(Configuration) == 'Release'">
-        <DebugType>embedded</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <IncludeSymbols>true</IncludeSymbols>
         <Optimize>true</Optimize>
     </PropertyGroup>
 
     <!-- Import local user props -->
     <Import Project="$(SolutionDir)SigurdLib.props.user" Condition="$(CI) != 'true'"/>
+
+    <!-- Dummy target to execute 'initially' -->
+    <Target Name="InitializeProps" />
 </Project>

@@ -8,36 +8,33 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
+    <Target Name="SetPluginVersion" AfterTargets="MinVer" DependsOnTargets="MinVer">
         <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
         <PropertyGroup>
             <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
-            <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
         </PropertyGroup>
     </Target>
 
     <!-- https://github.com/BepInEx/BepInEx.Templates/blob/9d628c67de0a84337f38f755eeb6646696ae8423/BepInEx.PluginInfoProps/BepInEx.PluginInfoProps.props -->
     <!-- BepInEx.PluginInfoProps Copyright (c) 2021 BepInEx -->
     <Target
-        Name="AddGeneratedFile"
+        Name="GenerateMyPluginInfo"
+        DependsOnTargets="SetPluginVersion"
         BeforeTargets="BeforeCompile;CoreCompile"
         Condition="$(HasBepInPlugin) == 'true'"
         Inputs="$(MSBuildAllProjects)"
         Outputs="$(IntermediateOutputPath)MyPluginInfo.cs"
     >
         <PropertyGroup>
-            <BepInExPluginGuid Condition="'$(BepInExPluginGuid)' == ''">$(AssemblyName)</BepInExPluginGuid>
-            <BepInExPluginName Condition="'$(BepInExPluginName)' == ''">$(Product)</BepInExPluginName>
-            <BepInExPluginVersion Condition="'$(BepInExPluginVersion)' == ''">$(Version)</BepInExPluginVersion>
             <GeneratedText><![CDATA[
 namespace $(RootNamespace)%3B
 
 #pragma warning disable 1591
 internal static class MyPluginInfo
 {
-    public const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
-    public const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
-    public const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
+    public const string PLUGIN_GUID = "$(AssemblyName)"%3B
+    public const string PLUGIN_NAME = "$(Product)"%3B
+    public const string PLUGIN_VERSION = "$(PlainVersion)"%3B
 }
 #pragma warning restore 1591
 
@@ -60,15 +57,16 @@ internal static class MyPluginInfo
     </Target>
 
     <Target
-        Name="PatchThunderstoreMetadata"
+        Name="GenThunderstoreMetadata"
         DependsOnTargets="SetPluginVersion"
-        Condition="$(IsThunderstorePackable) == 'true'"
+        Condition="$(IsThunderstorePackable)"
+        Outputs="$(_ConfigurationFileOutputPath)"
     >
         <PropertyGroup>
             <_ConfigurationFileOutputPath>$(ProjectDir)assets/thunderstore.toml.user</_ConfigurationFileOutputPath>
         </PropertyGroup>
 
-        <PatchThunderstoreMetadata
+        <GenThunderstoreMetadata
             ConfigurationFileOutputPath="$(_ConfigurationFileOutputPath)"
             PackageNamespace="$(ThunderstoreNamespace)"
             PackageName="$(ThunderstoreName)"
@@ -85,21 +83,26 @@ internal static class MyPluginInfo
         />
     </Target>
 
+    <PropertyGroup>
+        <ShouldThunderstorePackThisBuild>false</ShouldThunderstorePackThisBuild>
+        <ShouldThunderstorePackThisBuild Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable)">true</ShouldThunderstorePackThisBuild>
+    </PropertyGroup>
+
     <Target
         Name="ThunderstorePack"
-        DependsOnTargets="NetcodePatch;SetPluginVersion;PatchThunderstoreMetadata"
+        DependsOnTargets="NetcodePatch;SetPluginVersion;GenThunderstoreMetadata"
         AfterTargets="PostBuildEvent"
-        Condition="$(TargetFramework) == 'netstandard2.1' and $(IsThunderstorePackable) == 'true' and $(Configuration) == 'Release'"
+        Condition="$(ShouldThunderstorePackThisBuild)"
     >
         <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
         <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml.user --package-version $(PlainVersion)"/>
         <ItemGroup>
-            <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
+            <FilesToRename Include="$(ThunderstoreOutDir)*-$(PlainVersion).zip"/>
         </ItemGroup>
         <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))"/>
     </Target>
 
-    <Target Name="ThunderstorePublish" DependsOnTargets="SetPluginVersion" Condition="$(IsThunderstorePackable) == 'true'">
-        <Exec Command="dotnet tcli publish --config-path $(ProjectDir)assets/thunderstore.toml.user --file $(ProjectDir)dist/*-$(MinVerVersion).zip"/>
+    <Target Name="ThunderstorePublish" DependsOnTargets="SetPluginVersion" Condition="$(IsThunderstorePackable)">
+        <Exec Command="dotnet tcli publish --config-path $(ProjectDir)assets/thunderstore.toml.user --file $(ThunderstoreOutDir)*-$(MinVerVersion).zip"/>
     </Target>
 </Project>

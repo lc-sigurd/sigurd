@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>com.sigurd.sigurd.common</AssemblyName>
 
         <Id>SigurdLib.Common</Id>
@@ -23,6 +23,7 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+        <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Runtime assembly references -->
@@ -58,5 +59,10 @@
     </ItemGroup>
     <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../SigurdLib.Util/SigurdLib.Util.csproj" />
+        <ProjectReference Include="$(ProjectDir)../SigurdLib.PluginLoader/SigurdLib.PluginLoader.csproj" />
     </ItemGroup>
 </Project>

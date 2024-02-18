@@ -42,5 +42,6 @@
 
     <ItemGroup>
         <ProjectReference Include="$(ProjectDir)../SigurdLib.*/SigurdLib.*.csproj"/>
+        <ProjectReference Remove="$(ProjectDir)../*.Tests/*.Tests.csproj"/>
     </ItemGroup>
 </Project>

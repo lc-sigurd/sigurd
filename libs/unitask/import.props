@@ -1,0 +1,19 @@
+<Project>
+    <ItemGroup>
+        <Reference Include="UniTask">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.dll</HintPath>
+        </Reference>
+        <Reference Include="UniTask.Addressables">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.Addressables.dll</HintPath>
+        </Reference>
+        <Reference Include="UniTask.DOTween">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.DOTween.dll</HintPath>
+        </Reference>
+        <Reference Include="UniTask.Linq">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.Linq.dll</HintPath>
+        </Reference>
+        <Reference Include="UniTask.TextMeshPro">
+            <HintPath>$(MSBuildThisFileDirectory)UniTask.TextMeshPro.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>
