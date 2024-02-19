@@ -7,12 +7,19 @@ using SigurdLib.Util.Resources;
 
 namespace SigurdLib.PluginLoader;
 
+/// <summary>
+/// Utility class that keeps track of the active <see cref="PluginContainer"/> and exposes retrieval
+/// methods for it and its properties.
+/// </summary>
 public class PluginLoadingContext
 {
     private static Type BasePluginType = typeof(BaseUnityPlugin);
 
     private static readonly ThreadLocal<PluginLoadingContext> Context = new(() => new PluginLoadingContext());
 
+    /// <summary>
+    /// The thread-local <see cref="PluginLoadingContext"/> instance.
+    /// </summary>
     public static PluginLoadingContext Instance => Context.Value;
 
     private PluginContainer? _activeContainer;

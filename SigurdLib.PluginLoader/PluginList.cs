@@ -9,12 +9,19 @@ using SigurdLib.Util.Collections.Generic;
 
 namespace SigurdLib.PluginLoader;
 
+/// <summary>
+/// Utility class that keeps track of <see cref="PluginContainer"/> instances and exposes methods for their
+/// enumeration and lookup.
+/// </summary>
 public class PluginList
 {
     private static readonly IEqualityComparer<PluginInfo> InfoComparer = new MetadataPluginInfoComparer();
 
     private static PluginList? _instance;
 
+    /// <summary>
+    /// The global <see cref="PluginList"/> instance.
+    /// </summary>
     public static PluginList Instance => _instance ??= new PluginList();
 
     // If someone manages to install 4095 plugins, they have bigger problems than this
