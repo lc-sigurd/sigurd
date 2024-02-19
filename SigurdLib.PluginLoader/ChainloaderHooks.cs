@@ -17,14 +17,36 @@ namespace SigurdLib.PluginLoader;
 
 public static class ChainloaderHooks
 {
-    public class PluginLoadEventArgs : EventArgs
+    public class EventArgs : System.EventArgs;
+
+    public static class Plugin
     {
-        public required PluginInfo PluginInfo { get; init; }
+        public class EventArgs : ChainloaderHooks.EventArgs
+        {
+            public required PluginInfo PluginInfo { get; init; }
+        }
+
+        /// <summary>
+        /// Event that is invoked immediately before the <see cref="Chainloader"/> attempts
+        /// to load a plugin.
+        /// </summary>
+        public static event EventHandler<EventArgs>? OnPreLoad;
+
+        /// <summary>
+        /// Event that is invoked immediately after a plugin has successfully loaded.
+        /// </summary>
+        public static event EventHandler<EventArgs>? OnPostLoad;
+
+        internal static void InvokePre(PluginInfo pluginInfo) => OnPreLoad?.Invoke(null, new EventArgs { PluginInfo = pluginInfo });
+
+        internal static void InvokePost(PluginInfo pluginInfo) => OnPostLoad?.Invoke(null, new EventArgs { PluginInfo = pluginInfo });
     }
 
-    public static event EventHandler<PluginLoadEventArgs>? Pre;
-
-    public static event EventHandler<PluginLoadEventArgs>? Post;
+    /// <summary>
+    /// Event that is invoked after all plugins have loaded; just before <see cref="Chainloader._loaded"/>
+    /// is set to <see langword="true"/>.
+    /// </summary>
+    public static event EventHandler<EventArgs>? OnComplete;
 
     internal static ManualLogSource Logger = null!;
 
@@ -32,16 +54,15 @@ public static class ChainloaderHooks
     {
         Logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
 
-        Pre += (sender, args) => Logger.LogWarning($"Now loading {args.PluginInfo.Metadata.Name}");
-        Post += (sender, args) => Logger.LogWarning($"Just finished loading {args.PluginInfo.Metadata.Name}");
+        Plugin.OnPreLoad += (sender, args) => Logger.LogWarning($"Now loading {args.PluginInfo.Metadata.Name}");
+        Plugin.OnPostLoad += (sender, args) => Logger.LogWarning($"Just finished loading {args.PluginInfo.Metadata.Name}");
+        OnComplete += (sender, args) => Logger.LogWarning("Chainloader finished loading all plugins.");
 
         var harmony = new Harmony(PluginLoaderInfo.PRODUCT_GUID);
         harmony.PatchAll(typeof(ChainloaderStartPatches));
     }
 
-    internal static void InvokePre(PluginInfo pluginInfo) => Pre?.Invoke(null, new PluginLoadEventArgs { PluginInfo = pluginInfo });
-
-    internal static void InvokePost(PluginInfo pluginInfo) => Post?.Invoke(null, new PluginLoadEventArgs { PluginInfo = pluginInfo });
+    internal static void InvokeComplete() => OnComplete?.Invoke(null, new EventArgs { });
 
     [HarmonyPatch(typeof(Chainloader), nameof(Chainloader.Start))]
     static class ChainloaderStartPatches
@@ -52,6 +73,7 @@ public static class ChainloaderHooks
             var cursor = new ILCursor(ilContext);
 
             cursor
+                // Match ahead to just before the part where the actual `AddComponent<PluginType>()` is
                 .GotoNext(
                     instr => instr.MatchLdloc(23),
                     instr => instr.MatchCall(AccessTools.PropertyGetter(typeof(Chainloader), nameof(Chainloader.ManagerObject))),
@@ -61,14 +83,29 @@ public static class ChainloaderHooks
                     instr => instr.MatchCallvirt(AccessTools.Method(typeof(Assembly), nameof(Assembly.GetType), [typeof(string)])),
                     instr => instr.MatchCallvirt(AccessTools.Method(typeof(GameObject), nameof(GameObject.AddComponent), [typeof(Type)]))
                 )
+                // Load the current plugin info from local variables
                 .Emit(OpCodes.Ldloc_S, (byte)23)
-                .Emit(OpCodes.Call, AccessTools.Method(typeof(PluginLoadingHooks), nameof(InvokePre)));
+                // Invoke `OnPreLoad` event
+                .Emit(OpCodes.Call, AccessTools.Method(typeof(Plugin), nameof(Plugin.InvokePre)));
 
+            // Jump over the `AddComponent<PluginType>()` block
             cursor.Index += 7;
 
             cursor
+                // Load the current plugin info from local variables
                 .Emit(OpCodes.Ldloc_S, (byte)23)
-                .Emit(OpCodes.Call, AccessTools.Method(typeof(PluginLoadingHooks), nameof(InvokePost)));
+                // Invoke `OnPostLoad` event
+                .Emit(OpCodes.Call, AccessTools.Method(typeof(Plugin), nameof(Plugin.InvokePost)));
+
+            cursor
+                // Match ahead to where `Chainloader._loaded` is set to `true`
+                .GotoNext(
+                    instr => instr.MatchLdcI4(1),
+                    instr => instr.MatchStsfld(AccessTools.Field(typeof(Chainloader), "_loaded"))
+                )
+                // Invoke `OnComplete` event
+                .Emit(OpCodes.Call, AccessTools.Method(typeof(ChainloaderHooks), nameof(InvokeComplete)));
+            ;
         }
     }
 }
