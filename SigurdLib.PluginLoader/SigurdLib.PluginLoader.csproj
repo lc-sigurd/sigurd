@@ -20,12 +20,16 @@
         <RootNamespace>SigurdLib.PluginLoader</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="com.sigurd.sigurd.common"/>
+    </ItemGroup>
+
     <!-- Thunderstore metadata -->
     <ItemGroup>
         <ThunderstoreBuildCopyPath Remove="$(TargetPath)"/>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath 
-            Include="$(ProjectDir)../SigurdLib.Patcher/bin/Release/netstandard2.1/com.sigurd.sigurd.patcher.dll" 
+        <ThunderstoreBuildCopyPath
+            Include="$(ProjectDir)../SigurdLib.Patcher/bin/Release/netstandard2.1/com.sigurd.sigurd.patcher.dll"
             Destination="BepInEx/patchers/SigurdLib.Patcher/"
         />
     </ItemGroup>
