@@ -13,6 +13,8 @@ using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
 using MonoMod.Cil;
 using UnityEngine;
 using OpCodes = Mono.Cecil.Cil.OpCodes;
@@ -181,6 +183,12 @@ internal static class ChainloaderHooks
         public static void Manipulate(ILContext ilContext, MethodBase original, ILLabel retLabel)
         {
             var cursor = new ILCursor(ilContext);
+
+            var orderedGuidsVariableDefinition = new VariableDefinition(ilContext.Module
+                .ImportReference(typeof(List<>))
+                .MakeGenericInstanceType(ilContext.Module.TypeSystem.String)
+            );
+            cursor.Method.Body.Variables.Add(orderedGuidsVariableDefinition);
 
             cursor
                 // Match ahead to just before the part where the actual `AddComponent<PluginType>()` is
