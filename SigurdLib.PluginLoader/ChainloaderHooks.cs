@@ -5,6 +5,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Bootstrap;
@@ -21,11 +23,21 @@ internal static class ChainloaderHooks
 {
     public class EventArgs : System.EventArgs;
 
+    public class StartEventArgs : EventArgs
+    {
+        public required IDictionary<string, PluginInfo> PluginsByGuid { get; init; }
+        public required IList<string> OrderedPluginGuids { get; init; }
+    };
+
+    public class CompleteEventArgs : EventArgs;
+
     public static class Plugin
     {
+        /// <inheritdoc />
+        // ReSharper disable once MemberHidesStaticFromOuterClass
         public class EventArgs : ChainloaderHooks.EventArgs
         {
-            public required PluginInfo PluginInfo { get; init; }
+            public required PluginContainer PluginContainer { get; init; }
         }
 
         /// <summary>
@@ -39,23 +51,49 @@ internal static class ChainloaderHooks
         /// </summary>
         public static event EventHandler<EventArgs>? OnPostLoad;
 
-        internal static void InvokePre(PluginInfo pluginInfo) => InvokePhaseSafely(OnPreLoad, new EventArgs { PluginInfo = pluginInfo }, $"pre-load initialization for {pluginInfo}");
+        internal static void InvokePre(PluginInfo pluginInfo)
+        {
+            var container = new PluginContainer(pluginInfo);
+            PluginList.Instance.AddLoadingPluginContainer(container);
+            PluginLoadingContext.Instance.ActiveContainer = container;
+            InvokePhaseSafely(
+                OnPreLoad,
+                new EventArgs { PluginContainer = container },
+                $"pre-load initialization for {pluginInfo}"
+            );
+        }
 
-        internal static void InvokePost(PluginInfo pluginInfo) => InvokePhaseSafely(OnPostLoad, new EventArgs { PluginInfo = pluginInfo }, $"post-load initialization for {pluginInfo}");
+        internal static void InvokePost(PluginInfo pluginInfo)
+        {
+            var container = PluginList.Instance.GetPluginContainerByGuidOrThrow(pluginInfo.Metadata.GUID);
+            InvokePhaseSafely(
+                OnPostLoad,
+                new EventArgs { PluginContainer = container },
+                $"post-load initialization for {pluginInfo}"
+            );
+            PluginList.Instance.SetPluginLoaded(container);
+            PluginLoadingContext.Instance.ActiveContainer = null;
+        }
     }
+
+    /// <summary>
+    /// Event that is invoked before BepInEx attempts to load any plugins; just after
+    /// <see cref="Chainloader.PluginInfos"/> has been populated.
+    /// </summary>
+    public static event EventHandler<StartEventArgs>? OnStart;
 
     /// <summary>
     /// Event that is invoked after all plugins have loaded; just before <see cref="Chainloader._loaded"/>
     /// is set to <see langword="true"/>.
     /// </summary>
-    public static event EventHandler<EventArgs>? OnComplete;
+    public static event EventHandler<CompleteEventArgs>? OnComplete;
 
-    private static ManualLogSource _logger = null!;
+    internal static ManualLogSource Logger = null!;
 
     [UsedImplicitly]
     static void Start()
     {
-        _logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
+        Logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
 
         var harmony = new Harmony(PluginLoaderInfo.PRODUCT_GUID);
         harmony.PatchAll(typeof(ChainloaderStartPatches));
@@ -67,7 +105,7 @@ internal static class ChainloaderHooks
             InvokePhase(@event, eventArgs, phase, level);
         }
         catch (Exception exc) {
-            _logger.LogError(exc);
+            Logger.LogError(exc);
         }
     }
 
@@ -83,7 +121,7 @@ internal static class ChainloaderHooks
 
         foreach (var @delegate in delegates) {
             if (@delegate is not EventHandler<T> handler) {
-                _logger.LogWarning($"Skipping invocation of {phase} listener {@delegate} as it doesn't match its expected signature");
+                Logger.LogWarning($"Skipping invocation of {phase} listener {@delegate} as it doesn't match its expected signature");
                 continue;
             }
 
@@ -101,10 +139,35 @@ internal static class ChainloaderHooks
 
         Log($"Completed {phase}");
 
-        void Log(string message) => _logger.Log(level, message);
+        void Log(string message) => Logger.Log(level, message);
     }
 
-    internal static void InvokeComplete() => InvokePhaseSafely(OnComplete, new EventArgs { }, "post-startup initialization", LogLevel.Info);
+    internal static void InvokeStart(Dictionary<string, PluginInfo> pluginsByGuid, List<string> orderedPluginGuids)
+    {
+        PluginList.Instance.OrderedPluginInfos = orderedPluginGuids
+            .Select(guid => pluginsByGuid[guid])
+            .ToArray();
+
+        InvokePhaseSafely(
+            OnStart,
+            new StartEventArgs {
+                PluginsByGuid = new ReadOnlyDictionary<string, PluginInfo>(pluginsByGuid),
+                OrderedPluginGuids = new ReadOnlyCollection<string>(orderedPluginGuids),
+            },
+            "pre-startup initialization",
+            LogLevel.Info
+        );
+    }
+
+    internal static void InvokeComplete()
+    {
+        InvokePhaseSafely(
+            OnComplete,
+            new CompleteEventArgs { },
+            "post-startup initialization",
+            LogLevel.Info
+        );
+    }
 
     [HarmonyPatch(typeof(Chainloader), nameof(Chainloader.Start))]
     static class ChainloaderStartPatches
@@ -147,7 +210,6 @@ internal static class ChainloaderHooks
                 )
                 // Invoke `OnComplete` event
                 .Emit(OpCodes.Call, AccessTools.Method(typeof(ChainloaderHooks), nameof(InvokeComplete)));
-            ;
         }
     }
 }
