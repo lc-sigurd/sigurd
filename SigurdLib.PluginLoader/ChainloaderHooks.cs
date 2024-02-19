@@ -96,7 +96,12 @@ internal static class ChainloaderHooks
         Logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
 
         var harmony = new Harmony(PluginLoaderInfo.PRODUCT_GUID);
-        harmony.PatchAll(typeof(ChainloaderStartPatches));
+        try {
+            harmony.PatchAll(typeof(ChainloaderStartPatches));
+        }
+        catch (Exception exc) {
+            Logger.LogFatal($"Failed to patch {nameof(Chainloader.Start)}\n{exc}");
+        }
     }
 
     private static void InvokePhaseSafely<T>(EventHandler<T>? @event, T eventArgs, string phase, LogLevel level = LogLevel.Debug)
