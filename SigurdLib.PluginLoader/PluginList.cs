@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
-using BepInEx.Bootstrap;
 using SigurdLib.Util;
 using SigurdLib.Util.Collections.Generic;
 
@@ -28,7 +27,7 @@ public class PluginList
     private readonly BitArray _loadedPluginIdMap = new BitArray(0xFFF);
 
     private BiDictionary<int, PluginInfo>? _infoById;
-    private Dictionary<string, PluginContainer>? _containerByGuid;
+    private Dictionary<string, PluginContainer> _containerByGuid = new();
 
     private readonly object _writeLock = new();
 
@@ -39,7 +38,7 @@ public class PluginList
 
             lock (_writeLock) {
                 _loadedPluginIdMap.SetAll(false);
-                _containerByGuid = null;
+                _containerByGuid.Clear();
 
                 _infoById = new BiDictionary<int, PluginInfo>(
                     value
@@ -54,52 +53,94 @@ public class PluginList
         }
     }
 
-    internal IEnumerable<PluginContainer> LoadedPlugins {
-        set {
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
+    internal void AddLoadingPluginContainer(PluginContainer container)
+    {
+        if (container is null)
+            throw new ArgumentNullException(nameof(container));
+        if (_infoById is null)
+            throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before trying to add loading plugin containers");
 
-            lock (_writeLock) {
-                if (_infoById is null)
-                    throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before assigning {nameof(LoadedPlugins)}");
-
-                _containerByGuid = new();
-
-                foreach (var container in value) {
-                    AddLoadedPlugin(container);
-                }
-
-                void AddLoadedPlugin(PluginContainer container)
-                {
-                    int id;
-                    try {
-                        id = _infoById.Inverse[container.Info];
-                    }
-                    catch (KeyNotFoundException exc) {
-                        ChainloaderHooks.Logger.LogError($"Can't add {container} to {nameof(PluginList)} as its GUID-Version combination was not recognised.\n{exc}");
-                        return;
-                    }
-
-                    _loadedPluginIdMap[id] = true;
-                    _containerByGuid![container.Guid] = container;
-                }
+        lock (_writeLock) {
+            try {
+                _ = _infoById.Inverse[container.Info];
             }
+            catch (KeyNotFoundException exc) {
+                throw new ArgumentException($"Can't add {container} to {nameof(PluginList)} as its GUID-Version combination was not recognised", nameof(container), exc);
+            }
+
+            _containerByGuid[container.Guid] = container;
         }
+    }
+
+    internal void SetPluginLoaded(PluginContainer container)
+    {
+        if (container is null)
+            throw new ArgumentNullException(nameof(container));
+        if (_infoById is null)
+            throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before trying to set loaded plugin containers");
+
+        lock (_writeLock) {
+            int id;
+            try {
+                id = _infoById.Inverse[container.Info];
+            }
+            catch (KeyNotFoundException exc) {
+                throw new ArgumentException($"Can't mark {container} as loaded in {nameof(PluginList)} as its GUID-Version combination was not recognised", nameof(container), exc);
+            }
+
+            PluginContainer cachedContainer;
+            try {
+                cachedContainer = _containerByGuid[container.Guid];
+            }
+            catch (KeyNotFoundException exc) {
+                throw new ArgumentException($"Can't mark {container} as loaded in {nameof(PluginList)} as its container has not been added", nameof(container), exc);
+            }
+
+            if (!ReferenceEquals(container, cachedContainer))
+                throw new ArgumentException($"Provided {container} does not match cached {cachedContainer}", nameof(container));
+
+            _loadedPluginIdMap[id] = true;
+        }
+    }
+
+    public PluginContainer GetPluginContainerByGuidOrThrow(string guid)
+    {
+        if (guid is null)
+            throw new ArgumentNullException(nameof(guid));
+        if (_infoById is null)
+            throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before trying to get plugin containers");
+
+        return _containerByGuid[guid];
     }
 
     public Optional<PluginContainer> GetPluginContainerByGuid(string guid)
     {
-        if (_containerByGuid is null)
+        try {
+            return Optional.Some(GetPluginContainerByGuidOrThrow(guid));
+        }
+        catch (Exception exc) when (exc is ArgumentNullException or InvalidOperationException or KeyNotFoundException) {
             return Optional<PluginContainer>.None;
-
-        if (_containerByGuid.TryGetValue(guid, out var container))
-            return Optional<PluginContainer>.Some(container);
-        return Optional<PluginContainer>.None;
+        }
     }
 
-    public PluginContainer GetPluginContainerByGuidOrThrow(string guid)
-        => GetPluginContainerByGuid(guid)
-            .IfNone(() => throw new ArgumentException($"Missing plugin with guid: {guid}"));
+    public PluginContainer GetPluginContainerByIdOrThrow(int id)
+    {
+        if (_infoById is null)
+            throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before trying to get plugin containers");
+
+        var info = _infoById[id];
+        return _containerByGuid[info.Metadata.GUID];
+    }
+
+    public Optional<PluginContainer> GetPluginContainerById(int id)
+    {
+        try {
+            return Optional.Some(GetPluginContainerByIdOrThrow(id));
+        }
+        catch (Exception exc) when (exc is ArgumentNullException or InvalidOperationException or KeyNotFoundException) {
+            return Optional<PluginContainer>.None;
+        }
+    }
 
     private class MetadataPluginInfoComparer : IEqualityComparer<PluginInfo>
     {
