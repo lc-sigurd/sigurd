@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Sigurd Team
+ * The Sigurd Team licenses this file to you under the LGPL-3.0-OR-LATER license.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
