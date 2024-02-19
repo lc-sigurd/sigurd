@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Bootstrap;
@@ -15,7 +16,7 @@ using OpCodes = Mono.Cecil.Cil.OpCodes;
 
 namespace SigurdLib.PluginLoader;
 
-public static class ChainloaderHooks
+internal static class ChainloaderHooks
 {
     public class EventArgs : System.EventArgs;
 
@@ -37,9 +38,9 @@ public static class ChainloaderHooks
         /// </summary>
         public static event EventHandler<EventArgs>? OnPostLoad;
 
-        internal static void InvokePre(PluginInfo pluginInfo) => OnPreLoad?.Invoke(null, new EventArgs { PluginInfo = pluginInfo });
+        internal static void InvokePre(PluginInfo pluginInfo) => InvokePhaseSafely(OnPreLoad, new EventArgs { PluginInfo = pluginInfo }, $"pre-load initialization for {pluginInfo}");
 
-        internal static void InvokePost(PluginInfo pluginInfo) => OnPostLoad?.Invoke(null, new EventArgs { PluginInfo = pluginInfo });
+        internal static void InvokePost(PluginInfo pluginInfo) => InvokePhaseSafely(OnPostLoad, new EventArgs { PluginInfo = pluginInfo }, $"post-load initialization for {pluginInfo}");
     }
 
     /// <summary>
@@ -48,21 +49,64 @@ public static class ChainloaderHooks
     /// </summary>
     public static event EventHandler<EventArgs>? OnComplete;
 
-    internal static ManualLogSource Logger = null!;
+    private static ManualLogSource _logger = null!;
 
-    public static void Start()
+    static void Start()
     {
-        Logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
+        _logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
 
-        Plugin.OnPreLoad += (sender, args) => Logger.LogWarning($"Now loading {args.PluginInfo.Metadata.Name}");
-        Plugin.OnPostLoad += (sender, args) => Logger.LogWarning($"Just finished loading {args.PluginInfo.Metadata.Name}");
-        OnComplete += (sender, args) => Logger.LogWarning("Chainloader finished loading all plugins.");
+        Plugin.OnPreLoad += (sender, args) => _logger.LogWarning("Pre-load step happens now");
+        Plugin.OnPostLoad += (sender, args) => _logger.LogWarning("Post-load step happens now");
+        OnComplete += (sender, args) => _logger.LogWarning("Post-startup step happens now");
 
         var harmony = new Harmony(PluginLoaderInfo.PRODUCT_GUID);
         harmony.PatchAll(typeof(ChainloaderStartPatches));
     }
 
-    internal static void InvokeComplete() => OnComplete?.Invoke(null, new EventArgs { });
+    private static void InvokePhaseSafely<T>(EventHandler<T>? @event, T eventArgs, string phase, LogLevel level = LogLevel.Debug)
+    {
+        try {
+            InvokePhase(@event, eventArgs, phase, level);
+        }
+        catch (Exception exc) {
+            _logger.LogError(exc);
+        }
+    }
+
+    private static void InvokePhase<T>(EventHandler<T>? @event, T eventArgs, string phase, LogLevel level = LogLevel.Debug)
+    {
+        if (@event is null || @event.GetInvocationList() is not [_, ..] delegates) {
+            Log($"Skipped {phase} as no actionable tasks were found");
+            return;
+        }
+
+        Log($"Starting {phase}");
+        var exceptions = new LinkedList<Exception>();
+
+        foreach (var @delegate in delegates) {
+            if (@delegate is not EventHandler<T> handler) {
+                _logger.LogWarning($"Skipping invocation of {phase} listener {@delegate} as it doesn't match its expected signature");
+                continue;
+            }
+
+            try {
+                handler.Invoke(null, eventArgs);
+            }
+            catch (Exception exception) {
+                exceptions.AddLast(exception);
+            }
+        }
+
+        if (exceptions.Count > 0) {
+            throw new AggregateException($"SigurdLib {phase} failed due to potentially multiple exceptions", exceptions);
+        }
+
+        Log($"Completed {phase}");
+
+        void Log(string message) => _logger.Log(level, message);
+    }
+
+    internal static void InvokeComplete() => InvokePhaseSafely(OnComplete, new EventArgs { }, "post-startup initialization", LogLevel.Info);
 
     [HarmonyPatch(typeof(Chainloader), nameof(Chainloader.Start))]
     static class ChainloaderStartPatches
