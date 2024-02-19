@@ -14,4 +14,7 @@ public class PluginContainer
     {
         Info = info;
     }
+
+    /// <inheritdoc />
+    public override string ToString() => $"PluginContainer[guid = {Guid}]";
 }
