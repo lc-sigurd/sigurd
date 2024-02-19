@@ -10,6 +10,7 @@ using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
+using JetBrains.Annotations;
 using MonoMod.Cil;
 using UnityEngine;
 using OpCodes = Mono.Cecil.Cil.OpCodes;
@@ -51,6 +52,7 @@ internal static class ChainloaderHooks
 
     private static ManualLogSource _logger = null!;
 
+    [UsedImplicitly]
     static void Start()
     {
         _logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
