@@ -17,7 +17,7 @@ public class PluginLoadingContext
 
     private PluginContainer? _activeContainer;
 
-    public PluginContainer ActiveContainer {
+    public PluginContainer? ActiveContainer {
         get => _activeContainer ?? PluginList.Instance.GetPluginContainerByGuidOrThrow(ResourceName.DefaultNamespace);
         internal set => _activeContainer = value;
     }
