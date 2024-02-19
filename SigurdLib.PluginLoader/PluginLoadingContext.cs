@@ -30,17 +30,4 @@ public class PluginLoadingContext
     }
 
     public string ActiveNamespace => _activeContainer?.Namespace ?? ResourceName.DefaultNamespace;
-
-    public static PluginContainer Infer()
-    {
-        var pluginType = new StackTrace()
-            .GetFrames()
-            ?.Select(frame => frame.GetMethod().ReflectedType)
-            .FirstOrDefault(type => BasePluginType.IsAssignableFrom(type));
-
-        if (pluginType is null)
-            throw new InvalidOperationException("Could not discern calling plugin.");
-
-        return PluginList.Instance.GetPluginContainerByTypeOrThrow(pluginType);
-    }
 }
