@@ -17,24 +17,75 @@ public class PluginList
 
     public static PluginList Instance => _instance ??= new PluginList();
 
-    private ConcurrentDictionary<string, PluginContainer>? _containersByGuid;
+    // If someone manages to install 4095 plugins, they have bigger problems than this
+    private readonly BitArray _loadedPluginIdMap = new BitArray(0xFFF);
+
+    private BiDictionary<int, PluginInfo>? _infoById;
+    private Dictionary<string, PluginContainer>? _containerByGuid;
+
+    private readonly object _writeLock = new();
+
+    internal IReadOnlyCollection<PluginInfo> OrderedPluginInfos {
+        set {
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
+            lock (_writeLock) {
+                _loadedPluginIdMap.SetAll(false);
+                _containerByGuid = null;
+
+                _infoById = new BiDictionary<int, PluginInfo>(
+                    value
+                        .Select((info, index) => (Info: info, Index: index))
+                        .ToDictionary(
+                            item => item.Index,
+                            item => item.Info
+                        ),
+                    valueComparer: InfoComparer
+                );
+            }
+        }
+    }
 
     internal IEnumerable<PluginContainer> LoadedPlugins {
         set {
-            _containersByGuid = new(
-                value.ToDictionary(
-                    item => item.Info.Metadata.GUID
-                )
-            );
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
+            lock (_writeLock) {
+                if (_infoById is null)
+                    throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before assigning {nameof(LoadedPlugins)}");
+
+                _containerByGuid = new();
+
+                foreach (var container in value) {
+                    AddLoadedPlugin(container);
+                }
+
+                void AddLoadedPlugin(PluginContainer container)
+                {
+                    int id;
+                    try {
+                        id = _infoById.Inverse[container.Info];
+                    }
+                    catch (KeyNotFoundException exc) {
+                        ChainloaderHooks.Logger.LogError($"Can't add {container} to {nameof(PluginList)} as its GUID-Version combination was not recognised.\n{exc}");
+                        return;
+                    }
+
+                    _loadedPluginIdMap[id] = true;
+                    _containerByGuid![container.Guid] = container;
+                }
+            }
         }
     }
 
     public Optional<PluginContainer> GetPluginContainerByGuid(string guid)
     {
-        if (_containersByGuid is null)
+        if (_containerByGuid is null)
             return Optional<PluginContainer>.None;
 
-        if (_containersByGuid.TryGetValue(guid, out var container))
+        if (_containerByGuid.TryGetValue(guid, out var container))
             return Optional<PluginContainer>.Some(container);
         return Optional<PluginContainer>.None;
     }
