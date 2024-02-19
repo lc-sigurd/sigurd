@@ -53,7 +53,7 @@ public static class SigurdLibPatcher
             return; // fail silently because BepInEx will throw an error anyway
 
         using var injected = AssemblyDefinition.ReadAssembly(SigurdLibPluginLoaderAssemblyPath);
-        var originalStartMethod = injected.MainModule.Types.First(x => x.Name == "PluginLoadingHooks").Methods
+        var originalStartMethod = injected.MainModule.Types.First(x => x.Name == "ChainloaderHooks").Methods
             .First(x => x.Name == "Start");
 
         var startMethod = assembly.MainModule.ImportReference(originalStartMethod);

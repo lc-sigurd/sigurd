@@ -15,7 +15,7 @@ using OpCodes = Mono.Cecil.Cil.OpCodes;
 
 namespace SigurdLib.PluginLoader;
 
-public static class PluginLoadingHooks
+public static class ChainloaderHooks
 {
     public class PluginLoadEventArgs : EventArgs
     {
