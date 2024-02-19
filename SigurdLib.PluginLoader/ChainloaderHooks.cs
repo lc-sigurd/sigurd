@@ -57,10 +57,6 @@ internal static class ChainloaderHooks
     {
         _logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
 
-        Plugin.OnPreLoad += (sender, args) => _logger.LogWarning("Pre-load step happens now");
-        Plugin.OnPostLoad += (sender, args) => _logger.LogWarning("Post-load step happens now");
-        OnComplete += (sender, args) => _logger.LogWarning("Post-startup step happens now");
-
         var harmony = new Harmony(PluginLoaderInfo.PRODUCT_GUID);
         harmony.PatchAll(typeof(ChainloaderStartPatches));
     }
