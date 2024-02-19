@@ -15,7 +15,7 @@ public class PluginList
 
     private ConcurrentDictionary<string, PluginContainer>? _containersByGuid;
 
-    public IEnumerable<PluginContainer> LoadedPlugins {
+    internal IEnumerable<PluginContainer> LoadedPlugins {
         set {
             _containersByGuid = new(
                 value.ToDictionary(
