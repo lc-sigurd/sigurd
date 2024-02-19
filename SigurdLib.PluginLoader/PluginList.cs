@@ -101,20 +101,6 @@ public class PluginList
         => GetPluginContainerByGuid(guid)
             .IfNone(() => throw new ArgumentException($"Missing plugin with guid: {guid}"));
 
-    public Optional<PluginContainer> GetPluginContainerByType(Type pluginType)
-    {
-        var maybePluginInfo = Chainloader.PluginInfos.Values
-            .FirstOrDefault(info => info.Instance.GetType() == pluginType);
-
-        if (maybePluginInfo is null) return Optional<PluginContainer>.None;
-
-        return GetPluginContainerByGuid(maybePluginInfo.Metadata.GUID);
-    }
-
-    public PluginContainer GetPluginContainerByTypeOrThrow(Type pluginType)
-        => GetPluginContainerByType(pluginType)
-            .IfNone(() => throw new ArgumentException($"Missing plugin of type: {pluginType}"));
-
     private class MetadataPluginInfoComparer : IEqualityComparer<PluginInfo>
     {
         private static readonly IEqualityComparer<BepInPlugin> PluginMetadataComparer = new BepInPluginComparer();
