@@ -277,7 +277,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
 
     public ICollection<KeyValuePair<IResourceKey<TValue>, TValue>> Entries => _readonlyEntryCollection ??= _keys.AsReadOnly();
 
-    public IEnumerator<TValue> GetEnumerator() => new RegistryEnumerator(this);
+    public IEnumerator<TValue> GetEnumerator() => new Enumerator(this);
 
     #endregion
 
@@ -513,16 +513,18 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
         }
     }
 
-    private struct RegistryEnumerator : IEnumerator<TValue>
+    /// <inheritdoc />
+    public struct Enumerator : IEnumerator<TValue>
     {
         private readonly SigurdRegistry<TValue> _registry;
         private int _currentId = -1;
 
-        internal RegistryEnumerator(SigurdRegistry<TValue> registry)
+        internal Enumerator(SigurdRegistry<TValue> registry)
         {
             _registry = registry;
         }
 
+        /// <inheritdoc />
         public bool MoveNext()
         {
             _currentId = _registry._availabilityMap.NextSetBitIndex(_currentId + 1);
@@ -530,8 +532,10 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
             return _currentId != -1;
         }
 
+        /// <inheritdoc />
         public void Reset() => _currentId = -1;
 
+        /// <inheritdoc />
         public TValue Current {
             get {
                 try {
@@ -545,8 +549,10 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
             }
         }
 
+        /// <inheritdoc />
         object IEnumerator.Current => Current;
 
+        /// <inheritdoc />
         public void Dispose() { }
     }
 }
