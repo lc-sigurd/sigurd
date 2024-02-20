@@ -528,7 +528,7 @@ internal class SigurdRegistry<TValue> : SigurdRegistry, IRegistryInternal<TValue
         public bool MoveNext()
         {
             _currentId = _registry._availabilityMap.NextSetBitIndex(_currentId + 1);
-            Debug.Assert(Current is not null);
+            Debug.Assert(_currentId == -1 || Current is not null);
             return _currentId != -1;
         }
 
