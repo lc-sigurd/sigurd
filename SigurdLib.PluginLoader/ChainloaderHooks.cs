@@ -13,6 +13,7 @@ using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using MonoMod.Cil;
@@ -149,7 +150,7 @@ internal static class ChainloaderHooks
         void Log(string message) => Logger.Log(level, message);
     }
 
-    internal static void InvokeStart(Dictionary<string, PluginInfo> pluginsByGuid, List<string> orderedPluginGuids)
+    internal static void InvokeStart(List<string> orderedPluginGuids, Dictionary<string, PluginInfo> pluginsByGuid)
     {
         PluginList.Instance.OrderedPluginInfos = orderedPluginGuids
             .Select(guid => pluginsByGuid[guid])
@@ -184,14 +185,32 @@ internal static class ChainloaderHooks
         {
             var cursor = new ILCursor(ilContext);
 
-            var orderedGuidsVariableDefinition = new VariableDefinition(ilContext.Module
-                .ImportReference(typeof(List<>))
-                .MakeGenericInstanceType(ilContext.Module.TypeSystem.String)
+            var pluginsByGuidFieldReference = new FieldReference(
+                "pluginsByGUID",
+                ilContext.Module
+                    .ImportReference(typeof(Dictionary<,>))
+                    .MakeGenericInstanceType(
+                        ilContext.Module.TypeSystem.String,
+                        ilContext.Module.ImportReference(typeof(PluginInfo))
+                    ),
+                ilContext.Method.Body.Variables[0].VariableType
             );
-            cursor.Method.Body.Variables.Add(orderedGuidsVariableDefinition);
 
             cursor
-                // Match ahead to just before the part where the actual `AddComponent<PluginType>()` is
+                // Match ahead to just after the ordered plugin GUID list is computed
+                .GotoNext(
+                    MoveType.After,
+                    instr => instr.MatchCall(AccessTools.Method(typeof(Enumerable), nameof(Enumerable.ToList), generics: [ typeof(string), ]))
+                )
+                // Duplicate the reference to the ordered plugin GUID list
+                .Emit(OpCodes.Dup)
+                // Load the 'V_0' local of a compiler-generated type
+                .Emit(OpCodes.Ldloc_0)
+                // Load the `pluginsByGUID` field of the compiler-generated type
+                .Emit(OpCodes.Ldfld, pluginsByGuidFieldReference)
+                // Invoke `OnStart` event
+                .Emit(OpCodes.Call, AccessTools.Method(typeof(ChainloaderHooks), nameof(InvokeStart)))
+                // Match ahead to just before the actual `AddComponent<PluginType>()`
                 .GotoNext(
                     instr => instr.MatchLdloc(23),
                     instr => instr.MatchCall(AccessTools.PropertyGetter(typeof(Chainloader), nameof(Chainloader.ManagerObject))),
@@ -216,7 +235,7 @@ internal static class ChainloaderHooks
                 .Emit(OpCodes.Call, AccessTools.Method(typeof(Plugin), nameof(Plugin.InvokePost)));
 
             cursor
-                // Match ahead to where `Chainloader._loaded` is set to `true`
+                // Match ahead to just before `Chainloader._loaded` is set to `true`
                 .GotoNext(
                     instr => instr.MatchLdcI4(1),
                     instr => instr.MatchStsfld(AccessTools.Field(typeof(Chainloader), "_loaded"))
