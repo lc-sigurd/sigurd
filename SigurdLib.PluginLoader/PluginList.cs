@@ -174,7 +174,6 @@ public class PluginList
 
         /// <inheritdoc />
         public void Reset() => _currentId = -1;
-        object IEnumerator.Current => Current;
 
         /// <inheritdoc />
         public PluginContainer Current {
@@ -192,6 +191,9 @@ public class PluginList
                 }
             }
         }
+
+        /// <inheritdoc />
+        object IEnumerator.Current => Current;
 
         /// <inheritdoc />
         public void Dispose() { }
