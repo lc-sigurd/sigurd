@@ -168,7 +168,7 @@ public class PluginList
         public bool MoveNext()
         {
             _currentId = _list._loadedPluginIdMap.NextSetBitIndex(_currentId + 1);
-            Debug.Assert(Current is not null);
+            Debug.Assert(_currentId == -1 || Current is not null);
             return _currentId != -1;
         }
 
