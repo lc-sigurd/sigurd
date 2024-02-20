@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BepInEx;
 using SigurdLib.Util;
 using SigurdLib.Util.Collections.Generic;
+using SigurdLib.Util.Extensions;
 
 namespace SigurdLib.PluginLoader;
 
@@ -140,6 +142,59 @@ public class PluginList
         catch (Exception exc) when (exc is ArgumentNullException or InvalidOperationException or KeyNotFoundException) {
             return Optional<PluginContainer>.None;
         }
+    }
+
+    public IEnumerable<PluginContainer> PluginContainersInOrder {
+        get {
+            var enumerator = new Enumerator(this);
+            while (enumerator.MoveNext()) {
+                yield return enumerator.Current;
+            }
+        }
+    }
+
+    /// <inheritdoc />
+    public struct Enumerator : IEnumerator<PluginContainer>
+    {
+        private readonly PluginList _list;
+        private int _currentId = -1;
+
+        internal Enumerator(PluginList list)
+        {
+            _list = list;
+        }
+
+        /// <inheritdoc />
+        public bool MoveNext()
+        {
+            _currentId = _list._loadedPluginIdMap.NextSetBitIndex(_currentId + 1);
+            Debug.Assert(Current is not null);
+            return _currentId != -1;
+        }
+
+        /// <inheritdoc />
+        public void Reset() => _currentId = -1;
+        object IEnumerator.Current => Current;
+
+        /// <inheritdoc />
+        public PluginContainer Current {
+            get {
+                if (_list._infoById is null)
+                    throw new InvalidOperationException($"Must assign {nameof(OrderedPluginInfos)} before trying to enumerate {nameof(PluginList)}");
+
+                try {
+                    return _list._containerByGuid[_list._infoById[_currentId].Metadata.GUID];
+                }
+                catch (KeyNotFoundException exc) {
+                    if (_currentId < 0)
+                        throw new InvalidOperationException("Cannot retrieve element before advancing position from initial state", exc);
+                    throw new InvalidOperationException($"ID not found, but {nameof(_list._loadedPluginIdMap)} shows ID should be assigned", exc);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public void Dispose() { }
     }
 
     private class MetadataPluginInfoComparer : IEqualityComparer<PluginInfo>
