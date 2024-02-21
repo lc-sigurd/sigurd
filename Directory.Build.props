@@ -1,7 +1,7 @@
 <Project InitialTargets="InitializeProps">
     <!-- Build configurations -->
     <PropertyGroup>
-        <Configurations>Debug;Release;BuildTasks</Configurations>
+        <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
