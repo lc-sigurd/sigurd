@@ -3,17 +3,6 @@
     <PropertyGroup>
         <LethalCompanyDir>C:/Program Files (x86)/Steam/steamapps/common/Lethal Company/</LethalCompanyDir>
         <TestProfileDir>$(AppData)/r2modmanPlus-local/LethalCompany/profiles/Test Sigurd/</TestProfileDir>
+        <ShouldCopyToTestProfile>true</ShouldCopyToTestProfile>
     </PropertyGroup>
-
-    <!-- Enable by removing the 'false and' part of the condition -->
-    <Target
-        Name="CopyToTestProfile"
-        AfterTargets="ThunderstorePack"
-        Condition="false and $(ShouldThunderstorePackThisBuild)"
-    >
-        <ItemGroup>
-            <StageThunderstorePackageList Include="$(ThunderstoreOutDir)*-$(MinVerVersion).zip" />
-        </ItemGroup>
-        <StageThunderstorePackage Packages="@(StageThunderstorePackageList)" StagingProfilePath="$(TestProfileDir)" />
-    </Target>
 </Project>

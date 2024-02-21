@@ -1,4 +1,6 @@
-<Project InitialTargets="InitializeProps">
+<Project InitialTargets="InitializeProps" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="Sdk.props" Sdk="Sigurd.Thunderstore.Sdk" />
+
     <!-- Build configurations -->
     <PropertyGroup>
         <Configurations>Debug;Release</Configurations>
@@ -43,25 +45,6 @@
     </ItemGroup>
 
     <!-- Thunderstore metadata -->
-    <ItemDefinitionGroup>
-        <ThunderstoreDependency>
-            <Version/>
-            <Reference>true</Reference>
-        </ThunderstoreDependency>
-        <ThunderstoreBuildCopyPath>
-            <Destination/>
-        </ThunderstoreBuildCopyPath>
-        <ThunderstorePublishCommunity>
-            <CategorySlugs/>
-        </ThunderstorePublishCommunity>
-    </ItemDefinitionGroup>
-
-    <Target Name="SetThunderstoreOutDir" BeforeTargets="InitializeProps" Condition="$(IsThunderstorePackable)">
-        <PropertyGroup>
-            <ThunderstoreOutDir>$(TargetDir)dist/</ThunderstoreOutDir>
-        </PropertyGroup>
-    </Target>
-
     <PropertyGroup>
         <IsThunderstorePackable>false</IsThunderstorePackable>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
@@ -94,6 +77,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <SetThunderstorePackageVersionTargetName Include="SetThunderstorePackageVersion" />
     </ItemGroup>
 
     <!-- Release optimisations -->

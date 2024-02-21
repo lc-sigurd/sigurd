@@ -55,7 +55,7 @@
     <!-- BepInEx.PluginInfoProps Copyright (c) 2021 BepInEx -->
     <Target
         Name="GeneratePluginLoaderInfo"
-        DependsOnTargets="SetPluginVersion"
+        DependsOnTargets="SetThunderstorePackageVersionEvent"
         BeforeTargets="BeforeCompile;CoreCompile"
         Inputs="$(MSBuildAllProjects)"
         Outputs="$(IntermediateOutputPath)PluginLoaderInfo.cs"
@@ -69,7 +69,7 @@ internal static class PluginLoaderInfo
 {
     public const string PRODUCT_GUID = "$(AssemblyName)"%3B
     public const string PRODUCT_NAME = "$(Product)"%3B
-    public const string PRODUCT_VERSION = "$(PlainVersion)"%3B
+    public const string PRODUCT_VERSION = "$(ThunderstorePackageVersion)"%3B
 }
 #pragma warning restore 1591
 

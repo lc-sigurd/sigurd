@@ -20,14 +20,17 @@
     </PropertyGroup>
 
     <!-- Dependencies for thunderstore.toml -->
-    <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetPluginVersion" BeforeTargets="PatchThunderstoreMetadata">
+    <Target Name="AddThunderstoreDependencies" DependsOnTargets="SetThunderstorePackageVersionEvent">
         <ItemGroup>
-            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(PlainVersion)" Reference="false" />
-            <ThunderstoreDependency Include="Sigurd-Sigurd_ClientAPI" Version="$(PlainVersion)" Reference="false" />
-            <ThunderstoreDependency Include="Sigurd-Sigurd_ServerAPI" Version="$(PlainVersion)" Reference="false" />
-            <ThunderstoreDependency Include="Sigurd-Sigurd_Networking" Version="$(PlainVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Common" Version="$(ThunderstorePackageVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_ClientAPI" Version="$(ThunderstorePackageVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_ServerAPI" Version="$(ThunderstorePackageVersion)" Reference="false" />
+            <ThunderstoreDependency Include="Sigurd-Sigurd_Networking" Version="$(ThunderstorePackageVersion)" Reference="false" />
         </ItemGroup>
     </Target>
+    <ItemGroup>
+        <PreThunderstoreGenTargetName Include="AddThunderstoreDependencies"/>
+    </ItemGroup>
 
     <!-- Development dependencies -->
     <ItemGroup>
