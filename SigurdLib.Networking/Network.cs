@@ -705,5 +705,6 @@ internal static class UnregisterPatch
     internal static void Postfix()
     {
         Network.UnregisterMessages();
+        SNetworkManager.Singleton.SBehaviourUpdater.Shutdown();
     }
 }

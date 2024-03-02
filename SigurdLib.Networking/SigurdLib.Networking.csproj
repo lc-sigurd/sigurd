@@ -45,7 +45,7 @@
         <Reference Include="Unity.InputSystem">
             <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Unity.InputSystem.dll</HintPath>
         </Reference>
-        <Reference Include="Unity.Netcode.Runtime">
+        <Reference Include="Unity.Netcode.Runtime" Publicize="true">
             <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Unity.Netcode.Runtime.dll</HintPath>
         </Reference>
         <Reference Include="Unity.TextMeshPro">
@@ -59,6 +59,7 @@
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)..\libs\odin-serializer\OdinSerializer.dll</HintPath>
         </Reference>
