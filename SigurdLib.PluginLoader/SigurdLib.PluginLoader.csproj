@@ -57,8 +57,6 @@
         Name="GeneratePluginLoaderInfo"
         DependsOnTargets="SetThunderstorePackageVersionEvent"
         BeforeTargets="BeforeCompile;CoreCompile"
-        Inputs="$(MSBuildAllProjects)"
-        Outputs="$(IntermediateOutputPath)PluginLoaderInfo.cs"
     >
         <PropertyGroup>
             <GeneratedText><![CDATA[
