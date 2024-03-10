@@ -32,6 +32,7 @@
             Include="$(ProjectDir)../SigurdLib.Patcher/bin/Release/netstandard2.1/com.sigurd.sigurd.patcher.dll"
             Destination="BepInEx/patchers/SigurdLib.Patcher/"
         />
+        <ThunderstoreDependency Include="Sigurd-Serilog_Pack" Version="0.4.2" />
     </ItemGroup>
 
     <!-- Development dependencies -->
@@ -45,6 +46,8 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
+        <PackageReference Include="Serilog" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.BepInEx" Version="0.4.2" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="$(ProjectDir)../SigurdLib.Util/SigurdLib.Util.csproj" />
