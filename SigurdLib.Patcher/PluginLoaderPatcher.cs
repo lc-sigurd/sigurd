@@ -16,7 +16,7 @@ using Mono.Cecil.Cil;
 
 namespace SigurdLib.Patcher;
 
-public static class SigurdLibPatcher
+public static class PluginLoaderPatcher
 {
     private const string SigurdLibPluginLoaderAssemblyName = "com.sigurd.sigurd.pluginloader.dll";
 
@@ -36,7 +36,7 @@ public static class SigurdLibPatcher
     /// <summary>
     /// Inserts Sigurd's PluginLoader entrypoint just before BepInEx's Chainloader.
 	/// </summary>
-	/// <param name="assembly">The assembly that the <see cref="SigurdLibPatcher"/> will attempt to patch.</param>
+	/// <param name="assembly">The assembly that the <see cref="PluginLoaderPatcher"/> will attempt to patch.</param>
 	public static void Patch(AssemblyDefinition assembly)
 	{
         if (SigurdLibPluginLoaderAssemblyPath is null)
