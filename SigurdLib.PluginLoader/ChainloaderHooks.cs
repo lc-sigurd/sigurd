@@ -10,19 +10,21 @@ using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Bootstrap;
-using BepInEx.Logging;
 using HarmonyLib;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using MonoMod.Cil;
+using Serilog.Events;
 using UnityEngine;
+using ILogger = Serilog.ILogger;
 using OpCodes = Mono.Cecil.Cil.OpCodes;
 
 namespace SigurdLib.PluginLoader;
 
 internal static class ChainloaderHooks
 {
+    private static ILogger Logger => Entrypoint.Logger;
+
     public class EventArgs : System.EventArgs;
 
     public class StartEventArgs : EventArgs
@@ -90,45 +92,29 @@ internal static class ChainloaderHooks
     /// </summary>
     public static event EventHandler<CompleteEventArgs>? OnComplete;
 
-    internal static ManualLogSource Logger = null!;
-
-    [UsedImplicitly]
-    static void Start()
-    {
-        Logger = BepInEx.Logging.Logger.CreateLogSource(PluginLoaderInfo.PRODUCT_NAME);
-
-        var harmony = new Harmony(PluginLoaderInfo.PRODUCT_GUID);
-        try {
-            harmony.PatchAll(typeof(ChainloaderStartPatches));
-        }
-        catch (Exception exc) {
-            Logger.LogFatal($"Failed to patch {nameof(Chainloader.Start)}\n{exc}");
-        }
-    }
-
-    private static void InvokePhaseSafely<T>(EventHandler<T>? @event, T eventArgs, string phase, LogLevel level = LogLevel.Debug)
+    private static void InvokePhaseSafely<T>(EventHandler<T>? @event, T eventArgs, string phase, LogEventLevel level = LogEventLevel.Debug)
     {
         try {
             InvokePhase(@event, eventArgs, phase, level);
         }
         catch (Exception exc) {
-            Logger.LogError(exc);
+            Logger.Error(exc, "An error occurred during {Phase}", phase);
         }
     }
 
-    private static void InvokePhase<T>(EventHandler<T>? @event, T eventArgs, string phase, LogLevel level = LogLevel.Debug)
+    private static void InvokePhase<T>(EventHandler<T>? @event, T eventArgs, string phase, LogEventLevel level = LogEventLevel.Debug)
     {
         if (@event is null || @event.GetInvocationList() is not [_, ..] delegates) {
-            Log($"Skipped {phase} as no actionable tasks were found");
+            Logger.Write(level, "Skipped {Phase} as no actionable tasks were found", phase);
             return;
         }
 
-        Log($"Starting {phase}");
+        Logger.Write(level, "Starting {Phase}", phase);
         var exceptions = new LinkedList<Exception>();
 
         foreach (var @delegate in delegates) {
             if (@delegate is not EventHandler<T> handler) {
-                Logger.LogWarning($"Skipping invocation of {phase} listener {@delegate} as it doesn't match its expected signature");
+                Logger.Warning($"Skipping invocation of {phase} listener {@delegate} as it doesn't match its expected signature");
                 continue;
             }
 
@@ -144,9 +130,7 @@ internal static class ChainloaderHooks
             throw new AggregateException($"SigurdLib {phase} failed due to potentially multiple exceptions", exceptions);
         }
 
-        Log($"Completed {phase}");
-
-        void Log(string message) => Logger.Log(level, message);
+        Logger.Write(level, "Completed {Phase}", phase);
     }
 
     internal static void InvokeStart(List<string> orderedPluginGuids, Dictionary<string, PluginInfo> pluginsByGuid)
@@ -162,7 +146,7 @@ internal static class ChainloaderHooks
                 OrderedPluginGuids = new ReadOnlyCollection<string>(orderedPluginGuids),
             },
             "pre-startup initialization",
-            LogLevel.Info
+            LogEventLevel.Information
         );
     }
 
@@ -172,7 +156,7 @@ internal static class ChainloaderHooks
             OnComplete,
             new CompleteEventArgs { },
             "post-startup initialization",
-            LogLevel.Info
+            LogEventLevel.Information
         );
     }
 
