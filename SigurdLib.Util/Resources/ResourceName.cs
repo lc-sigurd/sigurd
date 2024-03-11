@@ -1,6 +1,6 @@
 using System;
 
-namespace SigurdLib.Util.Resources;
+namespace Sigurd.Util.Resources;
 
 /// <summary>
 /// Used to uniquely identify objects, for example in a registry.

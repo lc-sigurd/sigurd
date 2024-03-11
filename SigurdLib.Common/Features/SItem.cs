@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using SigurdLib.Util.Extensions;
+using Sigurd.Util.Extensions;
 using UnityEngine;
 
 namespace Sigurd.Common.Features;

@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
-using SigurdLib.Util;
-using SigurdLib.Util.Resources;
+using Sigurd.Util;
+using Sigurd.Util.Resources;
 
 namespace Sigurd.Common.Core.Registries;
 

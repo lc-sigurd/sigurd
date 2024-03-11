@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sigurd.Common.Core.Tags;
-using SigurdLib.Util;
-using SigurdLib.Util.Extensions;
+using Sigurd.Util;
+using Sigurd.Util.Extensions;
 
 namespace Sigurd.Common.Core.Registries;
 

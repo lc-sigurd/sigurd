@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="IList{T}"/> instances.

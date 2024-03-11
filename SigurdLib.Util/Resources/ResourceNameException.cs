@@ -1,6 +1,6 @@
 using System;
 
-namespace SigurdLib.Util.Resources;
+namespace Sigurd.Util.Resources;
 
 /// <summary>
 /// Represents <see cref="ResourceName"/> errors that occur during application execution.

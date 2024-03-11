@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SigurdLib.Util;
+using Sigurd.Util;
 
 namespace Sigurd.Common.Core.Tags;
 

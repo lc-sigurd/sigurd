@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 public static class DictionaryExtensions
 {

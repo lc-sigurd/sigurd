@@ -3,9 +3,9 @@ using BepInEx.Bootstrap;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Serilog;
-using SigurdLib.Util.Extensions;
+using Sigurd.Util.Extensions;
 
-namespace SigurdLib.PluginLoader;
+namespace Sigurd.PluginLoader;
 
 internal static class Entrypoint
 {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="string"/> instances.

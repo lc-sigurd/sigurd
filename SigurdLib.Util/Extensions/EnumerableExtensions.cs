@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="IEnumerable{T}"/> instances.

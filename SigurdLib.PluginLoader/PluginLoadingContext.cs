@@ -6,9 +6,9 @@
 using System;
 using System.Threading;
 using BepInEx;
-using SigurdLib.Util.Resources;
+using Sigurd.Util.Resources;
 
-namespace SigurdLib.PluginLoader;
+namespace Sigurd.PluginLoader;
 
 /// <summary>
 /// Utility class that keeps track of the active <see cref="PluginContainer"/> and exposes retrieval

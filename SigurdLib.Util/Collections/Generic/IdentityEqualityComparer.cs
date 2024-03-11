@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace SigurdLib.Util.Collections.Generic;
+namespace Sigurd.Util.Collections.Generic;
 
 // https://stackoverflow.com/a/8946825
 public sealed class IdentityEqualityComparer<T> : IEqualityComparer<T>

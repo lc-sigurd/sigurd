@@ -1,7 +1,7 @@
 using System;
 using Sigurd.Common.Core.Resources;
-using SigurdLib.Util.Collections.Generic;
-using SigurdLib.Util.Resources;
+using Sigurd.Util.Collections.Generic;
+using Sigurd.Util.Resources;
 
 namespace Sigurd.Common.Core.Registries;
 

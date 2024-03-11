@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SigurdLib.Util.Collections.Generic;
+namespace Sigurd.Util.Collections.Generic;
 
 /// <summary>
 /// Provides a readonly abstraction of a set.

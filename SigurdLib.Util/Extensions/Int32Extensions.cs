@@ -1,4 +1,4 @@
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="int"/> instances.

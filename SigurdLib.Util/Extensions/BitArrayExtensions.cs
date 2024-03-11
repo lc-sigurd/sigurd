@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 /// <summary>
 /// Extension methods for instances of the <see cref="BitArray"/> class.

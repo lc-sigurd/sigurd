@@ -2,8 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using JetBrains.Annotations;
 using Sigurd.Common.Core.Registries;
-using SigurdLib.Util.Extensions;
-using SigurdLib.Util.Resources;
+using Sigurd.Util.Extensions;
+using Sigurd.Util.Resources;
 
 namespace Sigurd.Common.Core.Resources;
 

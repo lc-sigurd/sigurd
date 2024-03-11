@@ -1,6 +1,6 @@
 using System;
 
-namespace SigurdLib.Util;
+namespace Sigurd.Util;
 
 /// <summary>
 /// Extension methods providing functionality for <see cref="Side"/>.

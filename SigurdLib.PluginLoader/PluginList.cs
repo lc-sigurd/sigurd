@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using BepInEx;
-using SigurdLib.Util;
-using SigurdLib.Util.Collections.Generic;
-using SigurdLib.Util.Extensions;
+using Sigurd.Util;
+using Sigurd.Util.Collections.Generic;
+using Sigurd.Util.Extensions;
 
-namespace SigurdLib.PluginLoader;
+namespace Sigurd.PluginLoader;
 
 /// <summary>
 /// Utility class that keeps track of <see cref="PluginContainer"/> instances and exposes methods for their

@@ -1,6 +1,6 @@
 using Sigurd.Common.Core.Registries;
 using Sigurd.Common.Core.Resources;
-using SigurdLib.Util.Resources;
+using Sigurd.Util.Resources;
 
 namespace Sigurd.Common.Core.Tags;
 

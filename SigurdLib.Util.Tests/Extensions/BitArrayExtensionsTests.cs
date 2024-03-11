@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using SigurdLib.Util.Extensions;
+using Sigurd.Util.Extensions;
 
-namespace SigurdLib.Util.Tests.Extensions;
+namespace Sigurd.Util.Tests.Extensions;
 
 public class BitArrayExtensionsTests
 {

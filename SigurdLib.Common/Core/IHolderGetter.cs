@@ -2,7 +2,7 @@ using System;
 using Sigurd.Common.Core.Registries;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
-using SigurdLib.Util;
+using Sigurd.Util;
 
 namespace Sigurd.Common.Core;
 

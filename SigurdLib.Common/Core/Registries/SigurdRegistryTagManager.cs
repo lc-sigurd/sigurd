@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sigurd.Common.Core.Resources;
 using Sigurd.Common.Core.Tags;
-using SigurdLib.Util;
-using SigurdLib.Util.Collections.Generic;
-using SigurdLib.Util.Collections.ObjectModel;
-using SigurdLib.Util.Resources;
+using Sigurd.Util;
+using Sigurd.Util.Collections.Generic;
+using Sigurd.Util.Collections.ObjectModel;
+using Sigurd.Util.Resources;
 
 namespace Sigurd.Common.Core.Registries;
 

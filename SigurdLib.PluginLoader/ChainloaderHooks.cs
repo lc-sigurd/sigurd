@@ -19,7 +19,7 @@ using UnityEngine;
 using ILogger = Serilog.ILogger;
 using OpCodes = Mono.Cecil.Cil.OpCodes;
 
-namespace SigurdLib.PluginLoader;
+namespace Sigurd.PluginLoader;
 
 internal static class ChainloaderHooks
 {

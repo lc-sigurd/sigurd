@@ -14,7 +14,7 @@ using BepInEx.Preloader;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace SigurdLib.Patcher;
+namespace Sigurd.Patcher;
 
 public static class PluginLoaderPatcher
 {

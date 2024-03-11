@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace SigurdLib.Util.Collections.Generic;
+namespace Sigurd.Util.Collections.Generic;
 
 /// <inheritdoc />
 public class BiDictionary<TKey, TValue> : IBiDictionary<TKey, TValue>

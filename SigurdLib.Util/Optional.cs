@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SigurdLib.Util;
+namespace Sigurd.Util;
 
 public static class Optional
 {

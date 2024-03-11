@@ -13,7 +13,7 @@ using System.Text;
 using BepInEx.Logging;
 using HarmonyLib;
 
-namespace SigurdLib.Util.Extensions;
+namespace Sigurd.Util.Extensions;
 
 public static class ManualLogSourceExtensions
 {

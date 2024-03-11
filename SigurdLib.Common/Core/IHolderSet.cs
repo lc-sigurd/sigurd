@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sigurd.Common.Core.Tags;
-using SigurdLib.Util;
+using Sigurd.Util;
 
 namespace Sigurd.Common.Core;
 

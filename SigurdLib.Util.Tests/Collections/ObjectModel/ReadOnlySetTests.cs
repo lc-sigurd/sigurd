@@ -1,4 +1,4 @@
-namespace SigurdLib.Util.Tests.Collections.ObjectModel;
+namespace Sigurd.Util.Tests.Collections.ObjectModel;
 
 public class ReadOnlySetTests
 {
