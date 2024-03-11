@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>com.sigurd.sigurd.eventbus</AssemblyName>
+
+        <Id>SigurdLib.EventBus</Id>
+        <Product>SigurdLib.EventBus</Product>
+
+        <PackageId>SigurdLib.EventBus</PackageId>
+        <Description>Sigurd's event bus implementation.</Description>
+
+        <ThunderstoreName>Sigurd_Event_Bus</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's event bus implementation</ThunderstoreDescription>
+        <HasBepInPlugin>false</HasBepInPlugin>
+
+        <IsPackable>true</IsPackable>
+        <IsThunderstorePackable>true</IsThunderstorePackable>
+
+        <RootNamespace>Sigurd.EventBus</RootNamespace>
+    </PropertyGroup>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Runtime assembly references -->
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../SigurdLib.Util/SigurdLib.Util.csproj" />
+    </ItemGroup>
+
+</Project>
