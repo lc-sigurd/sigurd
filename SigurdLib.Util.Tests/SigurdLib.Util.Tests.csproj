@@ -2,6 +2,6 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <AssemblyName>com.sigurd.sigurd.util.tests</AssemblyName>
-        <RootNamespace>SigurdLib.Util.Tests</RootNamespace>
+        <RootNamespace>Sigurd.Util.Tests</RootNamespace>
     </PropertyGroup>
 </Project>

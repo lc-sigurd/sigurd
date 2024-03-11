@@ -17,7 +17,7 @@
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
 
-        <RootNamespace>SigurdLib.PluginLoader</RootNamespace>
+        <RootNamespace>Sigurd.PluginLoader</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
