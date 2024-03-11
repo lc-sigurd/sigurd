@@ -12,14 +12,14 @@ public static class SideExtensions
     /// </summary>
     /// <param name="side">A <see cref="Side"/> to test.</param>
     /// <returns><see langword="true"/> if the <see cref="Side"/> includes client-sidedness. Otherwise, <see langword="false"/>.</returns>
-    public static bool IsClient(this Side side) => side.IsSide(Side.Client);
+    public static bool IsClient(this Side side) => side.ContainsSide(Side.Client);
 
     /// <summary>
     /// Determines whether the <see cref="Side"/> represents a server.
     /// </summary>
     /// <param name="side"></param>
     /// <returns><see langword="true"/> if the <see cref="Side"/> includes server-sidedness. Otherwise, <see langword="false"/>.</returns>
-    public static bool IsServer(this Side side) => side.IsSide(Side.Server);
+    public static bool IsServer(this Side side) => side.ContainsSide(Side.Server);
 
     /// <summary>
     /// Determines whether the <see cref="Side"/> represents a client host, also known as a 'listen server'.
@@ -28,9 +28,9 @@ public static class SideExtensions
     /// </summary>
     /// <param name="side"></param>
     /// <returns><see langword="true"/> if the <see cref="Side"/> includes both client- and server-sidedness. Otherwise, <see langword="false"/>.</returns>
-    public static bool IsHost(this Side side) => side.IsSide(Side.Client | Side.Server);
+    public static bool IsHost(this Side side) => side.ContainsSide(Side.Client | Side.Server);
 
-    private static bool IsSide(this Side side, Side testSide) => (side & testSide) == testSide;
+    private static bool ContainsSide(this Side side, Side testSide) => (side & testSide) == testSide;
 }
 
 /// <summary>
