@@ -16,7 +16,7 @@
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
 
-        <RootNamespace></RootNamespace>
+        <RootNamespace>Sigurd.Common</RootNamespace>
     </PropertyGroup>
 
     <!-- Development dependencies -->
