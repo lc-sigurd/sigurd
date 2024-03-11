@@ -52,6 +52,7 @@
     <ItemGroup>
         <ProjectReference Include="$(ProjectDir)../SigurdLib.Util/SigurdLib.Util.csproj" />
         <ProjectReference Include="$(ProjectDir)../SigurdLib.Patcher/SigurdLib.Patcher.csproj" />
+        <ProjectReference Include="$(ProjectDir)../SigurdLib.EventBus/SigurdLib.EventBus.csproj" />
     </ItemGroup>
 
     <!-- https://github.com/BepInEx/BepInEx.Templates/blob/9d628c67de0a84337f38f755eeb6646696ae8423/BepInEx.PluginInfoProps/BepInEx.PluginInfoProps.props -->
