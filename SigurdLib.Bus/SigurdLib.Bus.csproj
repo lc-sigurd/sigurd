@@ -4,20 +4,20 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>com.sigurd.sigurd.eventbus</AssemblyName>
 
-        <Id>SigurdLib.EventBus</Id>
-        <Product>SigurdLib.EventBus</Product>
+        <Id>SigurdLib.Bus</Id>
+        <Product>SigurdLib.Bus</Product>
 
-        <PackageId>SigurdLib.EventBus</PackageId>
+        <PackageId>SigurdLib.Bus</PackageId>
         <Description>Sigurd's event bus implementation.</Description>
 
-        <ThunderstoreName>Sigurd_Event_Bus</ThunderstoreName>
-        <ThunderstoreDescription>Sigurd's event bus implementation</ThunderstoreDescription>
+        <ThunderstoreName>Sigurd_Bus</ThunderstoreName>
+        <ThunderstoreDescription>Sigurd's event firing &amp; listening framework, based on the 'event bus' model</ThunderstoreDescription>
         <HasBepInPlugin>false</HasBepInPlugin>
 
         <IsPackable>true</IsPackable>
         <IsThunderstorePackable>true</IsThunderstorePackable>
 
-        <RootNamespace>Sigurd.EventBus</RootNamespace>
+        <RootNamespace>Sigurd.Bus</RootNamespace>
     </PropertyGroup>
 
     <!-- Thunderstore metadata -->

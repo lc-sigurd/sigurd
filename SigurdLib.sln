@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Util", "SigurdLib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Util.Tests", "SigurdLib.Util.Tests\SigurdLib.Util.Tests.csproj", "{5E4870D9-2E31-4B2E-8F73-45C2810833FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.EventBus", "SigurdLib.EventBus\SigurdLib.EventBus.csproj", "{D2415142-BF2C-4D79-BDB0-8245973E3493}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SigurdLib.Bus", "SigurdLib.Bus\SigurdLib.Bus.csproj", "{D2415142-BF2C-4D79-BDB0-8245973E3493}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
