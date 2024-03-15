@@ -46,6 +46,15 @@ public interface IEventBus
     void AddListener<TEvent>(EventPriority priority, Action<TEvent> listener) where TEvent : Event;
 
     /// <summary>
+    /// Add a consumer listener with default <see cref="EventPriority.Normal"/> priority that will potentially
+    /// receive cancelled events.
+    /// </summary>
+    /// <param name="receiveCancelled">Pass <see langword="true"/> to indicate that the provided <paramref name="listener"/> should receive cancelled events.</param>
+    /// <param name="listener">Callback to invoke when a matching event is posted.</param>
+    /// <typeparam name="TEvent">The derived <see cref="Event"/> type.</typeparam>
+    void AddListener<TEvent>(bool receiveCancelled, Action<TEvent> listener) where TEvent : Event;
+
+    /// <summary>
     /// Add a consumer listener with the specified <see cref="EventPriority"/> that will potentially receive
     /// cancelled events.
     /// </summary>
