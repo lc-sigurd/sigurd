@@ -3,7 +3,7 @@ using Sigurd.Util.Collections.ObjectModel;
 
 namespace Sigurd.EventBus.Api;
 
-public class EventPriority : IEventListener
+public class EventPriority
 {
     private static LinkedList<EventPriority> _priorities = new();
 
@@ -34,8 +34,6 @@ public class EventPriority : IEventListener
         Ordinal = _priorities.Count;
         _priorities.AddLast(this);
     }
-
-    public void Invoke(Event @event) => @event.CurrentPhase = this;
 
     public static IEnumerable<EventPriority> Values => new ReadOnlyAssemblage<EventPriority>(_priorities);
 }
