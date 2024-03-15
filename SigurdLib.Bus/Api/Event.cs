@@ -1,4 +1,4 @@
-namespace Sigurd.EventBus.Api;
+namespace Sigurd.Bus.Api;
 
 public abstract class Event
 {

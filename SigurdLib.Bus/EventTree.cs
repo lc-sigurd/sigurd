@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Sigurd.EventBus.Api;
+using Sigurd.Bus.Api;
 using Sigurd.Util.Collections.Generic;
 
-namespace Sigurd.EventBus;
+namespace Sigurd.Bus;
 
 public sealed class EventTree
 {

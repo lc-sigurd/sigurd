@@ -8,12 +8,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
-using Sigurd.EventBus.Api;
-using Sigurd.EventBus.Listener;
+using Sigurd.Bus.Api;
+using Sigurd.Bus.Listener;
 using Sigurd.Util;
 using Sigurd.Util.Collections.ObjectModel;
 
-namespace Sigurd.EventBus;
+namespace Sigurd.Bus;
 
 public class EventTreeNode
 {

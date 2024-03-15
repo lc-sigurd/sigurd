@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Sigurd.EventBus.Api;
+namespace Sigurd.Bus.Api;
 
 /// <summary>
 /// Messenger hub responsible for taking subscriptions/publications and delivering of messages.

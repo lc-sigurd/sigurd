@@ -1,7 +1,7 @@
 using System;
-using Sigurd.EventBus.Api;
+using Sigurd.Bus.Api;
 
-namespace Sigurd.EventBus.Listener;
+namespace Sigurd.Bus.Listener;
 
 public sealed class ConsumerEventListener : IEventListener
 {

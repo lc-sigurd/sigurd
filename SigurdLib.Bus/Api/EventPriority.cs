@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Sigurd.Util.Collections.ObjectModel;
 
-namespace Sigurd.EventBus.Api;
+namespace Sigurd.Bus.Api;
 
 public class EventPriority
 {

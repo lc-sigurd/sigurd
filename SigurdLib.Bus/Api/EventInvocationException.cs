@@ -1,6 +1,6 @@
 using System;
 
-namespace Sigurd.EventBus.Api;
+namespace Sigurd.Bus.Api;
 
 public class EventInvocationException : Exception
 {

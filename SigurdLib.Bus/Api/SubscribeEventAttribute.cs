@@ -1,6 +1,6 @@
 using System;
 
-namespace Sigurd.EventBus.Api;
+namespace Sigurd.Bus.Api;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class SubscribeEventAttribute : Attribute

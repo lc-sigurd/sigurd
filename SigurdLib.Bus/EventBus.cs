@@ -3,11 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Sigurd.EventBus.Api;
-using Sigurd.EventBus.Listener;
+using Sigurd.Bus.Api;
+using Sigurd.Bus.Listener;
 using Sigurd.Util.Extensions;
 
-namespace Sigurd.EventBus;
+namespace Sigurd.Bus;
 
 public class EventBus : IEventBus
 {

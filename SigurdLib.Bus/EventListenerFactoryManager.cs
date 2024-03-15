@@ -5,10 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
-using Sigurd.EventBus.Api;
-using Sigurd.EventBus.Listener;
+using Sigurd.Bus.Api;
+using Sigurd.Bus.Listener;
 
-namespace Sigurd.EventBus;
+namespace Sigurd.Bus;
 
 internal class EventListenerFactoryManager
 {
