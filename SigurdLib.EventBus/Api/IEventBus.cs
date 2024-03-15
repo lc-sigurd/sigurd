@@ -75,20 +75,20 @@ public interface IEventBus
     /// Submit an <see cref="Event"/> for dispatch to the appropriate listeners.
     /// </summary>
     /// <param name="event">The <see cref="Event"/> to dispatch.</param>
-    /// <returns><see langword="true"/> if the <see cref="Event"/> was cancelled; otherwise, <see langword="false"/>.</returns>
-    bool Post(Event @event);
+    /// <returns>The dispatched event.</returns>
+    TEvent Post<TEvent>(TEvent @event) where TEvent: Event;
 
     /// <summary>
     /// Submit an <see cref="Event"/> for dispatch to listeners registered with a specific <see cref="EventPriority"/>.
     /// </summary>
     /// <param name="phase">The <see cref="EventPriority"/> to dispatch with.</param>
     /// <param name="event">The <see cref="Event"/> to dispatch.</param>
-    /// <returns><see langword="true"/> if the <see cref="Event"/> was cancelled; otherwise, <see langword="false"/>.</returns>
-    bool Post(EventPriority phase, Event @event);
+    /// <returns>The dispatched event.</returns>
+    TEvent Post<TEvent>(EventPriority phase, TEvent @event) where TEvent: Event;
 
     /// <summary>
     /// Shut down this <see cref="IEventBus"/>.
-    /// Any further call to <see cref="Post(Sigurd.EventBus.Api.Event)"/> or its overloads will effectively no-op.
+    /// Any further call to <see cref="Post{TEvent}(TEvent)"/> or its overloads will effectively no-op.
     /// </summary>
     void Shutdown();
 
