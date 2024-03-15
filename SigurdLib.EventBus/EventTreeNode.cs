@@ -9,9 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using Sigurd.EventBus.Api;
+using Sigurd.EventBus.Listener;
 using Sigurd.Util;
 using Sigurd.Util.Collections.ObjectModel;
-using Sigurd.Util.Extensions;
 
 namespace Sigurd.EventBus;
 
@@ -29,7 +29,7 @@ public class EventTreeNode
 
     private LinkedList<EventTreeNode>? _children;
 
-    private EventListenerEnumerable[] _busEventListenerEnumerables;
+    private readonly EventListenerEnumerable _listeners;
 
     public static EventTreeNode CreateRoot(Type rootEventType, EventTree tree) => new EventTreeNode(rootEventType, tree);
 
@@ -38,9 +38,9 @@ public class EventTreeNode
         EventType = eventType;
         _tree = tree;
 
-        _busEventListenerEnumerables = Enumerable.Range(0, _tree.MaxBusCount)
-            .Select(busId => new EventListenerEnumerable(this, busId))
-            .ToArray();
+        _listeners = new(this);
+
+        IsCancellable = typeof(ICancellableEvent).IsAssignableFrom(eventType);
     }
 
     public ICollection<EventTreeNode> Children => _children is null
@@ -60,42 +60,29 @@ public class EventTreeNode
         return childNode;
     }
 
-    internal void ResizeBusEventListenerEnumerableArray(int newCapacity)
-    {
-        var oldCapacity = _busEventListenerEnumerables.Length;
-        if (oldCapacity >= newCapacity) return;
+    public IEnumerable<IEventListener> GetListeners() => _listeners;
 
-        var newEventListenerEnumerables = Enumerable.Range(oldCapacity, newCapacity - oldCapacity)
-            .Select(busId => new EventListenerEnumerable(this, busId));
+    public IEnumerable<IEventListener> GetPriorityListeners(EventPriority priority) => _listeners.GetPriorityListeners(priority);
 
-        _busEventListenerEnumerables = _busEventListenerEnumerables
-            .Concat(newEventListenerEnumerables)
-            .ToArray();
-    }
+    public void RegisterListener(EventPriority priority, IEventListener listener)
+        => _listeners.RegisterListener(priority, listener);
 
-    protected EventListenerEnumerable GetBusListenerEnumerable(int busId) => _busEventListenerEnumerables[busId];
+    public void UnregisterListener(IEventListener listener)
+        => _listeners.UnregisterListener(listener);
 
-    public IEnumerable<IEventListener> GetBusListeners(int busId) => GetBusListenerEnumerable(busId);
-
-    public void RegisterListener(int busId, EventPriority priority, IEventListener listener)
-        => GetBusListenerEnumerable(busId).RegisterListener(priority, listener);
-
-    public void UnregisterListener(int busId, IEventListener listener)
-        => GetBusListenerEnumerable(busId).UnregisterListener(listener);
-
-    public void ClearBus(int busId) => GetBusListenerEnumerable(busId).Dispose();
+    public void Clear() => _listeners.Dispose();
 
     protected sealed class EventListenerEnumerable : IEnumerable<IEventListener>, IDisposable
     {
         private bool _disposed;
 
         private readonly EventTreeNode _node;
-        private readonly int _busId;
 
-        [MemberNotNullWhen(false, nameof(_orderedListenersCache))]
+        [MemberNotNullWhen(false, nameof(_orderedListenersCache), nameof(_orderedPriorityListenersCache))]
         protected bool CacheDirty { get; private set; }
 
         private IEventListener[]? _orderedListenersCache;
+        private IEventListener[][]? _orderedPriorityListenersCache;
 
         private LinkedList<IEventListener>[] _priorityListenerLists = EventPriority.Values
             .Select(_ => new LinkedList<IEventListener>())
@@ -103,18 +90,14 @@ public class EventTreeNode
 
         private readonly SemaphoreSlim _accessLock = new(1, 1);
 
-        public EventListenerEnumerable(EventTreeNode node, int busId)
+        public EventListenerEnumerable(EventTreeNode node)
         {
             _node = node;
-            _busId = busId;
         }
 
         IEnumerator<IEventListener> IEnumerable<IEventListener>.GetEnumerator()
         {
-            if (CacheDirty) {
-                _orderedListenersCache = ComputeOrderedListeners();
-                CacheDirty = false;
-            }
+            EnsureCleanCache();
 
             return _orderedListenersCache
                 .AsEnumerable()
@@ -123,16 +106,34 @@ public class EventTreeNode
 
         public IEnumerator GetEnumerator() => (this as IEnumerable<IEventListener>).GetEnumerator();
 
-        private IEventListener[] ComputeOrderedListeners()
+        public IEnumerable<IEventListener> GetPriorityListeners(EventPriority priority)
         {
-            return EventPriority.Values
-                .Select(GetListenersWithPriorityNotifier)
-                .SelectManyValueWhereSome()
+            EnsureCleanCache();
+
+            return _orderedPriorityListenersCache[priority.Ordinal];
+        }
+
+        [MemberNotNull(nameof(_orderedListenersCache), nameof(_orderedPriorityListenersCache))]
+        private void EnsureCleanCache()
+        {
+            if (!CacheDirty) return;
+            BuildCache();
+        }
+
+        [MemberNotNull(nameof(_orderedListenersCache), nameof(_orderedPriorityListenersCache))]
+        private void BuildCache()
+        {
+            _orderedPriorityListenersCache = EventPriority.Values
+                .Select(GetListeners)
+                .Select(value => value.IsSome ? value.ValueUnsafe : Enumerable.Empty<IEventListener>())
+                .Select(enumerable => enumerable.ToArray())
                 .ToArray();
 
-            Optional<IEnumerable<IEventListener>> GetListenersWithPriorityNotifier(EventPriority priority)
-                => GetListeners(priority)
-                    .Select(listeners => listeners.Prepend(priority));
+            _orderedListenersCache = _orderedPriorityListenersCache
+                .SelectMany(x => x)
+                .ToArray();
+
+            CacheDirty = false;
         }
 
         private Optional<IEnumerable<IEventListener>> GetListeners(EventPriority priority)
@@ -140,13 +141,14 @@ public class EventTreeNode
             _accessLock.Wait();
             Optional<IEnumerable<IEventListener>> parentListeners = _node.Parent
                 .Select(parent => parent
-                    .GetBusListenerEnumerable(_busId)
-                    .GetListeners(priority));
+                    .GetPriorityListeners(priority));
 
             ICollection<IEventListener> thisListeners;
             _accessLock.Wait();
             try {
-               thisListeners = _priorityListenerLists[priority.Ordinal];
+                thisListeners = _priorityListenerLists[priority.Ordinal]
+                    .Select(Unwrap)
+                    .ToArray();
             }
             finally {
                 _accessLock.Release();
@@ -158,6 +160,15 @@ public class EventTreeNode
             return Optional.Some(parentListeners
                 .IfNone(Array.Empty<IEventListener>)
                 .Concat(thisListeners));
+
+            // If the Event does not implement ICancellable, 'unwrap' it from its predicate
+            IEventListener Unwrap(IEventListener listener)
+            {
+                if (_node.IsCancellable) return listener;
+                if (listener is CancellationFilteredEventListener filteredListener)
+                    return filteredListener.Inner;
+                return listener;
+            }
         }
 
         protected void SetDirty()
@@ -165,9 +176,7 @@ public class EventTreeNode
             CacheDirty = true;
 
             foreach (var eventTreeNode in _node.Children) {
-                eventTreeNode
-                    .GetBusListenerEnumerable(_busId)
-                    .SetDirty();
+                eventTreeNode._listeners.SetDirty();
             }
         }
 

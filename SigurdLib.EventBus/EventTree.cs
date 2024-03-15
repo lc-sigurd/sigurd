@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using Sigurd.EventBus.Api;
 using Sigurd.Util.Collections.Generic;
 
@@ -9,34 +8,19 @@ namespace Sigurd.EventBus;
 
 public sealed class EventTree
 {
-    public static EventTree Instance = new();
-
     private static readonly IEqualityComparer<Type> TypeComparer = new IdentityEqualityComparer<Type>();
 
-    private EventTreeNode _root;
+    private readonly EventTreeNode _root;
 
-    private int _currentMaxBusId = -1;
-
-    public int CurrentMaxBusId => _currentMaxBusId;
-
-    public int MaxBusCount => CurrentMaxBusId + 1;
-
-    private LinkedList<EventTreeNode> _allNodes = [];
+    private readonly LinkedList<EventTreeNode> _allNodes = [];
 
     private readonly ConcurrentDictionary<Type, EventTreeNode> _eventNodes;
 
-    private EventTree()
+    internal EventTree()
     {
         _root = EventTreeNode.CreateRoot(typeof(Event), this);
         _allNodes.AddFirst(_root);
         _eventNodes = new([new KeyValuePair<Type, EventTreeNode>(typeof(Event), _root)], TypeComparer);
-    }
-
-    internal int GetAndIncrementIdForNewBus()
-    {
-        var id = Interlocked.Increment(ref _currentMaxBusId);
-        ResizeBusArrays(id + 1);
-        return id;
     }
 
     public EventTreeNode GetNode(Type eventType)
@@ -52,7 +36,7 @@ public sealed class EventTree
 
         Type baseType = eventType.BaseType!;
 
-        if (!TypeComparer.Equals(baseType, typeof(Event)) && eventType.IsAbstract && !baseType.IsAbstract)
+        if (eventType.IsAbstract && !baseType.IsAbstract)
             throw new NotSupportedException(
                 $"Abstract event type {eventType} has a non-abstract base type {baseType}.\n" +
                 $"Base types of abstract event types must be abstract, with the exception of the root {nameof(Event)} type."
@@ -62,17 +46,10 @@ public sealed class EventTree
         return baseTypeEventTreeNode.AddChild(baseType);
     }
 
-    internal void ResizeBusArrays(int newCapacity)
-    {
-        foreach (var eventTreeNode in PreOrderTraverseNodes()) {
-            eventTreeNode.ResizeBusEventListenerEnumerableArray(newCapacity);
-        }
-    }
-
     internal void ClearBus(int busId)
     {
         foreach (var eventTreeNode in PreOrderTraverseNodes()) {
-            eventTreeNode.ClearBus(busId);
+            eventTreeNode.Clear();
         }
     }
 
