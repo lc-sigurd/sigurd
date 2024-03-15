@@ -26,7 +26,7 @@ public interface ITagKey
         where TValue : class
     {
         var internKey = new InternKey(registryKey.Name, name);
-        var possibleTagKey = Values.ComputeIfAbsent(
+        var possibleTagKey = Values.GetOrAdd(
             internKey,
             _ => new WeakReference(KeyFactory())
         ).Target;

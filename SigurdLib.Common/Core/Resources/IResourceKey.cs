@@ -26,7 +26,7 @@ public interface IResourceKey
     private static IResourceKey<TValue> Create<TValue>(ResourceName registryName, ResourceName name)
     {
         var internKey = new InternKey(registryName, name);
-        var possibleResourceKey = Values.ComputeIfAbsent(
+        var possibleResourceKey = Values.GetOrAdd(
             internKey,
             _ => new WeakReference(KeyFactory())
         ).Target;
