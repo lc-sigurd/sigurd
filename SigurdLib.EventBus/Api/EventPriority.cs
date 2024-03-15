@@ -5,9 +5,9 @@ namespace Sigurd.EventBus.Api;
 
 public class EventPriority
 {
-    private static LinkedList<EventPriority> _priorities = new();
+    private static readonly LinkedList<EventPriority> Priorities = new();
 
-    public static int Count => _priorities.Count;
+    public static int Count => Priorities.Count;
 
     public static EventPriority Highest;
     public static EventPriority High;
@@ -31,9 +31,9 @@ public class EventPriority
     private EventPriority(string name)
     {
         Name = name;
-        Ordinal = _priorities.Count;
-        _priorities.AddLast(this);
+        Ordinal = Priorities.Count;
+        Priorities.AddLast(this);
     }
 
-    public static IEnumerable<EventPriority> Values => new ReadOnlyAssemblage<EventPriority>(_priorities);
+    public static IEnumerable<EventPriority> Values => new ReadOnlyAssemblage<EventPriority>(Priorities);
 }
