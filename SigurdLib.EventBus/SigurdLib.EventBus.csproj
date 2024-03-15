@@ -20,6 +20,12 @@
         <RootNamespace>Sigurd.EventBus</RootNamespace>
     </PropertyGroup>
 
+    <!-- Thunderstore metadata -->
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Remove="$(TargetPath)"/>
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
+    </ItemGroup>
+
     <!-- Development dependencies -->
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2023.3.1" PrivateAssets="all" />
