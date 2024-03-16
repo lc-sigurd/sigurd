@@ -1,4 +1,4 @@
-using Sigurd.EventBus.Api;
+using Sigurd.Bus.Api;
 
 namespace Sigurd.Common;
 
