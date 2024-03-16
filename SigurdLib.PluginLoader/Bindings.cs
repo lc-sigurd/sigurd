@@ -30,6 +30,7 @@ public class Bindings
         var it = typeof(T);
 
         return AccessTools.AllTypes()
+            .Where(type => type != it && !type.IsInterface)
             .Where(it.IsAssignableFrom)
             .Select(type => (T)Activator.CreateInstance(type));
     }
