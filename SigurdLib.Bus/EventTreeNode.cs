@@ -79,7 +79,7 @@ public class EventTreeNode
         private readonly EventTreeNode _node;
 
         [MemberNotNullWhen(false, nameof(_orderedListenersCache), nameof(_orderedPriorityListenersCache))]
-        protected bool CacheDirty { get; private set; }
+        protected bool CacheDirty { get; private set; } = true;
 
         private IEventListener[]? _orderedListenersCache;
         private IEventListener[][]? _orderedPriorityListenersCache;
@@ -138,7 +138,6 @@ public class EventTreeNode
 
         private Optional<IEnumerable<IEventListener>> GetListeners(EventPriority priority)
         {
-            _accessLock.Wait();
             Optional<IEnumerable<IEventListener>> parentListeners = _node.Parent
                 .Select(parent => parent
                     .GetPriorityListeners(priority));
