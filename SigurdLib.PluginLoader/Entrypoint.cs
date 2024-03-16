@@ -36,11 +36,11 @@ internal static class Entrypoint
     {
         var autoSubscriber = new AutomaticEventSubscriber(Logger);
 
-        ChainloaderHooks.Plugin.OnPreLoad += (sender, args) => {
+        ChainloaderHooks.Plugin.OnPostLoad += (_, args) => {
             autoSubscriber.Inject(args.PluginContainer, Side.Client);
         };
 
-        ChainloaderHooks.OnComplete += (sender, args) => {
+        ChainloaderHooks.OnComplete += (_, args) => {
             autoSubscriber.WarnOfIgnoredSubscribers();
         };
     }
