@@ -33,6 +33,13 @@ internal class EventListenerFactoryManager
     private EventListenerFactory ComputeListenerFactory(MethodInfo method)
     {
         try {
+            EnsureRuntimeAssembly();
+            if (!method.IsAccessible(RuntimeEmittedAssembly))
+                throw new MethodAccessException(
+                    $"{method} is not sufficiently accessible to be invoked as an event listener.\n" +
+                    $"Ensure {method}, its declaring type, and enclosing types are `public`."
+                );
+
             var listenerImplementationType = MakeWrapperType(method);
             return method.IsStatic switch {
                 true => StaticFactory,
