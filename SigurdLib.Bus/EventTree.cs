@@ -55,7 +55,7 @@ public sealed class EventTree
 
     public IEnumerable<EventTreeNode> PreOrderTraverseNodes() => PreOrderTraverseSubtreeNodes(_root);
 
-    protected static IEnumerable<EventTreeNode> PreOrderTraverseSubtreeNodes(EventTreeNode subtreeRoot)
+    private static IEnumerable<EventTreeNode> PreOrderTraverseSubtreeNodes(EventTreeNode subtreeRoot)
     {
         yield return subtreeRoot;
 
@@ -68,7 +68,7 @@ public sealed class EventTree
 
     public IEnumerable<EventTreeNode> PostOrderTraverseNodes() => PostOrderTraverseSubtreeNodes(_root);
 
-    protected static IEnumerable<EventTreeNode> PostOrderTraverseSubtreeNodes(EventTreeNode subtreeRoot)
+    private static IEnumerable<EventTreeNode> PostOrderTraverseSubtreeNodes(EventTreeNode subtreeRoot)
     {
         foreach (var child in subtreeRoot.Children) {
             foreach (var subtreeNode in PostOrderTraverseSubtreeNodes(child)) {
