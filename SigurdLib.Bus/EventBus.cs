@@ -66,7 +66,7 @@ public class EventBus : IEventBus
     {
         if (_listeners.ContainsKey(target)) return;
 
-        var targetIsType = target.GetType() == typeof(Type);
+        var targetIsType = target is Type;
         var targetType = targetIsType ? (Type)target : target.GetType();
 
         CheckSupertypes(targetType);
