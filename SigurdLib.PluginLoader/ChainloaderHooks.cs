@@ -55,9 +55,9 @@ internal static class ChainloaderHooks
         /// </summary>
         public static event EventHandler<EventArgs>? OnPostLoad;
 
-        internal static void InvokePre(PluginInfo pluginInfo)
+        internal static void InvokePre(PluginInfo pluginInfo, Assembly pluginAssembly)
         {
-            var container = new PluginContainer(pluginInfo);
+            var container = new PluginContainer(pluginInfo, pluginAssembly);
             PluginList.Instance.AddLoadingPluginContainer(container);
             PluginLoadingContext.Instance.ActiveContainer = container;
             InvokePhaseSafely(
@@ -205,6 +205,8 @@ internal static class ChainloaderHooks
                 )
                 // Load the current plugin info from local variables
                 .Emit(OpCodes.Ldloc_S, (byte)23)
+                // Load the current plugin assembly from local variables
+                .Emit(OpCodes.Ldloc_S, (byte)31)
                 // Invoke `OnPreLoad` event
                 .Emit(OpCodes.Call, AccessTools.Method(typeof(Plugin), nameof(Plugin.InvokePre)));
 
