@@ -11,7 +11,7 @@ namespace Sigurd.Bus;
 
 public class EventBus : IEventBus
 {
-    const BindingFlags MethodSearchFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+    const BindingFlags MethodSearchFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
     private readonly EventTree _eventTree = new();
     private readonly ConcurrentDictionary<object, ConcurrentBag<IEventListener>> _listeners = new();
