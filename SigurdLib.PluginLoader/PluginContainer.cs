@@ -5,6 +5,7 @@
 
 using System.Reflection;
 using BepInEx;
+using Sigurd.Bus.Api;
 
 namespace Sigurd.PluginLoader;
 
@@ -17,6 +18,8 @@ public class PluginContainer
     public string Guid => Info.Metadata.GUID;
 
     public string Namespace => Guid;
+
+    public IEventBus EventBus { get; } = new BusConfiguration { }.Build();
 
     public PluginContainer(PluginInfo info, Assembly assembly)
     {
